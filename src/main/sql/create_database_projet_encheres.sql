@@ -5,10 +5,11 @@ USE Projet_Encheres;
 GO
 
 DROP TABLE IF EXISTS ENCHERES;
-DROP TABLE IF EXISTS ARTICLES_VENDUS;
+DROP TABLE IF EXISTS RETRAITS;
+DROP TABLE IF EXISTS ARTICLES;
 DROP TABLE IF EXISTS UTILISATEURS;
 DROP TABLE IF EXISTS CATEGORIES;
-DROP TABLE IF EXISTS RETRAITS;
+
 
 CREATE TABLE CATEGORIES (
     no_categorie   INTEGER IDENTITY(1,1) NOT NULL,
@@ -20,7 +21,7 @@ ALTER TABLE CATEGORIES ADD constraint categorie_pk PRIMARY KEY (no_categorie);
 CREATE TABLE ENCHERES (
     no_utilisateur   INTEGER NOT NULL,
     no_article       INTEGER NOT NULL,
-    date_enchere     datetime NOT NULL,
+    date_enchere     datetime2 NOT NULL,
 	montant_enchere  INTEGER NOT NULL
 );
 
@@ -45,7 +46,7 @@ CREATE TABLE UTILISATEURS (
     rue              VARCHAR(30) NOT NULL,
     code_postal      VARCHAR(10) NOT NULL,
     ville            VARCHAR(30) NOT NULL,
-    mot_de_passe     VARCHAR(30) NOT NULL,
+    mot_de_passe     VARCHAR(250) NOT NULL,
     credit           INTEGER NOT NULL,
     administrateur   bit NOT NULL
 );
@@ -53,7 +54,7 @@ CREATE TABLE UTILISATEURS (
 ALTER TABLE UTILISATEURS ADD constraint utilisateur_pk PRIMARY KEY (no_utilisateur);
 
 
-CREATE TABLE ARTICLES_VENDUS (
+CREATE TABLE ARTICLES (
     no_article                    INTEGER IDENTITY(1,1) NOT NULL,
     nom_article                   VARCHAR(30) NOT NULL,
     description                   VARCHAR(300) NOT NULL,
@@ -61,20 +62,21 @@ CREATE TABLE ARTICLES_VENDUS (
     date_fin_encheres             DATE NOT NULL,
     prix_initial                  INTEGER,
     prix_vente                    INTEGER,
+	url_image					  VARCHAR(300),
     no_utilisateur                INTEGER NOT NULL,
     no_categorie                  INTEGER NOT NULL
 );
 
-ALTER TABLE ARTICLES_VENDUS ADD constraint articles_vendus_pk PRIMARY KEY (no_article);
+ALTER TABLE ARTICLES ADD constraint articles_pk PRIMARY KEY (no_article);
 
 -- Foreign keys
-ALTER TABLE ARTICLES_VENDUS
+ALTER TABLE ARTICLES
     ADD CONSTRAINT articles_vendus_categories_fk FOREIGN KEY ( no_categorie )
         REFERENCES CATEGORIES ( no_categorie )
 ON DELETE NO ACTION 
     ON UPDATE no action;
 
-ALTER TABLE ARTICLES_VENDUS
+ALTER TABLE ARTICLES
     ADD CONSTRAINT ventes_utilisateur_fk FOREIGN KEY ( no_utilisateur )
         REFERENCES UTILISATEURS ( no_utilisateur )
 ON DELETE NO ACTION 
@@ -88,13 +90,13 @@ ON DELETE NO ACTION
 
 ALTER TABLE ENCHERES
     ADD CONSTRAINT encheres_articles_vendus_fk FOREIGN KEY ( no_article )
-        REFERENCES ARTICLES_VENDUS ( no_article )
+        REFERENCES ARTICLES ( no_article )
 ON DELETE NO ACTION 
     ON UPDATE no action;
 
 ALTER TABLE RETRAITS
     ADD CONSTRAINT retraits_articles_vendus_fk FOREIGN KEY ( no_article )
-        REFERENCES ARTICLES_VENDUS ( no_article )
+        REFERENCES ARTICLES ( no_article )
 ON DELETE NO ACTION 
     ON UPDATE no action;
 
