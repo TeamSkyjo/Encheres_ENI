@@ -1,25 +1,25 @@
 USE Projet_Encheres;
 GO
 
--- Suppression des données dans l'ordre de dépendance
+-- Suppression des donnÃ©es dans l'ordre de dÃ©pendance
 DELETE FROM ENCHERES;
 DELETE FROM RETRAITS;
 DELETE FROM ARTICLES;
 DELETE FROM UTILISATEURS;
 DELETE FROM CATEGORIES;
 
--- Insertion des catégories
+-- Insertion des catÃ©gories
 SET IDENTITY_INSERT CATEGORIES ON;
 
 INSERT INTO CATEGORIES (no_categorie, libelle) VALUES
 (1, 'Informatique'),
 (2, 'Ameublement'),
 (3, 'Sport&Loisirs'),
-(4, 'Vêtements');
+(4, 'VÃªtements');
 
 SET IDENTITY_INSERT CATEGORIES OFF;
 
--- Insertion des utilisateurs (avec mots de passe hachés)
+-- Insertion des utilisateurs (avec mots de passe hachÃ©s)
 SET IDENTITY_INSERT UTILISATEURS ON;
 
 INSERT INTO UTILISATEURS (no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES
@@ -39,8 +39,8 @@ SET IDENTITY_INSERT ARTICLES ON;
 
 INSERT INTO ARTICLES (no_article, nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, url_image, no_utilisateur, no_categorie) VALUES
 (1, 'Ordinateur portable', 'PC portable Lenovo, 16Go RAM, 512Go SSD', DATEADD(DAY,+1,GETDATE()), DATEADD(DAY,+3,GETDATE()), 500, NULL, 'https://example.com/pc.jpg', 1, 1),
-(2, 'Canapé 3 places', 'Canapé en tissu gris, très confortable', DATEADD(DAY,-1,GETDATE()), DATEADD(DAY,+1,GETDATE()), 300, NULL, 'https://example.com/canape.jpg', 2, 2),
-(3, 'Vélo de course', 'Vélo BTWIN, très bon état, taille M', DATEADD(DAY,-4,GETDATE()), GETDATE(), 250, NULL, 'https://example.com/velo.jpg', 3, 3),
+(2, 'CanapÃ© 3 places', 'CanapÃ© en tissu gris, trÃ¨s confortable', DATEADD(DAY,-1,GETDATE()), DATEADD(DAY,+1,GETDATE()), 300, NULL, 'https://example.com/canape.jpg', 2, 2),
+(3, 'VÃ©lo de course', 'VÃ©lo BTWIN, trÃ¨s bon Ã©tat, taille M', DATEADD(DAY,-4,GETDATE()), GETDATE(), 250, NULL, 'https://example.com/velo.jpg', 3, 3),
 (4, 'Veste en cuir', 'Veste cuir noir, taille L', DATEADD(DAY,-5,GETDATE()), DATEADD(DAY,-2,GETDATE()), 100, NULL, 'https://example.com/veste.jpg', 2, 4);
 
 SET IDENTITY_INSERT ARTICLES OFF;
@@ -52,7 +52,7 @@ INSERT INTO RETRAITS (no_article, rue, code_postal, ville) VALUES
 (3, '45 rue des Sports', '31000', 'Toulouse'),
 (4, '8 avenue des Meubles', '69000', 'Lyon');
 
--- Insertion des enchères
+-- Insertion des enchï¿½res
 INSERT INTO ENCHERES (no_utilisateur, no_article, date_enchere, montant_enchere) VALUES
 (3, 4, DATEADD(DAY,-5,GETDATE()), 110),
 (1, 2, DATEADD(DAY,-1,GETDATE()), 320),
