@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 
 @SpringBootTest
-public class testArticleDAO {
+public class TestArticleDAO {
 
     @Autowired
     private ArticleDAO articleDAO;
