@@ -12,6 +12,7 @@ public class Article {
     private int startingPrice;
     private int sellingPrice;
     private String status;
+    private String imageUrl;
 
     private User seller;
     private Category category;
@@ -20,7 +21,7 @@ public class Article {
     public Article() {
     }
 
-    public Article(String articleName, String description, LocalDate bidStartDate, LocalDate bidEndDate, int startingPrice, int sellingPrice, String status) {
+    public Article(String articleName, String description, LocalDate bidStartDate, LocalDate bidEndDate, int startingPrice, int sellingPrice, String status, String imageUrl) {
         this.articleName = articleName;
         this.description = description;
         this.bidStartDate = bidStartDate;
@@ -28,9 +29,10 @@ public class Article {
         this.startingPrice = startingPrice;
         this.sellingPrice = sellingPrice;
         this.status = status;
+        this.imageUrl = imageUrl;
     }
 
-    public Article(int articleId, String articleName, String description, LocalDate bidStartDate, LocalDate bidEndDate, int startingPrice, int sellingPrice, String status) {
+    public Article(int articleId, String articleName, String description, LocalDate bidStartDate, LocalDate bidEndDate, int startingPrice, int sellingPrice, String status, String imageUrl) {
         this.articleId = articleId;
         this.articleName = articleName;
         this.description = description;
@@ -39,6 +41,7 @@ public class Article {
         this.startingPrice = startingPrice;
         this.sellingPrice = sellingPrice;
         this.status = status;
+        this.imageUrl = imageUrl;
     }
 
     public int getArticleId() {
@@ -129,6 +132,14 @@ public class Article {
         this.pickup = pickup;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Article{");
@@ -158,4 +169,5 @@ public class Article {
     public int hashCode() {
         return Objects.hashCode(articleId);
     }
+
 }
