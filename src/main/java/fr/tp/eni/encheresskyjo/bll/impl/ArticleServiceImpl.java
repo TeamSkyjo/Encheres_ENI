@@ -2,10 +2,13 @@ package fr.tp.eni.encheresskyjo.bll.impl;
 
 import fr.tp.eni.encheresskyjo.bll.ArticleService;
 import fr.tp.eni.encheresskyjo.bo.Article;
+import fr.tp.eni.encheresskyjo.bo.Category;
 import fr.tp.eni.encheresskyjo.dal.*;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -38,15 +41,34 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<Article> getArticles() {
-
-
-
-
-        return List.of();
+        List<Article> articles = articleDAO.readAll();
+        return articles;
     }
 
     @Override
-    public List<Article> GetFilteredArticles(Article article) {
-        return List.of();
+    public List<Article> GetFilteredArticles(String pattern, Category category)
+            //throws BusinessException
+    {
+        //BusinessException businessException = new BusinessException();
+        List<Article> filteredArticles = new ArrayList<>();
+        if (category == null) {
+            if (pattern == null || pattern.isEmpty()) {
+                filteredArticles = articleDAO.readAll();
+            }
+            else {
+                filteredArticles = articleDAO.readByName(pattern);
+            }
+        }
+        else {
+            if (pattern == null || pattern.isEmpty()) {
+                filteredArticles = articleDAO.readByCategory(category.getLabel());
+            }
+            else {
+                filteredArticles = articleDAO.readByName(pattern).stream()
+                        .filter(article -> article.getCategory().equals(category))
+                        .toList();
+            }
+        }
+        return filteredArticles;
     }
 }
