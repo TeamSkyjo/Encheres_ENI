@@ -5,6 +5,7 @@ import fr.tp.eni.encheresskyjo.bo.Article;
 import fr.tp.eni.encheresskyjo.bo.Category;
 import fr.tp.eni.encheresskyjo.bo.Pickup;
 import fr.tp.eni.encheresskyjo.bo.User;
+import fr.tp.eni.encheresskyjo.bo.Category;
 import fr.tp.eni.encheresskyjo.dal.*;
 import fr.tp.eni.encheresskyjo.exception.BusinessCode;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -48,13 +51,13 @@ public class ArticleServiceImpl implements ArticleService {
         isValid = isNameValid(article.getArticleName(), businessException);
         isValid &= isDescriptionValid(article.getDescription(), businessException);
         isValid &= areDatesValid(article.getStartDate(), article.getEndDate(), businessException);
-        isValid &= isStartingPriceValid(article.getStartingPrice(), businessException);
-        isValid &= isImageUrlValid(article.getImageUrl(), businessException);
-        isValid &= isCategoryValid(article.getCategory(), businessException);
-        isValid &= isPickupValid(article.getPickup(), businessException);
+//        isValid &= isStartingPriceValid(article.getStartingPrice(), businessException);
+//        isValid &= isImageUrlValid(article.getImageUrl(), businessException);
+//        isValid &= isCategoryValid(article.getCategory(), businessException);
+//        isValid &= isPickupValid(article.getPickup(), businessException);
         // Méthode à mettre en fin pour des raisons de sécurité
         // Il y a un appel en BDD donc on vérifie les champs avant
-        isValid &= isArticleValid(article, businessException);
+//        isValid &= isArticleValid(article, businessException);
 
         if (isValid) {
             this.articleDAO.create(article);
@@ -67,13 +70,62 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<Article> getArticles() {
-
-        return List.of();
+        List<Article> articles = articleDAO.readAll();
+        return articles;
     }
 
     @Override
-    public List<Article> GetFilteredArticles(Article article) {
-        return List.of();
+    public List<Article> GetFilteredArticles(String pattern, Category category)
+            //throws BusinessException
+    {
+        //BusinessException businessException = new BusinessException();
+        List<Article> filteredArticles = new ArrayList<>();
+        if (category == null) {
+            if (pattern == null || pattern.isEmpty()) {
+                filteredArticles = articleDAO.readAll();
+            }
+            else {
+                filteredArticles = articleDAO.readByName(pattern);
+            }
+        }
+        else {
+            boolean isValid = true ;
+            isValid = isCategoryValid(category
+                    //,
+                    //businessException
+                    );
+
+            if (pattern == null || pattern.isEmpty()) {
+                filteredArticles = articleDAO.readByCategory(category.getLabel());
+            }
+            else {
+                filteredArticles = articleDAO.readByName(pattern).stream()
+                        .filter(article -> article.getCategory().equals(category))
+                        .toList();
+            }
+        }
+        return filteredArticles;
+    }
+
+    private boolean isCategoryValid(Category category
+                                    //,
+                                    //BusinessException businessException
+    ) {
+        boolean isValid = true;
+        //Category == null not useful for GetFilteredArticles
+        if (category == null) {
+            isValid = false;
+            //BusinessException.addMessage(BusinessCode.CATEGORY_NULL);
+        }
+        else {
+            try {
+                categoryDAO.read(category.getCategoryId());
+            } catch ( RuntimeException e) {
+                isValid = false;
+                //BusinessException.addMessage(BusinessCode.CATEGORY_UNKNOWN_ID);
+            }
+        }
+        return isValid;
     }
 
     private boolean isNameValid(String articleName, BusinessException businessException) {
