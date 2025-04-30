@@ -3,22 +3,22 @@ package fr.tp.eni.encheresskyjo.exception;
 public class BusinessCode {
 
     // USER
-//    public static final String VALID_USER_EXIST_ALREADY = "validation.user.exist";
-//    public static final String VALID_USER_USERNAME ="";
-//    public static final String VALID_USER_USERNAME_LENGTH = "";
-//    public static final String VALID_USER_PASSWORD = "";
-//    public static final String VALID_USER_FIRSTNAME = "";
-//    public static final String VALID_USERFIRSTNAME_LENGTH
-//    public static final String VALID_USER_LASTNAME
-//    public static final String VALID_USER_LASTNAME_LENGTH
-//    public static final String VALID_USER_EMAIL
-//    public static final String VALID_USER_PHONE
-//    public static final String VALID_STREET_NAME
+    public static final String VALID_USER_EXIST_ALREADY = "validation.user.exist";
+    public static final String VALID_USER_USERNAME ="";
+    public static final String VALID_USER_USERNAME_LENGTH = "";
+    public static final String VALID_USER_PASSWORD = "";
+    public static final String VALID_USER_FIRSTNAME = "";
+    public static final String VALID_USERFIRSTNAME_LENGTH = "";
+    public static final String VALID_USER_LASTNAME = "";
+    public static final String VALID_USER_LASTNAME_LENGTH= "";
+    public static final String VALID_USER_EMAIL= "";
+    public static final String VALID_USER_PHONE= "";
+    public static final String VALID_STREET_NAME= "";
 //
-//    public static final String VALID_ZIP
-//    public static final String VALID_CITY
-//    public static final String VALID_USER_PASSWORD_REGEX
-//    public static final String VALID_USER_PASSWORD_CONFIRM
+    public static final String VALID_ZIP= "";
+    public static final String VALID_CITY= "";
+    public static final String VALID_USER_PASSWORD_REGEX= "";
+    public static final String VALID_USER_PASSWORD_CONFIRM= "";
 
 
 //    // FILM
