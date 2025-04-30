@@ -14,6 +14,12 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
+
+/**
+ * @author TeamSkyjo
+ * @version 1.0
+ * Class to connect the database to the Bid class
+ */
 @Repository
 public class BidDAOImpl implements BidDAO {
 
