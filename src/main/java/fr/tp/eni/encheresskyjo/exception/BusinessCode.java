@@ -18,5 +18,12 @@ public class BusinessCode {
     public static final String VALID_ARTICLE_STARTDATE_BEFORE = "validation.article.startdate.before";
     public static final String VALID_ARTICLE_ENDDATE_NULL = "validation.article.enddate.null";
     public static final String VALID_ARTICLE_ENDDATE_BEFORE = "validation.article.enddate.before";
+    public static final String VALID_ARTICLE_CATEGORY_NULL = "validation.article.category.null";
+    public static final String VALID_ARTICLE_CATEGORY_UNKNOWN_ID = "validation.article.category.unknown.id";
+    public static final String VALID_ARTICLE_STARTINGPRICE_MIN = "validation.article.startingprice.min";
+    public static final String VALID_ARTICLE_IMAGEURL_PATTERN = "validation.article.imageurl.pattern";
+    public static final String VALID_ARTICLE_PICKUP_NULL = "validation.article.pickup.null";
+    public static final String VALID_ARTICLE_PICKUP_UNKNOWN_ARTICLE_ID = "validation.article.pickup.unknown.article.id";
+    public static final String VALID_ARTICLE_UNIQUE = "validation.article.unique";
 
 }

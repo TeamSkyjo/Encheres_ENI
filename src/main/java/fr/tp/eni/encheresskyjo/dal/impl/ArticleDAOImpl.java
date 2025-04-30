@@ -4,6 +4,7 @@ import fr.tp.eni.encheresskyjo.bo.Article;
 import fr.tp.eni.encheresskyjo.bo.Category;
 import fr.tp.eni.encheresskyjo.bo.User;
 import fr.tp.eni.encheresskyjo.dal.ArticleDAO;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -67,19 +68,23 @@ public class ArticleDAOImpl implements ArticleDAO {
     // sans le sellingPrice
     private static final String UPDATE =
             "UPDATE ARTICLES \n" +
-            "SET nom_article = :nom_article," +
-                "description = :description, " +
-                "date_debut_encheres = :date_debut_encheres, " +
-                "date_fin_encheres = :date_fin_encheres, " +
-                "prix_initial = :prix_initial, " +
-                "prix_vente = :prix_vente, \n" +
-                "url_image = :url_image " +
-            "WHERE no_article = :no_article";
+                    "SET nom_article = :nom_article," +
+                    "description = :description, " +
+                    "date_debut_encheres = :date_debut_encheres, " +
+                    "date_fin_encheres = :date_fin_encheres, " +
+                    "prix_initial = :prix_initial, " +
+                    "prix_vente = :prix_vente, \n" +
+                    "url_image = :url_image " +
+                    "WHERE no_article = :no_article";
 
 
     private static final String DELETE =
             "DELETE FROM ARTICLES \n" +
-            "WHERE no_article = :no_article";
+                    "WHERE no_article = :no_article";
+
+    private static final String READ_BY_NAME_USER_ID =
+            "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.url_image, u.no_utilisateur, u.pseudo AS username, c.no_categorie, c.libelle FROM ARTICLES a INNER JOIN UTILISATEURS u ON a.no_utilisateur = u.no_utilisateur INNER JOIN CATEGORIES c ON a.no_categorie = c.no_categorie WHERE a.no_utilisateur = :userId AND a.nom_article = :articleName;";
+
 
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -94,8 +99,8 @@ public class ArticleDAOImpl implements ArticleDAO {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("nom_article", article.getArticleName());
         mapSqlParameterSource.addValue("description", article.getDescription());
-        mapSqlParameterSource.addValue("date_debut_encheres", article.getBidStartDate());
-        mapSqlParameterSource.addValue("date_fin_encheres", article.getBidEndDate());
+        mapSqlParameterSource.addValue("date_debut_encheres", article.getStartDate());
+        mapSqlParameterSource.addValue("date_fin_encheres", article.getEndDate());
         mapSqlParameterSource.addValue("prix_initial", article.getStartingPrice());
         mapSqlParameterSource.addValue("prix_vente", article.getSellingPrice());
         mapSqlParameterSource.addValue("url_image", article.getImageUrl());
@@ -113,7 +118,6 @@ public class ArticleDAOImpl implements ArticleDAO {
 
         article.setArticleId(keyHolder.getKey().intValue());
     }
-
 
 
     @Override
@@ -163,8 +167,8 @@ public class ArticleDAOImpl implements ArticleDAO {
         mapSqlParameterSource.addValue("no_article", article.getArticleId());
         mapSqlParameterSource.addValue("nom_article", article.getArticleName());
         mapSqlParameterSource.addValue("description", article.getDescription());
-        mapSqlParameterSource.addValue("date_debut_encheres", article.getBidStartDate());
-        mapSqlParameterSource.addValue("date_fin_encheres", article.getBidEndDate());
+        mapSqlParameterSource.addValue("date_debut_encheres", article.getStartDate());
+        mapSqlParameterSource.addValue("date_fin_encheres", article.getEndDate());
         mapSqlParameterSource.addValue("prix_initial", article.getStartingPrice());
         mapSqlParameterSource.addValue("prix_vente", article.getSellingPrice());
         mapSqlParameterSource.addValue("url_image", article.getImageUrl());
@@ -172,8 +176,6 @@ public class ArticleDAOImpl implements ArticleDAO {
         namedParameterJdbcTemplate.update(UPDATE, mapSqlParameterSource);
 
     }
-
-
 
     @Override
     public void delete(int articleId) {
@@ -184,39 +186,46 @@ public class ArticleDAOImpl implements ArticleDAO {
 
     }
 
+    @Override
+    public boolean isArticleUnique(Article article) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("userId", article.getSeller().getUserId());
+        mapSqlParameterSource.addValue("articleName", article.getArticleName());
 
+        List<Article> articles = namedParameterJdbcTemplate.query(
+                READ_BY_NAME_USER_ID,
+                mapSqlParameterSource,
+                new ArticleRowMapper()
+        );
 
+        return articles.isEmpty();
+    }
+}
 
+class ArticleRowMapper implements RowMapper<Article> {
 
+    @Override
+    public Article mapRow(ResultSet rs, int rowNum) throws SQLException {
+        Article article = new Article();
+        article.setArticleId(rs.getInt("no_article"));
+        article.setArticleName(rs.getString("nom_article"));
+        article.setDescription(rs.getString("description"));
+        article.setStartDate(rs.getDate("date_debut_encheres").toLocalDate());
+        article.setEndDate(rs.getDate("date_fin_encheres").toLocalDate());
+        article.setStartingPrice(rs.getInt("prix_initial"));
+        article.setSellingPrice(rs.getInt("prix_vente"));
+        article.setImageUrl(rs.getString("url_image"));
 
+        User seller = new User();
+        seller.setUserId(rs.getInt("no_utilisateur"));
+        seller.setUsername(rs.getString("username"));
+        article.setSeller(seller);
 
+        Category category = new Category();
+        category.setCategoryId(rs.getInt("no_categorie"));
+        category.setLabel(rs.getString("libelle"));
+        article.setCategory(category);
 
-
-    class ArticleRowMapper implements RowMapper<Article> {
-
-        @Override
-        public Article mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Article article = new Article();
-            article.setArticleId(rs.getInt("no_article"));
-            article.setArticleName(rs.getString("nom_article"));
-            article.setDescription(rs.getString("description"));
-            article.setBidStartDate(rs.getDate("date_debut_encheres").toLocalDate());
-            article.setBidEndDate(rs.getDate("date_fin_encheres").toLocalDate());
-            article.setStartingPrice(rs.getInt("prix_initial"));
-            article.setSellingPrice(rs.getInt("prix_vente"));
-            article.setImageUrl(rs.getString("url_image"));
-
-            User seller = new User();
-            seller.setUserId(rs.getInt("no_utilisateur"));
-            seller.setUsername(rs.getString("username"));
-            article.setSeller(seller);
-
-            Category category = new Category();
-            category.setCategoryId(rs.getInt("no_categorie"));
-            category.setLabel(rs.getString("libelle"));
-            article.setCategory(category);
-
-            return article;
-        }
+        return article;
     }
 }

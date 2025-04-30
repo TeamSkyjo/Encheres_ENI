@@ -21,8 +21,8 @@ public class TestArticleDAO {
         Article article = new Article();
         article.setArticleName("Ordinateur portable");
         article.setDescription("Lenovo i15");
-        article.setBidStartDate(LocalDate.now());
-        article.setBidEndDate(LocalDate.now().plusDays(7));
+        article.setStartDate(LocalDate.now());
+        article.setEndDate(LocalDate.now().plusDays(7));
         article.setStartingPrice(1300);
         article.setSellingPrice(1300);
 
@@ -88,5 +88,26 @@ public class TestArticleDAO {
     public void test_delete() {
         articleDAO.delete(7);
         articleDAO.readAll().forEach(System.out::println);
+    }
+
+    @Test
+    public void test_isArticleUnique() {
+        Article article = new Article();
+        article.setArticleName("Ordinateur portable");
+        article.setDescription("Lenovo i15");
+        article.setStartDate(LocalDate.now());
+        article.setEndDate(LocalDate.now().plusDays(7));
+        article.setStartingPrice(1300);
+        article.setSellingPrice(1300);
+
+        User user = new User();
+        user.setUserId(1);
+        article.setSeller(user);
+
+        Category category = new Category();
+        category.setCategoryId(1);
+        article.setCategory(category);
+
+        System.out.println(articleDAO.isArticleUnique(article));
     }
 }
