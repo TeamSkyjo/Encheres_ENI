@@ -9,5 +9,5 @@ public interface CategoryDAO {
     List<Category> readAll();
     Category read(int categoryId);
     void delete(int categoryId);
-    void update(Category category, String label);
+    void update(Category category);
 }
