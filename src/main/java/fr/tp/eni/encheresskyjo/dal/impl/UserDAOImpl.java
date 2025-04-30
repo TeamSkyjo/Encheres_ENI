@@ -9,20 +9,23 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+/**
+ * @Author TeamSkyjo
+ * @Version 1.0
+ * Class to connect the database to the "User" object.
+ */
 
 @Repository
 public class UserDAOImpl implements UserDAO {
 
     //DEPENDENCIES INJECTION
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private JdbcTemplate jdbcTemplate;
-
-    public UserDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
+    public UserDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-        this.jdbcTemplate = jdbcTemplate;
+
     }
 
     //SQL REQUESTS
@@ -32,15 +35,15 @@ public class UserDAOImpl implements UserDAO {
     private static final String SELECT_BY_EMAIL = "SELECT * FROM UTILISATEURS WHERE email = :email;";
     private static final String UPDATE_USER = "UPDATE UTILISATEURS SET pseudo = :pseudo, nom = :nom, prenom=:prenom, email=:email, telephone = :telephone, rue=:rue, code_postal=:code_postal, ville=:ville, mot_de_passe=:mot_de_passe, credit= :credit, administrateur=:administrateur\n" +
             "WHERE no_utilisateur = :no_utilisateur;";
-
+    private static final String UPDATE_PASSWORD = "UPDATE UTILISATEURS SET mot_de_passe=:mot_de_passe WHERE email=:email;";
+    private static final String DELETE = "DELETE FROM UTILISATEURS WHERE no_utilisateur=:no_utilisateur;";
 
     //IMPLEMENTATION
+
     /**
-     Method to creat a user in the database
-    @Author TeamSkyjo
-    @Version 1.0
-     NB : The database is french, some of the code will be written in french
-     **/
+     * Method to create a new user in the database.
+     * @param user
+     */
     @Override
     public void create(User user) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -67,6 +70,11 @@ public class UserDAOImpl implements UserDAO {
         user.setUserId(keyHolder.getKey().intValue());
     }
 
+    /**
+     * Method to search for a user in database from an id
+     * @param userId
+     * @return User
+     */
     @Override
     public User readById(int userId) {
 
@@ -79,7 +87,11 @@ public class UserDAOImpl implements UserDAO {
         );
         return user;
     }
-
+    /**
+     * Method to search for a user in database from a username
+     * @param username
+     * @return User
+     */
     @Override
     public User readByUsername(String username) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource("pseudo", username);
@@ -92,6 +104,11 @@ public class UserDAOImpl implements UserDAO {
         return user;
     }
 
+    /**
+     * Method to search for a user in database from an email
+     * @param email
+     * @return User
+     */
     @Override
     public User readByEmail(String email) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource("email", email);
@@ -104,6 +121,10 @@ public class UserDAOImpl implements UserDAO {
         return user;
     }
 
+    /**
+     * Method to update fields from a user, except id.
+     * @param user
+     */
     @Override
     public void updateAll(User user) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -126,9 +147,13 @@ public class UserDAOImpl implements UserDAO {
         );
     }
 
+    /**
+     * Method to update the password from e-mail
+     * @param email
+     * @param newPassword
+     */
     @Override
     public void updatePassword(String email, String newPassword) {
-        String UPDATE_PASSWORD = "UPDATE UTILISATEURS SET mot_de_passe=:mot_de_passe WHERE email=:email;";
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("email", email);
         mapSqlParameterSource.addValue("mot_de_passe", newPassword);
@@ -138,17 +163,26 @@ public class UserDAOImpl implements UserDAO {
         );
     }
 
-    @Override
-    public void updateCredit(int userId, int newCredit) {
-
-    }
-
+    /**
+     * Method to delete a user in the database.
+     * @param userId
+     */
     @Override
     public void delete(int userId) {
-
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("no_utilisateur", userId);
+        namedParameterJdbcTemplate.update(
+                DELETE,
+                mapSqlParameterSource
+        );
     }
 }
 
+/**
+ * @Author TeamSkyjo
+ * @Version 1.0
+ * Class to RowMap Users from the database (in french) to User object.
+ */
 class UserRowMapper implements RowMapper<User> {
 
     @Override

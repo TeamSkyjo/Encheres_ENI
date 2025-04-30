@@ -8,6 +8,13 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.sql.SQLOutput;
 
+/**
+ * @Author TeamSkyjo
+ * @Version 1.0
+ * Class to test all the request for Users in the database.
+ * For Version 1.0 : everything is working locally.
+ */
+
 @SpringBootTest
 public class TestUserDAO {
 
@@ -52,6 +59,11 @@ public class TestUserDAO {
     @Test
     public void test_updatePassword() {
         userDAO.updatePassword("laety@vrd.fr", "nouveaumotdepassedetest");
+    }
+
+    @Test
+    public void test_delete(){
+        userDAO.delete(10);
     }
 
 }

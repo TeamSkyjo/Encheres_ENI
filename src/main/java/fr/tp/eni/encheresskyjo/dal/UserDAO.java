@@ -14,6 +14,5 @@ public interface UserDAO {
     User readByEmail(String email);
     void updateAll(User user);
     void updatePassword(String email, String newPassword);
-    void updateCredit (int userId, int newCredit);
     void delete(int userId);
 }
