@@ -1,20 +1,28 @@
 USE Projet_Encheres;
 GO
 
--- supprimer les données ajoutées lors des tests
-DELETE FROM CATEGORIES WHERE no_categorie > 4;
+SELECT * FROM ARTICLES;
 
--- private static final String SELECT_ALL = "SELECT no_categorie, libelle FROM CATEGORIES;";
-SELECT no_categorie, libelle FROM CATEGORIES;
+SELECT nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, url_image, u.pseudo, c.libelle
+FROM ARTICLES a
+INNER JOIN UTILISATEURS u ON a.no_utilisateur = u.no_utilisateur
+INNER JOIN CATEGORIES c ON a.no_categorie = c.no_categorie;
 
--- private static final String SELECT_BY_ID = "SELECT no_categorie, libelle FROM CATEGORIES WHERE no_categorie = :categoryId;";
-SELECT no_categorie, libelle FROM CATEGORIES WHERE no_categorie = 3;
 
--- private static final String INSERT = "INSERT INTO CATEGORIES VALUES (:label);";
-INSERT INTO CATEGORIES VALUES ('Voitures');
+--Update article
+UPDATE ARTICLES
+SET prix_vente = 200
+WHERE no_article = 4;
+SELECT * FROM ARTICLES WHERE no_article = 4;
 
--- private static final String UPDATE = "UPDATE CATEGORIES SET libelle = :label WHERE no_categorie = :categoryId;";
-UPDATE CATEGORIES SET libelle = 'Véhicules' WHERE no_categorie = 10;
+SELECT nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, url_image, u.pseudo, c.libelle
+FROM ARTICLES a
+INNER JOIN UTILISATEURS u ON a.no_utilisateur = u.no_utilisateur
+INNER JOIN CATEGORIES c ON a.no_categorie = c.no_categorie
+WHERE a.nom_article LIKE '%Ordinateur%';
 
--- private static final String DELETE = "DELETE FROM CATEGORIES WHERE no_categorie = :categoryId;";
-DELETE FROM CATEGORIES WHERE no_categorie = 8;
+DELETE FROM ARTICLES
+WHERE no_article = 6;
+SELECT * FROM ARTICLES;
+
+SELECT * FROM CATEGORIES;

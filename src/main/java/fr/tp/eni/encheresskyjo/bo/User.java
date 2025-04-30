@@ -14,13 +14,14 @@ public class User {
     private String zip;
     private String city;
     private String password;
+    private String passwordConfirm;
     private int credit;
     private boolean admin;
 
     public User() {
     }
 
-    public User(String username, String lastName, String firstName, String email, String telephone, String street, String zip, String city, String password, int credit, boolean admin) {
+    public User(String username, String lastName, String firstName, String email, String telephone, String street, String zip, String city, String password, String passwordConfirm, int credit, boolean admin) {
         this.username = username;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -30,11 +31,12 @@ public class User {
         this.zip = zip;
         this.city = city;
         this.password = password;
+        this.passwordConfirm = passwordConfirm;
         this.credit = credit;
         this.admin = admin;
     }
 
-    public User(int userId, String username, String lastName, String firstName, String email, String telephone, String street, String zip, String city, String password, int credit, boolean admin) {
+    public User(int userId, String username, String lastName, String firstName, String email, String telephone, String street, String zip, String city, String password, String passwordConfirm, int credit, boolean admin) {
         this.userId = userId;
         this.username = username;
         this.lastName = lastName;
@@ -45,6 +47,7 @@ public class User {
         this.zip = zip;
         this.city = city;
         this.password = password;
+        this.passwordConfirm = passwordConfirm;
         this.credit = credit;
         this.admin = admin;
     }
@@ -127,6 +130,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
     }
 
     public int getCredit() {
