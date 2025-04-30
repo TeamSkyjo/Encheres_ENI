@@ -32,6 +32,12 @@ INSERT INTO UTILISATEURS (no_utilisateur, pseudo, nom, prenom, email, telephone,
 (4, 'admin', 'Admin', 'Super', 'admin@site.com', '0600000000', '1 rue de l''Admin', '99999', 'Webtown', 
  '$2a$10$eEbzZpW94b5LqWZL2iHpiONOCgujj2crhTmwT1zAFmZYzLbwK3mx6', 9999, 1);
 
+--Mots de passe : 
+--techguy	pass123	$2a$10$kHbAVAt47pD.9mFChqZ1jOS3Cu9csyhKUk.ZqxShspqVEIQntFtfa
+--meublequeen	secret	$2a$10$7VqBS8C0D1pR14zEV0cC4OExzDqS.5IdgoF1g8hSpIbEM4FhdwIyu
+--sporty	foot2024	$2a$10$HQrl0N0d9ktUkZC7v0X.ZOivvVDViQrHQGLZGuGb6I/NXko2bFVo2
+--admin	adminpass	$2a$10$eEbzZpW94b5LqWZL2iHpiONOCgujj2crhTmwT1zAFmZYzLbwK3mx6
+
 SET IDENTITY_INSERT UTILISATEURS OFF;
 
 -- Insertion des articles
@@ -59,4 +65,4 @@ INSERT INTO ENCHERES (no_utilisateur, no_article, date_enchere, montant_enchere)
 (2, 3, DATEADD(DAY,-2,GETDATE()), 260),
 (1, 4, DATEADD(DAY,-3,GETDATE()), 150);
 
-SELECT * FROM ARTICLES INNER JOIN ENCHERES ON ARTICLES.no_article = ENCHERES.no_article
+SELECT * FROM ARTICLES INNER JOIN ENCHERES ON ARTICLES.no_article = ENCHERES.no_article;
