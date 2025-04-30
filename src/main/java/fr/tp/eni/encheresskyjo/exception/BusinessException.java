@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BusinessException extends RuntimeException {
-
     private List<String> keys = new ArrayList<>();
 
-    public BusinessException() {}
+    public BusinessException() {
+    }
 
     public void addKey(String key) {
         keys.add(key);
@@ -16,5 +16,4 @@ public class BusinessException extends RuntimeException {
     public List<String> getKeys() {
         return keys;
     }
-
 }

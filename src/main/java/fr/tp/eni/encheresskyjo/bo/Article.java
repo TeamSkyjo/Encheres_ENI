@@ -7,8 +7,8 @@ public class Article {
     private int articleId;
     private String articleName;
     private String description;
-    private LocalDate bidStartDate;
-    private LocalDate bidEndDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private int startingPrice;
     private int sellingPrice;
     private String status;
@@ -21,23 +21,23 @@ public class Article {
     public Article() {
     }
 
-    public Article(String articleName, String description, LocalDate bidStartDate, LocalDate bidEndDate, int startingPrice, int sellingPrice, String status, String imageUrl) {
+    public Article(String articleName, String description, LocalDate startDate, LocalDate endDate, int startingPrice, int sellingPrice, String status, String imageUrl) {
         this.articleName = articleName;
         this.description = description;
-        this.bidStartDate = bidStartDate;
-        this.bidEndDate = bidEndDate;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.startingPrice = startingPrice;
         this.sellingPrice = sellingPrice;
         this.status = status;
         this.imageUrl = imageUrl;
     }
 
-    public Article(int articleId, String articleName, String description, LocalDate bidStartDate, LocalDate bidEndDate, int startingPrice, int sellingPrice, String status, String imageUrl) {
+    public Article(int articleId, String articleName, String description, LocalDate startDate, LocalDate endDate, int startingPrice, int sellingPrice, String status, String imageUrl) {
         this.articleId = articleId;
         this.articleName = articleName;
         this.description = description;
-        this.bidStartDate = bidStartDate;
-        this.bidEndDate = bidEndDate;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.startingPrice = startingPrice;
         this.sellingPrice = sellingPrice;
         this.status = status;
@@ -68,20 +68,20 @@ public class Article {
         this.description = description;
     }
 
-    public LocalDate getBidStartDate() {
-        return bidStartDate;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setBidStartDate(LocalDate bidStartDate) {
-        this.bidStartDate = bidStartDate;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
-    public LocalDate getBidEndDate() {
-        return bidEndDate;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setBidEndDate(LocalDate bidEndDate) {
-        this.bidEndDate = bidEndDate;
+    public void setEndDate(LocalDate bidEndDate) {
+        this.endDate = endDate;
     }
 
     public int getStartingPrice() {
@@ -146,8 +146,8 @@ public class Article {
         sb.append("articleId=").append(articleId);
         sb.append(", articleName='").append(articleName).append('\'');
         sb.append(", description='").append(description).append('\'');
-        sb.append(", bidStartDate=").append(bidStartDate);
-        sb.append(", bidEndDate=").append(bidEndDate);
+        sb.append(", bidStartDate=").append(startDate);
+        sb.append(", bidEndDate=").append(endDate);
         sb.append(", startingPrice=").append(startingPrice);
         sb.append(", sellingPrice=").append(sellingPrice);
         sb.append(", status='").append(status).append('\'');
