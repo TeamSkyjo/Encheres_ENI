@@ -94,8 +94,8 @@ public class ArticleDAOImpl implements ArticleDAO {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("nom_article", article.getArticleName());
         mapSqlParameterSource.addValue("description", article.getDescription());
-        mapSqlParameterSource.addValue("date_debut_encheres", article.getBidStartDate());
-        mapSqlParameterSource.addValue("date_fin_encheres", article.getBidEndDate());
+        mapSqlParameterSource.addValue("date_debut_encheres", article.getStartDate());
+        mapSqlParameterSource.addValue("date_fin_encheres", article.getEndDate());
         mapSqlParameterSource.addValue("prix_initial", article.getStartingPrice());
         mapSqlParameterSource.addValue("prix_vente", article.getSellingPrice());
         mapSqlParameterSource.addValue("url_image", article.getImageUrl());
@@ -163,8 +163,8 @@ public class ArticleDAOImpl implements ArticleDAO {
         mapSqlParameterSource.addValue("no_article", article.getArticleId());
         mapSqlParameterSource.addValue("nom_article", article.getArticleName());
         mapSqlParameterSource.addValue("description", article.getDescription());
-        mapSqlParameterSource.addValue("date_debut_encheres", article.getBidStartDate());
-        mapSqlParameterSource.addValue("date_fin_encheres", article.getBidEndDate());
+        mapSqlParameterSource.addValue("date_debut_encheres", article.getStartDate());
+        mapSqlParameterSource.addValue("date_fin_encheres", article.getEndDate());
         mapSqlParameterSource.addValue("prix_initial", article.getStartingPrice());
         mapSqlParameterSource.addValue("prix_vente", article.getSellingPrice());
         mapSqlParameterSource.addValue("url_image", article.getImageUrl());
@@ -184,39 +184,32 @@ public class ArticleDAOImpl implements ArticleDAO {
 
     }
 
+}
 
+class ArticleRowMapper implements RowMapper<Article> {
 
+    @Override
+    public Article mapRow(ResultSet rs, int rowNum) throws SQLException {
+        Article article = new Article();
+        article.setArticleId(rs.getInt("no_article"));
+        article.setArticleName(rs.getString("nom_article"));
+        article.setDescription(rs.getString("description"));
+        article.setStartDate(rs.getDate("date_debut_encheres").toLocalDate());
+        article.setEndDate(rs.getDate("date_fin_encheres").toLocalDate());
+        article.setStartingPrice(rs.getInt("prix_initial"));
+        article.setSellingPrice(rs.getInt("prix_vente"));
+        article.setImageUrl(rs.getString("url_image"));
 
+        User seller = new User();
+        seller.setUserId(rs.getInt("no_utilisateur"));
+        seller.setUsername(rs.getString("username"));
+        article.setSeller(seller);
 
+        Category category = new Category();
+        category.setCategoryId(rs.getInt("no_categorie"));
+        category.setLabel(rs.getString("libelle"));
+        article.setCategory(category);
 
-
-
-
-    class ArticleRowMapper implements RowMapper<Article> {
-
-        @Override
-        public Article mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Article article = new Article();
-            article.setArticleId(rs.getInt("no_article"));
-            article.setArticleName(rs.getString("nom_article"));
-            article.setDescription(rs.getString("description"));
-            article.setBidStartDate(rs.getDate("date_debut_encheres").toLocalDate());
-            article.setBidEndDate(rs.getDate("date_fin_encheres").toLocalDate());
-            article.setStartingPrice(rs.getInt("prix_initial"));
-            article.setSellingPrice(rs.getInt("prix_vente"));
-            article.setImageUrl(rs.getString("url_image"));
-
-            User seller = new User();
-            seller.setUserId(rs.getInt("no_utilisateur"));
-            seller.setUsername(rs.getString("username"));
-            article.setSeller(seller);
-
-            Category category = new Category();
-            category.setCategoryId(rs.getInt("no_categorie"));
-            category.setLabel(rs.getString("libelle"));
-            article.setCategory(category);
-
-            return article;
-        }
+        return article;
     }
 }

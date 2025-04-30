@@ -31,7 +31,7 @@
         <img data-th-src="@{(${article.imageUrl})}" alt="image de l'article à vendre">
         <h4 data-th-text = "${article.articleName}">Titre </h4>
         <p data-th-text = "'Meilleure offre : ' + ${article.sellingPrice}">Prix : </p>
-        <p data-th-text = "'Date de fin : ' + ${article.bidEndDate}"></p>
+        <p data-th-text = "'Date de fin : ' + ${article.endDate}"></p>
         <p data-th-text = "'Vendeur : ' + ${article.seller.username}"></p>
 
       </div>
