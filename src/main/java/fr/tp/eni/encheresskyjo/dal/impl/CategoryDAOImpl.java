@@ -84,17 +84,15 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     @Override
-    public void update(Category category, String label) {
+    public void update(Category category) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("label", label);
+        mapSqlParameterSource.addValue("label", category.getLabel());
         mapSqlParameterSource.addValue("categoryId", category.getCategoryId());
 
         namedParameterJdbcTemplate.update(
                 UPDATE,
                 mapSqlParameterSource
         );
-
-        category.setLabel(label);
     }
 }
 

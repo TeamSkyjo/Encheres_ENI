@@ -37,8 +37,9 @@ public class TestCategoryDAO {
     @Test
     public void test_update() {
         Category category = new Category();
-        category = categoryDAO.read(8);
-        categoryDAO.update(category, "Animaux");
+        category = categoryDAO.read(10);
+        category.setLabel("Blablabla");
+        categoryDAO.update(category);
         System.out.println(category);
     }
 
