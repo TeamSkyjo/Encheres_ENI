@@ -19,8 +19,5 @@ public interface ArticleDAO {
 
     void delete(int articleId);
 
-
-
-
-
+    boolean isArticleUnique(Article article);
 }

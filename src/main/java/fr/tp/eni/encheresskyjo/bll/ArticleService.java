@@ -6,8 +6,7 @@ import fr.tp.eni.encheresskyjo.bo.Category;
 import java.util.List;
 
 public interface ArticleService {
-    void saveArticle(Article article);
+    void createArticle(Article article);
     List<Article> getArticles();
-    List<Article> GetFilteredArticles(String pattern, Category category);
-
+    List<Article> getFilteredArticles(String pattern, Category category);
 }

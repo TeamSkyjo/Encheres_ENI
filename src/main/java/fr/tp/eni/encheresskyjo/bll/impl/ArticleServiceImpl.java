@@ -4,19 +4,14 @@ import fr.tp.eni.encheresskyjo.bll.ArticleService;
 import fr.tp.eni.encheresskyjo.bo.Article;
 import fr.tp.eni.encheresskyjo.bo.Category;
 import fr.tp.eni.encheresskyjo.bo.Pickup;
-import fr.tp.eni.encheresskyjo.bo.User;
-import fr.tp.eni.encheresskyjo.bo.Category;
 import fr.tp.eni.encheresskyjo.dal.*;
 import fr.tp.eni.encheresskyjo.exception.BusinessCode;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -24,6 +19,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  * Class to secure the connection between the data & user for the Articles.
  */
+// TODO : test all three methods in TestArticleService
 @Service
 public class ArticleServiceImpl implements ArticleService {
 
@@ -43,25 +39,23 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    @Transactional
-    public void saveArticle(Article article) {
+    public void createArticle(Article article) {
         boolean isValid = true;
         BusinessException businessException = new BusinessException();
 
         isValid = isNameValid(article.getArticleName(), businessException);
         isValid &= isDescriptionValid(article.getDescription(), businessException);
         isValid &= areDatesValid(article.getStartDate(), article.getEndDate(), businessException);
-//        isValid &= isStartingPriceValid(article.getStartingPrice(), businessException);
-//        isValid &= isImageUrlValid(article.getImageUrl(), businessException);
-//        isValid &= isCategoryValid(article.getCategory(), businessException);
-//        isValid &= isPickupValid(article.getPickup(), businessException);
+        isValid &= isStartingPriceValid(article.getStartingPrice(), businessException);
+        isValid &= isImageUrlValid(article.getImageUrl(), businessException);
+        isValid &= isCategoryValid(article.getCategory(), businessException);
+        isValid &= isPickupValid(article.getPickup(), businessException);
         // Méthode à mettre en fin pour des raisons de sécurité
         // Il y a un appel en BDD donc on vérifie les champs avant
-//        isValid &= isArticleValid(article, businessException);
+        isValid &= isArticleUnique(article, businessException);
 
         if (isValid) {
             this.articleDAO.create(article);
-            this.pickupDAO.create(article.getPickup());
         } else {
             businessException.addKey(BusinessCode.VALID_ARTICLE);
             throw businessException;
@@ -75,10 +69,8 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> GetFilteredArticles(String pattern, Category category)
-            //throws BusinessException
-    {
-        //BusinessException businessException = new BusinessException();
+    public List<Article> getFilteredArticles(String pattern, Category category) {
+        BusinessException businessException = new BusinessException();
         List<Article> filteredArticles = new ArrayList<>();
         if (category == null) {
             if (pattern == null || pattern.isEmpty()) {
@@ -90,10 +82,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
         else {
             boolean isValid = true ;
-            isValid = isCategoryValid(category
-                    //,
-                    //businessException
-                    );
+            isValid = isCategoryValid(category,businessException);
 
             if (pattern == null || pattern.isEmpty()) {
                 filteredArticles = articleDAO.readByCategory(category.getLabel());
@@ -107,22 +96,19 @@ public class ArticleServiceImpl implements ArticleService {
         return filteredArticles;
     }
 
-    private boolean isCategoryValid(Category category
-                                    //,
-                                    //BusinessException businessException
-    ) {
+    private boolean isCategoryValid(Category category, BusinessException businessException) {
         boolean isValid = true;
         //Category == null not useful for GetFilteredArticles
         if (category == null) {
             isValid = false;
-            //BusinessException.addMessage(BusinessCode.CATEGORY_NULL);
+            businessException.addKey(BusinessCode.VALID_ARTICLE_CATEGORY_NULL);
         }
         else {
             try {
                 categoryDAO.read(category.getCategoryId());
             } catch ( RuntimeException e) {
                 isValid = false;
-                //BusinessException.addMessage(BusinessCode.CATEGORY_UNKNOWN_ID);
+                businessException.addKey(BusinessCode.VALID_ARTICLE_CATEGORY_UNKNOWN_ID);
             }
         }
         return isValid;
@@ -192,4 +178,58 @@ public class ArticleServiceImpl implements ArticleService {
 
         return isValid;
     }
+
+    private boolean isStartingPriceValid(int startingPrice, BusinessException businessException) {
+        boolean isValid = true;
+
+        if (startingPrice < 1) {
+            isValid = false;
+            businessException.addKey(BusinessCode.VALID_ARTICLE_STARTINGPRICE_MIN);
+        }
+
+        return isValid;
+    }
+
+    private boolean isImageUrlValid(String imageURL, BusinessException businessException) {
+        boolean isValid = true;
+
+        String URLValidationRegex = "https?:\\/\\/[^\\s\"]+\\.(?:jpe?g|png|gif)(?:\\?[^\\s\"]*)?\n";
+
+        if (!imageURL.isEmpty() && !imageURL.matches(URLValidationRegex)) {
+            isValid = false;
+            businessException.addKey(BusinessCode.VALID_ARTICLE_IMAGEURL_PATTERN);
+        }
+
+        return isValid;
+    }
+
+    private boolean isPickupValid(Pickup pickup, BusinessException businessException) {
+        boolean isValid = true;
+
+        if (pickup == null) {
+            isValid = false;
+            businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_NULL);
+        }
+        else {
+            try {
+                pickupDAO.read(pickup.getArticle().getArticleId());
+            } catch ( RuntimeException e) {
+                isValid = false;
+                businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_UNKNOWN_ARTICLE_ID);
+            }
+        }
+        return isValid;
+    }
+
+    private boolean isArticleUnique(Article article, BusinessException businessException) {
+        boolean isValid = articleDAO.isArticleUnique(article);
+
+        if (!isValid) {
+            businessException.addKey(BusinessCode.VALID_ARTICLE_UNIQUE);
+        }
+
+        return isValid;
+    }
+
+
 }
