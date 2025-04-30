@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @SpringBootTest
 public class TestArticleDAO {
@@ -16,21 +17,21 @@ public class TestArticleDAO {
     private ArticleDAO articleDAO;
 
     @Test
-    public void insertArticle() {
+    public void test_create() {
         Article article = new Article();
         article.setArticleName("Ordinateur portable");
-        article.setDescription("Lenovo i7");
+        article.setDescription("Lenovo i15");
         article.setBidStartDate(LocalDate.now());
         article.setBidEndDate(LocalDate.now().plusDays(7));
-        article.setStartingPrice(100);
-        article.setSellingPrice(150);
+        article.setStartingPrice(1300);
+        article.setSellingPrice(1300);
 
         User user = new User();
         user.setUserId(1);
         article.setSeller(user);
 
         Category category = new Category();
-        category.setCategoryId(2);
+        category.setCategoryId(1);
         article.setCategory(category);
 
         // Insertion
@@ -40,7 +41,52 @@ public class TestArticleDAO {
     }
 
     @Test
-    public void selectArticleById() {
+    public void test_readById() {
+        int articleId = 1;
+        // Ordi portable Lenovo
+        System.out.println(articleDAO.readByID(articleId));
 
+    }
+
+    @Test
+    public void test_readAll() {
+        List<Article> articles = articleDAO.readAll();
+
+        for (Article article : articles) {
+            System.out.println(article);
+        }
+    }
+
+    @Test
+    public void test_readByName() {
+        articleDAO.readByName("Ordinateur").forEach(System.out::println);
+
+    }
+
+    @Test
+    public void test_readByCategory() {
+        System.out.println(articleDAO.readByCategory("Ameublement"));
+
+    }
+
+    @Test
+    public void test_update() {
+        Article article = articleDAO.readByID(1);
+        System.out.println("Avant update : " + article);
+
+        article.setArticleName("nouveau nom");
+        article.setImageUrl("ours_url");
+        article.setSellingPrice(780);
+
+        articleDAO.update(article);
+
+        System.out.println("Après update : " + article);
+    }
+
+
+    @Test
+    public void test_delete() {
+        articleDAO.delete(7);
+        articleDAO.readAll().forEach(System.out::println);
     }
 }

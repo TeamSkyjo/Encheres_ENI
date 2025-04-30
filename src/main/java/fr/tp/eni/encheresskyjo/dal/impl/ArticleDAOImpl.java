@@ -15,21 +15,71 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ArticleDAOImpl implements ArticleDAO {
 
-    // sans url_image
     private static final String INSERT =
-            "INSERT INTO ARTICLES (nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, no_utilisateur, no_categorie) " +
-                    "VALUES (:nom_article, :description, :date_debut_encheres, :date_fin_encheres, :prix_initial, :prix_vente, :no_utilisateur, :no_categorie);";
+            "INSERT INTO ARTICLES (nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, url_image, no_utilisateur, no_categorie) " +
+                    "VALUES (:nom_article, :description, :date_debut_encheres, :date_fin_encheres, :prix_initial, :prix_vente, :url_image, :no_utilisateur, :no_categorie);";
 
-    private static final String SELECT_BY_ID =
-            "SELECT nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, url_image, u.pseudo, c.libelle\n" +
+    private static final String READ_BY_ID =
+            "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, \n" +
+                    "a.prix_initial, a.prix_vente, a.url_image, \n" +
+                    "u.no_utilisateur, u.pseudo AS username, \n" +
+                    "c.no_categorie, c.libelle \n" +
                     "FROM ARTICLES a\n" +
                     "INNER JOIN UTILISATEURS u ON a.no_utilisateur = u.no_utilisateur\n" +
                     "INNER JOIN CATEGORIES c ON a.no_categorie = c.no_categorie\n" +
                     "WHERE no_article = :no_article;";
+
+    private static final String READ_ALL =
+            "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, \n" +
+                    "a.prix_initial, a.prix_vente, a.url_image, \n" +
+                    "u.no_utilisateur, u.pseudo AS username, \n" +
+                    "c.no_categorie, c.libelle \n" +
+                    "FROM ARTICLES a\n" +
+                    "INNER JOIN UTILISATEURS u ON a.no_utilisateur = u.no_utilisateur\n" +
+                    "INNER JOIN CATEGORIES c ON a.no_categorie = c.no_categorie;";
+
+
+    private static final String READ_BY_NAME =
+            "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, \n" +
+                    "a.prix_initial, a.prix_vente, a.url_image, \n" +
+                    "u.no_utilisateur, u.pseudo AS username, \n" +
+                    "c.no_categorie, c.libelle \n" +
+                    "FROM ARTICLES a\n" +
+                    "INNER JOIN UTILISATEURS u ON a.no_utilisateur = u.no_utilisateur\n" +
+                    "INNER JOIN CATEGORIES c ON a.no_categorie = c.no_categorie\n" +
+                    "WHERE a.nom_article LIKE :pattern";
+
+    private static final String READ_BY_CATEGORY =
+            "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, \n" +
+                    "a.prix_initial, a.prix_vente, a.url_image, \n" +
+                    "u.no_utilisateur, u.pseudo AS username, \n" +
+                    "c.no_categorie, c.libelle \n" +
+                    "FROM ARTICLES a\n" +
+                    "INNER JOIN UTILISATEURS u ON a.no_utilisateur = u.no_utilisateur\n" +
+                    "INNER JOIN CATEGORIES c ON a.no_categorie = c.no_categorie\n" +
+                    "WHERE c.libelle LIKE :libelle";
+
+    // sans le sellingPrice
+    private static final String UPDATE =
+            "UPDATE ARTICLES \n" +
+            "SET nom_article = :nom_article," +
+                "description = :description, " +
+                "date_debut_encheres = :date_debut_encheres, " +
+                "date_fin_encheres = :date_fin_encheres, " +
+                "prix_initial = :prix_initial, " +
+                "prix_vente = :prix_vente, \n" +
+                "url_image = :url_image " +
+            "WHERE no_article = :no_article";
+
+
+    private static final String DELETE =
+            "DELETE FROM ARTICLES \n" +
+            "WHERE no_article = :no_article";
 
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -48,6 +98,7 @@ public class ArticleDAOImpl implements ArticleDAO {
         mapSqlParameterSource.addValue("date_fin_encheres", article.getBidEndDate());
         mapSqlParameterSource.addValue("prix_initial", article.getStartingPrice());
         mapSqlParameterSource.addValue("prix_vente", article.getSellingPrice());
+        mapSqlParameterSource.addValue("url_image", article.getImageUrl());
         mapSqlParameterSource.addValue("no_utilisateur", article.getSeller().getUserId());
         mapSqlParameterSource.addValue("no_categorie", article.getCategory().getCategoryId());
 
@@ -63,66 +114,82 @@ public class ArticleDAOImpl implements ArticleDAO {
         article.setArticleId(keyHolder.getKey().intValue());
     }
 
-    @Override
-    public void update(int articleId, Article article) {
 
-    }
 
     @Override
-    public Article read(int articleId) {
+    public Article readByID(int articleId) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("no_article", articleId);
 
 
         Article article = namedParameterJdbcTemplate.queryForObject(
-                SELECT_BY_ID,
+                READ_BY_ID,
                 mapSqlParameterSource,
                 new ArticleRowMapper()
         );
 
         return article;
-
     }
 
     @Override
     public List<Article> readAll() {
-        return List.of();
+        List<Article> articles = jdbcTemplate.query(READ_ALL, new ArticleRowMapper());
+        return articles;
     }
 
     @Override
-    public void delete() {
+    public List<Article> readByName(String pattern) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("pattern", "%" + pattern + "%");
 
+        List<Article> articles = namedParameterJdbcTemplate.query(READ_BY_NAME, mapSqlParameterSource, new ArticleRowMapper());
+        return articles;
     }
 
-    @Override
-    public void updateSellingPrice() {
-
-    }
 
     @Override
-    public void readSalesInProgress() {
+    public List<Article> readByCategory(String libelle) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("libelle", "%" + libelle + "%");
 
-    }
-
-    @Override
-    public void readWaitingSales() {
-
-    }
-
-    @Override
-    public void readEndedSales() {
+        List<Article> articles = namedParameterJdbcTemplate.query(READ_BY_CATEGORY, mapSqlParameterSource, new ArticleRowMapper());
+        return articles;
 
     }
 
     @Override
-    public void addImage() {
+    public void update(Article article) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("no_article", article.getArticleId());
+        mapSqlParameterSource.addValue("nom_article", article.getArticleName());
+        mapSqlParameterSource.addValue("description", article.getDescription());
+        mapSqlParameterSource.addValue("date_debut_encheres", article.getBidStartDate());
+        mapSqlParameterSource.addValue("date_fin_encheres", article.getBidEndDate());
+        mapSqlParameterSource.addValue("prix_initial", article.getStartingPrice());
+        mapSqlParameterSource.addValue("prix_vente", article.getSellingPrice());
+        mapSqlParameterSource.addValue("url_image", article.getImageUrl());
+
+        namedParameterJdbcTemplate.update(UPDATE, mapSqlParameterSource);
 
     }
+
+
 
     @Override
-    public void readByCategory() {
+    public void delete(int articleId) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("no_article", articleId);
+
+        namedParameterJdbcTemplate.update(DELETE, mapSqlParameterSource);
 
     }
+
+
+
+
+
+
+
 
 
     class ArticleRowMapper implements RowMapper<Article> {

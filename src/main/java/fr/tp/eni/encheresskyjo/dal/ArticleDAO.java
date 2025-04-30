@@ -9,17 +9,18 @@ public interface ArticleDAO {
 
     void create(Article article);
 
-    // pas nécessaire
-    void update(int articleId, Article article);
-
-    Article read(int articleId);
+    Article readByID(int articleId);
     List<Article> readAll();
 
-    void delete();
-    void updateSellingPrice();
-    void readSalesInProgress();
-    void readWaitingSales();
-    void readEndedSales();
-    void addImage();
-    void readByCategory();
+    List<Article> readByName(String pattern);
+    List<Article> readByCategory(String libelle);
+
+    void update(Article article);
+
+    void delete(int articleId);
+
+
+
+
+
 }
