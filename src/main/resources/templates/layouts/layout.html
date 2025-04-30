@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        data-th-fragment="layout(mainContent, cssContent, cssContent2, titleContent)"
+>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" data-th-href="@{images/logoENI.png}">
+  <title data-th-replace="${titleContent} ?: ~{}"></title>
+  <link rel="stylesheet" data-th-href="@{/css/general.css}">
+  <link rel="stylesheet" data-th-href="@{/css/layout.css}">
+  <link rel="stylesheet" href="#" data-th-replace="${cssContent} ?: ~{}">
+  <link rel="stylesheet" href="#" data-th-replace="${cssContent2} ?: ~{}">
+
+</head>
+<body>
+<header data-th-replace="~{fragments/fragment-header :: header}"></header>
+<main data-th-replace="${mainContent} ?: ~{}"></main>
+<footer data-th-replace="~{fragments/fragment-footer :: footer}"></footer>
+</body>
+</html>

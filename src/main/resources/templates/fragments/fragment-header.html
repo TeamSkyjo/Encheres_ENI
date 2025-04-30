@@ -1,0 +1,42 @@
+<header data-th-fragment="header">
+  <img data-th-src="@{/images/logoFilmotheque.png}" alt="Logo de la filmothèque" height="50px">
+  <div id="nav-title">
+    <div>
+      <a data-th-href="@{/?lang=fr}"><img data-th-src="@{/images/French.webp}" alt="French"></a>
+      <a data-th-href="@{/?lang=en}"><img data-th-src="@{/images/English.webp}" alt="English"></a>
+    </div>
+    <p >
+      <a data-th-href="@{/}">
+        Eni-Enchères
+      </a>
+<!--      <strong data-th-if="${membreSession != null && membreSession.id != 0}"-->
+<!--                  data-th-text="'[' + ${membreSession.prenom} + ']'">-->
+<!--      </strong>-->
+    </p>
+  </div>
+  <nav>
+    <ul>
+      <li>
+        <a data-th-href="@{/}">Enchères
+        </a>
+      </li>
+      <li>
+        <a data-th-href="@{/}">
+          Vendre un article
+        </a>
+      </li>
+      <li>
+<!--        data-th-if="${#authorization.expression('isAuthenticated')}"-->
+        <a data-th-href="@{/}">
+          Mon profil
+        </a>
+      </li>
+      <li>
+        <a data-th-href="@{/logout}">Déconnexion</a>
+      </li>
+      <li>
+        <a data-th-href="@{/login}">Se connecter / S'inscrire</a>
+      </li>
+    </ul>
+  </nav>
+</header>
