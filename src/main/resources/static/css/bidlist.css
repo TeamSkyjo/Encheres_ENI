@@ -1,0 +1,18 @@
+.bidlist {
+    display : flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding : 50px ;
+}
+
+.bidcards {
+    margin : 30px;
+    border: darkslategray;
+    border-radius: 5px;
+    max-width: 300px;
+}
+.bidcards>img {
+    width : 300px;
+    max-height: 300px;
+    margin-bottom: 15px;
+}

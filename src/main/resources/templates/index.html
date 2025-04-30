@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        data-th-replace="~{layouts/layout :: layout(
+                                                mainContent=~{:: main},
+                                                cssContent=~{},
+                                                cssContent2=~{:: link},
+                                                titleContent=~{:: title}
+                                            )}"
+>
+
+<title>Eni Enchères</title>
+<link rel="stylesheet" data-th-href="@{/css/bidlist.css}">
+
+<main class="center-main">
+  <section class="center-section">
+    <h1> Liste des enchères </h1>
+
+
+    <div>
+      <form action="">
+        <!-- todo: à terminer demain-->
+      </form>
+    </div>
+
+
+    <div class="bidlist">
+      <div data-th-each="article: ${articles}" class="bidcards">
+
+        <img data-th-src="@{(${article.imageUrl})}" alt="image de l'article à vendre">
+        <h4 data-th-text = "${article.articleName}">Titre </h4>
+        <p data-th-text = "'Meilleure offre : ' + ${article.sellingPrice}">Prix : </p>
+        <p data-th-text = "'Date de fin : ' + ${article.endDate}"></p>
+        <p data-th-text = "'Vendeur : ' + ${article.seller.username}"></p>
+
+      </div>
+
+    </div>
+
+
+  </section>
+</main>
+</html>
