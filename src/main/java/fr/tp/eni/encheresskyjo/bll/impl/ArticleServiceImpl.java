@@ -60,6 +60,12 @@ public class ArticleServiceImpl implements ArticleService {
             }
         }
         else {
+            boolean isValid = true ;
+            isValid = isCategoryValid(category
+                    //,
+                    //businessException
+                    );
+
             if (pattern == null || pattern.isEmpty()) {
                 filteredArticles = articleDAO.readByCategory(category.getLabel());
             }
@@ -70,5 +76,26 @@ public class ArticleServiceImpl implements ArticleService {
             }
         }
         return filteredArticles;
+    }
+
+    private boolean isCategoryValid(Category category
+                                    //,
+                                    //BusinessException businessException
+    ) {
+        boolean isValid = true;
+        //Category == null not useful for GetFilteredArticles
+        if (category == null) {
+            isValid = false;
+            //BusinessException.addMessage(BusinessCode.CATEGORY_NULL);
+        }
+        else {
+            try {
+                categoryDAO.read(category.getCategoryId());
+            } catch ( RuntimeException e) {
+                isValid = false;
+                //BusinessException.addMessage(BusinessCode.CATEGORY_UNKNOWN_ID);
+            }
+        }
+        return isValid;
     }
 }
