@@ -90,7 +90,7 @@ public class ArticleServiceImpl implements ArticleService {
         isValid &= isStartingPriceValid(article.getStartingPrice(), businessException);
         isValid &= isImageUrlValid(article.getImageUrl(), businessException);
         isValid &= isCategoryValid(article.getCategory(), businessException);
-//        isValid &= isPickupValid(article.getPickup(), businessException);
+        isValid &= isPickupValid(article.getPickup(), businessException);
 
         return isValid;
     }
@@ -247,6 +247,52 @@ public class ArticleServiceImpl implements ArticleService {
         if (pickup == null) {
             isValid = false;
             businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_NULL);
+        } else {
+            isValid = isStreetValid(pickup.getStreet(), businessException);
+            isValid &= isCityValid(pickup.getCity(), businessException);
+            isValid &= isZipValid(pickup.getZip(), businessException);
+        }
+
+        return isValid;
+    }
+
+    private boolean isStreetValid(String street, BusinessException businessException) {
+        boolean isValid = true;
+
+        if (street == null || street.isBlank()) {
+            isValid = false;
+            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_STREET_NULL);
+        } else if (street.length() > 30) {
+            isValid = false;
+            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_STREET_MAX);
+        }
+
+        return isValid;
+    }
+
+    private boolean isZipValid(String zip, BusinessException businessException) {
+        boolean isValid = true;
+
+        if (zip == null || zip.isBlank()) {
+            isValid = false;
+            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_ZIP_NULL);
+        } else if (zip.length() > 10) {
+            isValid = false;
+            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_ZIP_MAX);
+        }
+
+        return isValid;
+    }
+
+    private boolean isCityValid(String city, BusinessException businessException) {
+        boolean isValid = true;
+
+        if (city == null || city.isBlank()) {
+            isValid = false;
+            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_CITY_NULL);
+        } else if (city.length() > 30) {
+            isValid = false;
+            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_CITY_MAX);
         }
 
         return isValid;
