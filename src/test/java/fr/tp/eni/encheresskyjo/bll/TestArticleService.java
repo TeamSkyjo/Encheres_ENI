@@ -50,6 +50,12 @@ public class TestArticleService {
     }
 
     @Test
+    public void test_updateArticle() {
+        Article article = new Article();
+        article = articleService.getArticleById(6);
+    }
+
+    @Test
     public void test_getArticles() {
         List<Article> articles = articleService.getArticles();
         System.out.println("Articles récupérés : " + articles.size());

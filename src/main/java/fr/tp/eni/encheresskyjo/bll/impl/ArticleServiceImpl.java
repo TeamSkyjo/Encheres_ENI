@@ -86,6 +86,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public Article getArticleById(int articleId) {
+        return articleDAO.readByID(articleId);
+    }
+
+    @Override
     public List<Article> getArticles() {
         List<Article> articles = articleDAO.readAll();
         return articles;
