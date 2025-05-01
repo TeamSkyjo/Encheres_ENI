@@ -24,18 +24,18 @@ public class TestArticleService {
     @Test
     public void test_createArticle() {
         Article article = new Article();
-        article.setArticleName("Chaise de bureau");
-        article.setDescription("Chaise ergonomique confortable pour le télétravail.");
+        article.setArticleName("Chaise gaming");
+        article.setDescription("Chaise ergonomique confortable pour de longues heures de jeu.");
         article.setStartDate(LocalDate.now().plusDays(1));
         article.setEndDate(LocalDate.now().plusDays(7));
-        article.setStartingPrice(50);
+        article.setStartingPrice(100);
         article.setImageUrl("https://example.com/chaise.jpg");
 
         Category category = new Category();
         category.setCategoryId(1);
         article.setCategory(category);
 
-        article.setSeller(userDAO.readById(1));
+        article.setSeller(userDAO.readById(2));
 
         try {
             articleService.createArticle(article);

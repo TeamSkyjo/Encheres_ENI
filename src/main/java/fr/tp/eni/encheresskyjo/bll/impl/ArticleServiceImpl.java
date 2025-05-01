@@ -8,6 +8,7 @@ import fr.tp.eni.encheresskyjo.dal.*;
 import fr.tp.eni.encheresskyjo.exception.BusinessCode;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -39,25 +40,33 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public void createArticle(Article article) {
 
         BusinessException businessException = new BusinessException();
         boolean isValid = validateArticle(article, businessException);
 
-        if (isValid && isArticleUnique(article, businessException)) {
-            this.articleDAO.create(article);
-        } else {
-            if (!isValid) {
-                businessException.addKey(BusinessCode.VALID_ARTICLE);
-            }
-            if (!isArticleUnique(article, businessException)) {
-                businessException.addKey(BusinessCode.VALID_ARTICLE_UNIQUE);
-            }
+        if (!isValid) {
+            businessException.addKey(BusinessCode.VALID_ARTICLE);
             throw businessException;
+        } else {
+            if(!isArticleUnique(article, businessException)) {
+                businessException.addKey(BusinessCode.VALID_ARTICLE_UNIQUE);
+                throw businessException;
+            }
+            this.articleDAO.create(article);
+            // Create associated Pickup
+            Pickup pickup = new Pickup();
+            pickup.setArticle(article);
+            pickup.setCity(article.getSeller().getCity());
+            pickup.setStreet(article.getSeller().getStreet());
+            pickup.setZip(article.getSeller().getZip());
+            this.pickupDAO.create(pickup);
         }
     }
 
     @Override
+    @Transactional
     public void updateArticle(Article article) {
 
         BusinessException businessException = new BusinessException();
@@ -65,6 +74,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         if (isValid) {
             this.articleDAO.update(article);
+            this.pickupDAO.update(article.getPickup());
         } else {
             businessException.addKey(BusinessCode.VALID_ARTICLE);
             throw businessException;
@@ -221,7 +231,7 @@ public class ArticleServiceImpl implements ArticleService {
     private boolean isImageUrlValid(String imageURL, BusinessException businessException) {
         boolean isValid = true;
 
-        String URLValidationRegex = "/https?:\\/\\/[^\\s\"]+\\.(?:jpe?g|png|gif)(?:\\?[^\\s\"]*)?\n/gm";
+        String URLValidationRegex = "https?://[^\\s\"]+\\.(?i)(jpg|jpeg|png|gif)(\\?.*)?";
 
         if (imageURL != null && !imageURL.matches(URLValidationRegex)) {
             isValid = false;
