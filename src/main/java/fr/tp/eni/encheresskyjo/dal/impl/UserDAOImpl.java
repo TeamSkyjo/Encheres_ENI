@@ -29,7 +29,8 @@ public class UserDAOImpl implements UserDAO {
     }
 
     //SQL REQUESTS
-    private static final String INSERT = "INSERT INTO UTILISATEURS VALUES (:pseudo, :nom, :prenom, :email, :telephone, :rue, :code_postal, :ville, :mot_de_passe, :credit, :administrateur);";
+    private static final String INSERT = "INSERT INTO UTILISATEURS (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur)" +
+                                         "VALUES (:pseudo, :nom, :prenom, :email, :telephone, :rue, :code_postal, :ville, :mot_de_passe, :credit, :administrateur);";
     private static final String SELECT_BY_ID = "SELECT * FROM UTILISATEURS WHERE no_utilisateur = :no_utilisateur;";
     private static final String SELECT_BY_USERNAME = "SELECT * FROM UTILISATEURS WHERE pseudo = :pseudo;";
     private static final String SELECT_BY_EMAIL = "SELECT * FROM UTILISATEURS WHERE email = :email;";
@@ -181,7 +182,7 @@ public class UserDAOImpl implements UserDAO {
 /**
  * @Author TeamSkyjo
  * @Version 1.0
- * Class to RowMap Users from the database (in french) to User object.
+ * Class to RowMap Users from the database (in French) to User object.
  */
 class UserRowMapper implements RowMapper<User> {
 
