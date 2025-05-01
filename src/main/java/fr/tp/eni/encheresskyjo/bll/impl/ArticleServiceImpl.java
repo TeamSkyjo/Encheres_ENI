@@ -40,26 +40,49 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public void createArticle(Article article) {
-        boolean isValid = true;
-        BusinessException businessException = new BusinessException();
 
-        isValid = isNameValid(article.getArticleName(), businessException);
+        BusinessException businessException = new BusinessException();
+        boolean isValid = validateArticle(article, businessException);
+
+        if (isValid && isArticleUnique(article, businessException)) {
+            this.articleDAO.create(article);
+        } else {
+            if (!isValid) {
+                businessException.addKey(BusinessCode.VALID_ARTICLE);
+            }
+            if (!isArticleUnique(article, businessException)) {
+                businessException.addKey(BusinessCode.VALID_ARTICLE_UNIQUE);
+            }
+            throw businessException;
+        }
+    }
+
+    @Override
+    public void updateArticle(Article article) {
+
+        BusinessException businessException = new BusinessException();
+        boolean isValid = validateArticle(article, businessException);
+
+        if (isValid) {
+            this.articleDAO.update(article);
+        } else {
+            businessException.addKey(BusinessCode.VALID_ARTICLE);
+            throw businessException;
+        }
+    }
+
+    private boolean validateArticle(Article article, BusinessException businessException) {
+        boolean isValid = true;
+
+        isValid &= isNameValid(article.getArticleName(), businessException);
         isValid &= isDescriptionValid(article.getDescription(), businessException);
         isValid &= areDatesValid(article.getStartDate(), article.getEndDate(), businessException);
         isValid &= isStartingPriceValid(article.getStartingPrice(), businessException);
         isValid &= isImageUrlValid(article.getImageUrl(), businessException);
         isValid &= isCategoryValid(article.getCategory(), businessException);
         isValid &= isPickupValid(article.getPickup(), businessException);
-        // Méthode à mettre en fin pour des raisons de sécurité
-        // Il y a un appel en BDD donc on vérifie les champs avant
-        isValid &= isArticleUnique(article, businessException);
 
-        if (isValid) {
-            this.articleDAO.create(article);
-        } else {
-            businessException.addKey(BusinessCode.VALID_ARTICLE);
-            throw businessException;
-        }
+        return isValid;
     }
 
     @Override
@@ -81,16 +104,16 @@ public class ArticleServiceImpl implements ArticleService {
             }
         }
         else {
-            boolean isValid = true ;
-            isValid = isCategoryValid(category,businessException);
-
-            if (pattern == null || pattern.isEmpty()) {
-                filteredArticles = articleDAO.readByCategory(category.getLabel());
-            }
-            else {
-                filteredArticles = articleDAO.readByName(pattern).stream()
-                        .filter(article -> article.getCategory().equals(category))
-                        .toList();
+            if(isCategoryValid(category, businessException)) {
+                if (pattern == null || pattern.isEmpty()) {
+                    filteredArticles = articleDAO.readByCategory(category.getCategoryId());
+                } else {
+                    filteredArticles = articleDAO.readByName(pattern).stream()
+                            .filter(article -> article.getCategory().equals(category))
+                            .toList();
+                }
+            } else {
+                throw businessException;
             }
         }
         return filteredArticles;
@@ -193,9 +216,9 @@ public class ArticleServiceImpl implements ArticleService {
     private boolean isImageUrlValid(String imageURL, BusinessException businessException) {
         boolean isValid = true;
 
-        String URLValidationRegex = "https?:\\/\\/[^\\s\"]+\\.(?:jpe?g|png|gif)(?:\\?[^\\s\"]*)?\n";
+        String URLValidationRegex = "/https?:\\/\\/[^\\s\"]+\\.(?:jpe?g|png|gif)(?:\\?[^\\s\"]*)?\n/gm";
 
-        if (!imageURL.isEmpty() && !imageURL.matches(URLValidationRegex)) {
+        if (imageURL.isEmpty() && !imageURL.matches(URLValidationRegex)) {
             isValid = false;
             businessException.addKey(BusinessCode.VALID_ARTICLE_IMAGEURL_PATTERN);
         }
@@ -210,14 +233,7 @@ public class ArticleServiceImpl implements ArticleService {
             isValid = false;
             businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_NULL);
         }
-        else {
-            try {
-                pickupDAO.read(pickup.getArticle().getArticleId());
-            } catch ( RuntimeException e) {
-                isValid = false;
-                businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_UNKNOWN_ARTICLE_ID);
-            }
-        }
+
         return isValid;
     }
 
@@ -230,6 +246,4 @@ public class ArticleServiceImpl implements ArticleService {
 
         return isValid;
     }
-
-
 }

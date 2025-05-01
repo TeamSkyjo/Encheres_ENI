@@ -63,7 +63,7 @@ public class ArticleDAOImpl implements ArticleDAO {
                     "FROM ARTICLES a\n" +
                     "INNER JOIN UTILISATEURS u ON a.no_utilisateur = u.no_utilisateur\n" +
                     "INNER JOIN CATEGORIES c ON a.no_categorie = c.no_categorie\n" +
-                    "WHERE c.libelle LIKE :libelle";
+                    "WHERE c.no_categorie = :categoryId";
 
     // sans le sellingPrice
     private static final String UPDATE =
@@ -152,9 +152,9 @@ public class ArticleDAOImpl implements ArticleDAO {
 
 
     @Override
-    public List<Article> readByCategory(String libelle) {
+    public List<Article> readByCategory(int categoryId) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("libelle", "%" + libelle + "%");
+        mapSqlParameterSource.addValue("categoryId", categoryId);
 
         List<Article> articles = namedParameterJdbcTemplate.query(READ_BY_CATEGORY, mapSqlParameterSource, new ArticleRowMapper());
         return articles;

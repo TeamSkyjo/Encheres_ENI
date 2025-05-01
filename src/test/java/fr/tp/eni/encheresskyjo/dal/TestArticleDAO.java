@@ -37,7 +37,6 @@ public class TestArticleDAO {
         // Insertion
         articleDAO.create(article);
         System.out.println(article);
-
     }
 
     @Test
@@ -65,7 +64,7 @@ public class TestArticleDAO {
 
     @Test
     public void test_readByCategory() {
-        System.out.println(articleDAO.readByCategory("Ameublement"));
+        System.out.println(articleDAO.readByCategory(1));
 
     }
 

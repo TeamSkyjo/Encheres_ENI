@@ -13,7 +13,7 @@ public interface ArticleDAO {
     List<Article> readAll();
 
     List<Article> readByName(String pattern);
-    List<Article> readByCategory(String libelle);
+    List<Article> readByCategory(int categoryId);
 
     void update(Article article);
 
