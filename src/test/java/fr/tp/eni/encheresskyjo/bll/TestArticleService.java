@@ -47,8 +47,9 @@ public class TestArticleService {
 
     @Test
     public void test_updateArticle() {
-        Article article = articleService.getArticleById(6);
+        Article article = articleService.getArticleById(11);
         article.setDescription("Dell XY12345, processeur Intel Core i5");
+        article.getPickup().setCity("Quimper");
 
         try {
             articleService.updateArticle(article);

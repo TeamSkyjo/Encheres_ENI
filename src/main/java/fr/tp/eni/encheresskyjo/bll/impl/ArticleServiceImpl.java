@@ -20,7 +20,6 @@ import java.util.List;
  * @Version 1.0
  * Class to secure the connection between the data & user for the Articles.
  */
-// TODO : test all three methods in TestArticleService
 @Service
 public class ArticleServiceImpl implements ArticleService {
 
@@ -61,7 +60,10 @@ public class ArticleServiceImpl implements ArticleService {
             pickup.setCity(article.getSeller().getCity());
             pickup.setStreet(article.getSeller().getStreet());
             pickup.setZip(article.getSeller().getZip());
-            this.pickupDAO.create(pickup);
+            article.setPickup(pickup);
+            if (isPickupValid(article.getPickup(), businessException)) {
+                this.pickupDAO.create(pickup);
+            }
         }
     }
 
@@ -72,7 +74,7 @@ public class ArticleServiceImpl implements ArticleService {
         BusinessException businessException = new BusinessException();
         boolean isValid = validateArticle(article, businessException);
 
-        if (isValid) {
+        if (isValid && isPickupValid(article.getPickup(), businessException)) {
             this.articleDAO.update(article);
             this.pickupDAO.update(article.getPickup());
         } else {
@@ -90,19 +92,36 @@ public class ArticleServiceImpl implements ArticleService {
         isValid &= isStartingPriceValid(article.getStartingPrice(), businessException);
         isValid &= isImageUrlValid(article.getImageUrl(), businessException);
         isValid &= isCategoryValid(article.getCategory(), businessException);
-        isValid &= isPickupValid(article.getPickup(), businessException);
 
         return isValid;
     }
 
     @Override
     public Article getArticleById(int articleId) {
-        return articleDAO.readByID(articleId);
+        Article article = articleDAO.readByID(articleId);
+        if (article != null) {
+            // Association with Pickup
+            linkPickupToArticle(article);
+        }
+        return article;
+    }
+
+    /**
+     * Private method to centralize the link between an article and its pickup location
+     * @param article
+     */
+    private void linkPickupToArticle(Article article) {
+        Pickup pickup = pickupDAO.read(article.getArticleId());
+        article.setPickup(pickup);
     }
 
     @Override
     public List<Article> getArticles() {
         List<Article> articles = articleDAO.readAll();
+        if (articles != null) {
+            // Association with Pickup
+            articles.forEach(article -> linkPickupToArticle(article));
+        }
         return articles;
     }
 
@@ -130,6 +149,10 @@ public class ArticleServiceImpl implements ArticleService {
             } else {
                 throw businessException;
             }
+        }
+        if (filteredArticles != null) {
+            // Association with Pickup
+            filteredArticles.forEach(article -> linkPickupToArticle(article));
         }
         return filteredArticles;
     }
