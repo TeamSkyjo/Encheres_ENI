@@ -80,7 +80,7 @@ public class ArticleServiceImpl implements ArticleService {
         isValid &= isStartingPriceValid(article.getStartingPrice(), businessException);
         isValid &= isImageUrlValid(article.getImageUrl(), businessException);
         isValid &= isCategoryValid(article.getCategory(), businessException);
-        isValid &= isPickupValid(article.getPickup(), businessException);
+//        isValid &= isPickupValid(article.getPickup(), businessException);
 
         return isValid;
     }
@@ -223,7 +223,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         String URLValidationRegex = "/https?:\\/\\/[^\\s\"]+\\.(?:jpe?g|png|gif)(?:\\?[^\\s\"]*)?\n/gm";
 
-        if (imageURL.isEmpty() && !imageURL.matches(URLValidationRegex)) {
+        if (imageURL != null && !imageURL.matches(URLValidationRegex)) {
             isValid = false;
             businessException.addKey(BusinessCode.VALID_ARTICLE_IMAGEURL_PATTERN);
         }

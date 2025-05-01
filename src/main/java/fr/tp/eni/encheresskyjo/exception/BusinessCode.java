@@ -20,12 +20,6 @@ public class BusinessCode {
     public static final String VALID_USER_PASSWORD_REGEX= "";
     public static final String VALID_USER_PASSWORD_CONFIRM= "";
 
-
-//    // FILM
-//    public static final String VALID_FILM_TITLE_BLANK = "validation.film.titre.blank";
-//    public static final String VALID_FILM_TITLE_LENGTH_MAX = "validation.film.titre.length";
-//    public static final String VALID_FILM_YEAR_MIN = "validation.film.annee";
-
     // ARTICLE
     public static final String VALID_ARTICLE = "validation.article";
     public static final String VALID_ARTICLE_NAME_BLANK = "validation.article.name.blank";
@@ -43,7 +37,6 @@ public class BusinessCode {
     public static final String VALID_ARTICLE_STARTINGPRICE_MIN = "validation.article.startingprice.min";
     public static final String VALID_ARTICLE_IMAGEURL_PATTERN = "validation.article.imageurl.pattern";
     public static final String VALID_ARTICLE_PICKUP_NULL = "validation.article.pickup.null";
-    public static final String VALID_ARTICLE_PICKUP_UNKNOWN_ARTICLE_ID = "validation.article.pickup.unknown.article.id";
     public static final String VALID_ARTICLE_UNIQUE = "validation.article.unique";
 
 }

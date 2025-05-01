@@ -35,10 +35,6 @@ public class TestArticleService {
         category.setCategoryId(1);
         article.setCategory(category);
 
-        Pickup pickup = new Pickup();
-        pickup.setArticle(article);
-        article.setPickup(pickup);
-
         article.setSeller(userDAO.readById(1));
 
         try {
@@ -51,8 +47,15 @@ public class TestArticleService {
 
     @Test
     public void test_updateArticle() {
-        Article article = new Article();
-        article = articleService.getArticleById(6);
+        Article article = articleService.getArticleById(6);
+        article.setDescription("Dell XY12345, processeur Intel Core i5");
+
+        try {
+            articleService.updateArticle(article);
+            System.out.println("Article mis à jour avec succès");
+        } catch (BusinessException businessException) {
+            System.out.println(businessException.getKeys());
+        }
     }
 
     @Test
