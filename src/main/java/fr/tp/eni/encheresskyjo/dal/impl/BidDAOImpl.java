@@ -102,30 +102,14 @@ class BidRowMapper implements RowMapper<Bid> {
         bid.setBidDate(rs.getObject("date_enchere", LocalDate.class));
         bid.setBidPrice(rs.getInt("montant_enchere"));
 
-        // TODO : See Proposition_ENI for association in BidService
-        // Link with User/buyer
-        User user = new User();
-        user.setUserId(rs.getInt("no_utilisateur"));
-        bid.setBuyer(user);
+        User buyer = new User();
+        buyer.setUserId(rs.getInt("no_utilisateur"));
+        bid.setBuyer(buyer);
 
-        // Link with Article
         Article article = new Article();
         article.setArticleId(rs.getInt("no_article"));
         bid.setArticle(article);
 
         return bid;
     }
-
-//    /**
-//     * Méthode privée pour centraliser l'association entre un film et son genre et
-//     * réalisateur
-//     *
-//     * @param film
-//     */
-//    private void chargerGenreEtRealisateur1Film(Film f) {
-//        Participant realisateur = participantDAO.read(f.getRealisateur().getId());
-//        f.setRealisateur(realisateur);
-//        Genre genre = genreDAO.read(f.getGenre().getId());
-//        f.setGenre(genre);
-//    }
 }
