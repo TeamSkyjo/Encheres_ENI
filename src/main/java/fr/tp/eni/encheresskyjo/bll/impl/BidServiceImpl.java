@@ -6,6 +6,8 @@ import fr.tp.eni.encheresskyjo.bo.Bid;
 import fr.tp.eni.encheresskyjo.bo.User;
 import fr.tp.eni.encheresskyjo.dal.*;
 
+import java.util.List;
+
 public class BidServiceImpl implements BidService {
 
     //Dependencies Injection
@@ -40,7 +42,17 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
-    public Bid gestBestBid(Article article) {
+    public Bid getBestBid(Article article) {
         return null;
+    }
+
+    @Override
+    public List<Bid> getBidsByUser(int userId) {
+        return List.of();
+    }
+
+    @Override
+    public List<Bid> getBidsWonByUser(int userId) {
+        return List.of();
     }
 }
