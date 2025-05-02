@@ -16,8 +16,8 @@ import java.util.List;
 
 
 /**
- * @Author Teamskyjo
- * @Version 1.0
+ * @author Teamskyjo
+ * @version 1.0
  * Class to secure the connection between the data & user for the Articles.
  */
 @Service
@@ -55,10 +55,7 @@ public class ArticleServiceImpl implements ArticleService {
             }
             this.articleDAO.create(article);
             // Create associated Pickup
-            if (isPickupValid(article.getPickup(), businessException)) {
-                this.pickupDAO.create(article.getArticleId(), article.getPickup());
-                System.out.println("Pickup créé");
-            }
+            this.pickupDAO.create(article.getArticleId(), article.getPickup());
         }
     }
 
@@ -69,7 +66,7 @@ public class ArticleServiceImpl implements ArticleService {
         BusinessException businessException = new BusinessException();
         boolean isValid = validateArticle(article, businessException);
 
-        if (isValid && isPickupValid(article.getPickup(), businessException)) {
+        if (isValid) {
             this.articleDAO.update(article);
             this.pickupDAO.update(article.getArticleId(), article.getPickup());
         } else {
@@ -87,8 +84,9 @@ public class ArticleServiceImpl implements ArticleService {
         isValid &= isStartingPriceValid(article.getStartingPrice(), businessException);
         isValid &= isImageUrlValid(article.getImageUrl(), businessException);
         isValid &= isCategoryValid(article.getCategory(), businessException);
+        isValid &= isPickupValid(article.getPickup(), businessException);
 
-        return isValid;
+            return isValid;
     }
 
     @Override
@@ -145,7 +143,7 @@ public class ArticleServiceImpl implements ArticleService {
                 throw businessException;
             }
         }
-        if (filteredArticles != null) {
+        if (filteredArticles != null && !filteredArticles.isEmpty()) {
             // Association with Pickup
             filteredArticles.forEach(article -> linkPickupToArticle(article));
         }
@@ -162,7 +160,7 @@ public class ArticleServiceImpl implements ArticleService {
         else {
             try {
                 categoryDAO.read(category.getCategoryId());
-            } catch ( RuntimeException e) {
+            } catch (RuntimeException e) {
                 isValid = false;
                 businessException.addKey(BusinessCode.VALID_ARTICLE_CATEGORY_UNKNOWN_ID);
             }
@@ -249,7 +247,7 @@ public class ArticleServiceImpl implements ArticleService {
     private boolean isImageUrlValid(String imageURL, BusinessException businessException) {
         boolean isValid = true;
 
-        String URLValidationRegex = "https?://[^\\s\"]+\\.(?i)(jpg|jpeg|png|gif)(\\?.*)?";
+        String URLValidationRegex = "(?i)^https?://[^\\s\"]+\\.(jpg|jpeg|png|gif)(\\?.*)?$";
 
         if (imageURL != null && !imageURL.matches(URLValidationRegex)) {
             isValid = false;
