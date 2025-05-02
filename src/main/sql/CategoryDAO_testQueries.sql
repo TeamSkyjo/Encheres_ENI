@@ -2,6 +2,7 @@ USE Projet_Encheres;
 GO
 
 SELECT * FROM ARTICLES;
+SELECT * FROM RETRAITS;
 
 SELECT nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, url_image, u.pseudo, c.libelle
 FROM ARTICLES a

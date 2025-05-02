@@ -37,6 +37,12 @@ public class TestArticleService {
 
         article.setSeller(userDAO.readById(2));
 
+        Pickup pickup = new Pickup();
+        pickup.setCity(article.getSeller().getCity());
+        pickup.setZip(article.getSeller().getZip());
+        pickup.setStreet(article.getSeller().getStreet());
+        article.setPickup(pickup);
+
         try {
             articleService.createArticle(article);
             System.out.println("Article créé avec succès");
@@ -47,9 +53,9 @@ public class TestArticleService {
 
     @Test
     public void test_updateArticle() {
-        Article article = articleService.getArticleById(11);
+        Article article = articleService.getArticleById(5);
         article.setDescription("Dell XY12345, processeur Intel Core i5");
-        article.getPickup().setCity("Quimper");
+        article.getPickup().setCity("Bliblablou");
 
         try {
             articleService.updateArticle(article);
