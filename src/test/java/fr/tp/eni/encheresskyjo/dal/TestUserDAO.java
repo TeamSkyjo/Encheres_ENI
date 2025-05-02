@@ -25,6 +25,8 @@ public class TestUserDAO {
     public void test_create() {
 
         User test = new User("skyjo", "vrd", "Laety", "laety@vrd.fr", null, "rue des mouettes", "29000", "Quimper", "$2a$10$kHbAVAt47pD.9mFChqZ1jOS3Cu9csyhKUk.ZqxShspqVEIQntFtfa", 500,false);
+        //User test = new User("skyjo", "Test", "First", "mytest@email.com", null, "rue des mouettes", "29000", "Quimper", "$2a$10$kHbAVAt47pD.9mFChqZ1jOS3Cu9csyhKUk.ZqxShspqVEIQntFtfa", 500,false);
+        //User test = new User("movieFan", "Almodovar", "Pedro", "julien.lemoine@email.com", null, "5 somewhere", "67345", "MadridInFrance", "$2a$10$kHbAVAt47pD.9mFChqZ1jOS3Cu9csyhKUk.ZqxShspqVEIQntFtfa", 500,false);
         System.out.println(test);
         userDAO.create(test);
         System.out.println(test);

@@ -2,6 +2,7 @@ package fr.tp.eni.encheresskyjo.dal.impl;
 
 import fr.tp.eni.encheresskyjo.bo.User;
 import fr.tp.eni.encheresskyjo.dal.UserDAO;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @Author TeamSkyjo
@@ -187,6 +189,47 @@ public class UserDAOImpl implements UserDAO {
                 mapSqlParameterSource
         );
     }
+
+    /**
+     * Checks if the email already exists in the database.
+     *
+     * @param email the email to check.
+     * @return {@code true} if no user with the same email exists; {@code false} otherwise.
+     */
+    @Override
+    public boolean isEmailUnique(String email) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("email", email);
+
+        List<User> users = namedParameterJdbcTemplate.query(
+                SELECT_BY_EMAIL,
+                mapSqlParameterSource,
+                new BeanPropertyRowMapper<>(User.class)
+        );
+
+        return users.isEmpty();
+    }
+
+    /**
+     * Checks if the username already exists in the database.
+     *
+     * @param username the username to check.
+     * @return {@code true} if no user with the same username exists; {@code false} otherwise.
+     */
+    @Override
+    public boolean isUsernameUnique(String username) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("pseudo", username);
+
+        List<User> users = namedParameterJdbcTemplate.query(
+                SELECT_BY_USERNAME,
+                mapSqlParameterSource,
+                new BeanPropertyRowMapper<>(User.class)
+        );
+
+        return users.isEmpty();
+    }
+
 }
 
 /**

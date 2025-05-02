@@ -4,6 +4,19 @@ GO
 SELECT * FROM UTILISATEURS;
 INSERT INTO UTILISATEURS VALUES ('test', 'test', 'test', 'test', 'test', 'test', 'test', 'test', 'test', 150, 0);
 
+
+-- test pseudo identique
+INSERT INTO UTILISATEURS
+VALUES ("skyjo", "Test", "First", "mytest@email.com", null, "rue des mouettes", "29000", "Quimper", "$2a$10$kHbAVAt47pD.9mFChqZ1jOS3Cu9csyhKUk.ZqxShspqVEIQntFtfa", 500,false);
+
+-- test email identique
+INSERT INTO UTILISATEURS
+VALUES ("movieFan", "Almodovar", "Pedro", "julien.lemoine@email.com", null, "5 somewhere", "67345", "MadridInFrance", "$2a$10$kHbAVAt47pD.9mFChqZ1jOS3Cu9csyhKUk.ZqxShspqVEIQntFtfa", 500,false);
+
+
+--private static final String SELECT_BY_USERNAME_OR_EMAIL
+SELECT pseudo, nom, prenom, email FROM UTILISATEURS WHERE pseudo = 'skyjo' OR email = 'julien.lemoine@email.com';
+
 DELETE FROM UTILISATEURS WHERE no_utilisateur>4;
 
 UPDATE UTILISATEURS SET pseudo = 'skyyyjo', nom ='VV', prenom='LL', email='laety@vrd.com', telephone = '0987654321', rue='test', code_postal='29200', ville='BRESTMEME', mot_de_passe='testestest', credit= 50, administrateur=1

@@ -30,8 +30,8 @@ public class UserServiceImpl implements UserService {
         boolean isValid = true;
         BusinessException businessException = new BusinessException();
 
+        //username and email
         isValid = isUsernameValid(user.getUsername(), businessException);
-
         isValid &= isFirstnameValid(user.getFirstName(), businessException);
         isValid &= isLastnameValid(user.getLastName(), businessException);
         isValid &= isEmailValid(user.getEmail(), businessException);
@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
 
         isValid &= isPasswordValid(user.getPassword(), user.getPasswordConfirm(), businessException);
 
+        isValid &= isUserUnique(user, businessException);
 
         if (isValid) {
             // TODO Spring Security - BCryptPasswordEncoder
@@ -96,13 +97,6 @@ public class UserServiceImpl implements UserService {
             businessException.addKey(BusinessCode.VALID_USER_USERNAME_LENGTH_MAX);
         }
 
-
-        User user = userDAO.readByUsername(username);
-        if (user != null) {
-            isValid = false;
-            businessException.addKey(BusinessCode.VALID_USER_EXISTS_ALREADY);
-        }
-
         return isValid;
     }
 
@@ -148,12 +142,6 @@ public class UserServiceImpl implements UserService {
         } else if (email.length() > 30) {
             isValid = false;
             businessException.addKey(BusinessCode.VALID_USER_EMAIL_LENGTH_MAX);
-        }
-
-        User user = userDAO.readByEmail(email);
-        if (user != null) {
-            isValid = false;
-            businessException.addKey(BusinessCode.VALID_USER_EMAIL_EXISTS_ALREADY);
         }
 
         return isValid;
@@ -269,6 +257,21 @@ public class UserServiceImpl implements UserService {
 
         return isValid;
 
+    }
+
+    private boolean isUserUnique(User user, BusinessException businessException) {
+        boolean isUsernameUnique = userDAO.isUsernameUnique(user.getUsername());
+        boolean isEmailUnique = userDAO.isEmailUnique(user.getEmail());
+
+        if (!isUsernameUnique) {
+            businessException.addKey(BusinessCode.VALID_USER_USERNAME_UNIQUENESS);
+        }
+
+        if (!isEmailUnique) {
+            businessException.addKey(BusinessCode.VALID_USER_EMAIL_UNIQUENESS);
+        }
+
+        return isUsernameUnique && isEmailUnique;
     }
 
 

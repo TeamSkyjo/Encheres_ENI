@@ -22,7 +22,6 @@ public class TestUserService {
 
     @Test
     public void testCreateUser_valid() {
-        // Rien ne fonctionne
         User user = new User();
         user.setUsername("Jojo89");
         user.setLastName("Lapin");
@@ -40,13 +39,57 @@ public class TestUserService {
         } catch (BusinessException e) {
             System.out.println("BusinessException keys: " + e.getKeys());
         }
-//
-//
-//        User createdUser = userDAO.readByUsername("Jojo89");
-//
-//        assertNotNull(createdUser, "User should be in the database");
-//
-//        System.out.println("Created user: " + user);
 
+
+        User createdUser = userDAO.readByUsername("Jojo89");
+
+        assertNotNull(createdUser, "User should be in the database");
+
+        System.out.println("Created user: " + user);
+
+    }
+
+    @Test
+    public void testCreateUser_usernameFail() {
+        // username already in database: techguy
+        User user = new User();
+        user.setUsername("techguy");
+        user.setLastName("Lapin");
+        user.setFirstName("Jojo");
+        user.setEmail("jojo89@gmail.com");
+        user.setTelephone("");
+        user.setStreet("4 rue du terrier");
+        user.setZip("89024");
+        user.setCity("LapinVille");
+        user.setPassword("Pa$$w0rdlong");
+        user.setPasswordConfirm("Pa$$w0rdlong");
+
+        try {
+            userService.createUser(user);
+        } catch (BusinessException e) {
+            System.out.println("BusinessException keys: " + e.getKeys());
+        }
+    }
+
+    @Test
+    public void testCreateUser_emailFail() {
+        // email already in database: julien.lemoine@email.com
+        User user = new User();
+        user.setUsername("Jojo89");
+        user.setLastName("Lapin");
+        user.setFirstName("Jojo");
+        user.setEmail("julien.lemoine@email.com");
+        user.setTelephone("");
+        user.setStreet("4 rue du terrier");
+        user.setZip("89024");
+        user.setCity("LapinVille");
+        user.setPassword("Pa$$w0rdlong");
+        user.setPasswordConfirm("Pa$$w0rdlong");
+
+        try {
+            userService.createUser(user);
+        } catch (BusinessException e) {
+            System.out.println("BusinessException keys: " + e.getKeys());
+        }
     }
 }
