@@ -33,6 +33,7 @@ public class BidServiceImpl implements BidService {
         Article article = articleDAO.readByID((bid.getArticle().getArticleId()));
         bid.setArticle(article);
     }
+
     @Override
     public void createBid(Bid bid) {
 

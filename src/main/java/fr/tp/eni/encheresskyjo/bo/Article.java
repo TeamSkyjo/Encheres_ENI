@@ -11,28 +11,38 @@ public class Article {
     private LocalDate endDate;
     private int startingPrice;
     private int sellingPrice;
-    private String status;
     private String imageUrl;
 
     private User seller;
     private Category category;
     private Pickup pickup;
 
+    // Dynamic attribute
+    public ArticleStatus readStatus() {
+        LocalDate now = LocalDate.now();
+        if (now.isBefore(startDate)) {
+            return ArticleStatus.NOT_STARTED;
+        } else if (now.isAfter(endDate)) {
+            return ArticleStatus.ENDED;
+        } else {
+            return ArticleStatus.ONGOING;
+        }
+    }
+
     public Article() {
     }
 
-    public Article(String articleName, String description, LocalDate startDate, LocalDate endDate, int startingPrice, int sellingPrice, String status, String imageUrl) {
+    public Article(String articleName, String description, LocalDate startDate, LocalDate endDate, int startingPrice, int sellingPrice, String imageUrl) {
         this.articleName = articleName;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
         this.startingPrice = startingPrice;
         this.sellingPrice = sellingPrice;
-        this.status = status;
         this.imageUrl = imageUrl;
     }
 
-    public Article(int articleId, String articleName, String description, LocalDate startDate, LocalDate endDate, int startingPrice, int sellingPrice, String status, String imageUrl) {
+    public Article(int articleId, String articleName, String description, LocalDate startDate, LocalDate endDate, int startingPrice, int sellingPrice, String imageUrl) {
         this.articleId = articleId;
         this.articleName = articleName;
         this.description = description;
@@ -40,7 +50,6 @@ public class Article {
         this.endDate = endDate;
         this.startingPrice = startingPrice;
         this.sellingPrice = sellingPrice;
-        this.status = status;
         this.imageUrl = imageUrl;
     }
 
@@ -100,14 +109,6 @@ public class Article {
         this.sellingPrice = sellingPrice;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public User getSeller() {
         return seller;
     }
@@ -150,7 +151,6 @@ public class Article {
         sb.append(", endDate=").append(endDate);
         sb.append(", startingPrice=").append(startingPrice);
         sb.append(", sellingPrice=").append(sellingPrice);
-        sb.append(", status='").append(status).append('\'');
         sb.append(", seller=").append(seller);
         sb.append(", category=").append(category);
         sb.append(", pickup=").append(pickup);
