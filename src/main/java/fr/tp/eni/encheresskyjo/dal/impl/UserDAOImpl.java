@@ -36,7 +36,6 @@ public class UserDAOImpl implements UserDAO {
     private static final String SELECT_BY_ID = "SELECT * FROM UTILISATEURS WHERE no_utilisateur = :no_utilisateur;";
     private static final String SELECT_BY_USERNAME = "SELECT * FROM UTILISATEURS WHERE pseudo = :pseudo;";
     private static final String SELECT_BY_EMAIL = "SELECT * FROM UTILISATEURS WHERE email = :email;";
-    private static final String SELECT_BY_USERNAME_OR_EMAIL = "SELECT pseudo, nom, prenom, email FROM UTILISATEURS WHERE pseudo = :pseudo OR email = :email;";
     private static final String UPDATE_USER = "UPDATE UTILISATEURS SET pseudo = :pseudo, nom = :nom, prenom=:prenom, email=:email, telephone = :telephone, rue=:rue, code_postal=:code_postal, ville=:ville, mot_de_passe=:mot_de_passe, credit= :credit, administrateur=:administrateur\n" +
             "WHERE no_utilisateur = :no_utilisateur;";
     private static final String UPDATE_PASSWORD = "UPDATE UTILISATEURS SET mot_de_passe=:mot_de_passe WHERE email=:email;";
@@ -182,24 +181,45 @@ public class UserDAOImpl implements UserDAO {
     }
 
     /**
-     * Checks whether the given user has a unique username and email in the database.
+     * Checks if the email already exists in the database.
      *
-     *  @param user the User object containing the username and email to check.
-     *  @return {@code true} if no user with the same username or email exists; {@code false} otherwise.
+     * @param email the email to check.
+     * @return {@code true} if no user with the same email exists; {@code false} otherwise.
      */
     @Override
-    public boolean isUserUnique(User user) {
+    public boolean isEmailUnique(String email) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("pseudo", user.getUsername());
-        mapSqlParameterSource.addValue("email", user.getEmail());
+        mapSqlParameterSource.addValue("email", email);
 
         List<User> users = namedParameterJdbcTemplate.query(
-                SELECT_BY_USERNAME_OR_EMAIL,
+                SELECT_BY_EMAIL,
                 mapSqlParameterSource,
                 new BeanPropertyRowMapper<>(User.class)
         );
+
         return users.isEmpty();
     }
+
+    /**
+     * Checks if the username already exists in the database.
+     *
+     * @param username the username to check.
+     * @return {@code true} if no user with the same username exists; {@code false} otherwise.
+     */
+    @Override
+    public boolean isUsernameUnique(String username) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("pseudo", username);
+
+        List<User> users = namedParameterJdbcTemplate.query(
+                SELECT_BY_USERNAME,
+                mapSqlParameterSource,
+                new BeanPropertyRowMapper<>(User.class)
+        );
+
+        return users.isEmpty();
+    }
+
 }
 
 /**

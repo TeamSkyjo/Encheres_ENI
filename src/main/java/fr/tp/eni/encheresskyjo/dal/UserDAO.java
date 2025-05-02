@@ -15,5 +15,6 @@ public interface UserDAO {
     void updateAll(User user);
     void updatePassword(String email, String newPassword);
     void delete(int userId);
-    boolean isUserUnique(User user);
+    boolean isEmailUnique(String email);
+    boolean isUsernameUnique(String username);
 }

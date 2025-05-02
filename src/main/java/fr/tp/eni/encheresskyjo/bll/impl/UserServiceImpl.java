@@ -260,13 +260,18 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean isUserUnique(User user, BusinessException businessException) {
-        boolean isValid = userDAO.isUserUnique(user);
+        boolean isUsernameUnique = userDAO.isUsernameUnique(user.getUsername());
+        boolean isEmailUnique = userDAO.isEmailUnique(user.getEmail());
 
-        if (!isValid) {
-            businessException.addKey(BusinessCode.VALID_USER_UNIQUENESS);
+        if (!isUsernameUnique) {
+            businessException.addKey(BusinessCode.VALID_USER_USERNAME_UNIQUENESS);
         }
 
-        return isValid;
+        if (!isEmailUnique) {
+            businessException.addKey(BusinessCode.VALID_USER_EMAIL_UNIQUENESS);
+        }
+
+        return isUsernameUnique && isEmailUnique;
     }
 
 
