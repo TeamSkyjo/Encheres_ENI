@@ -28,7 +28,6 @@ public class ArticleController {
     }
 
     //mapping
-
     @GetMapping("/")
     public String home(Model model) {
         List<Article> articles = articleService.getArticles();

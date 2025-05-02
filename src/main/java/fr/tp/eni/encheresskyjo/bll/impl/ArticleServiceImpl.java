@@ -2,6 +2,7 @@ package fr.tp.eni.encheresskyjo.bll.impl;
 
 import fr.tp.eni.encheresskyjo.bll.ArticleService;
 import fr.tp.eni.encheresskyjo.bo.Article;
+import fr.tp.eni.encheresskyjo.bo.ArticleStatus;
 import fr.tp.eni.encheresskyjo.bo.Category;
 import fr.tp.eni.encheresskyjo.bo.Pickup;
 import fr.tp.eni.encheresskyjo.dal.*;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -65,6 +67,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         BusinessException businessException = new BusinessException();
         boolean isValid = validateArticle(article, businessException);
+        isValid &= (article.readStatus() == ArticleStatus.ONGOING);
 
         if (isValid) {
             this.articleDAO.update(article);
@@ -97,6 +100,19 @@ public class ArticleServiceImpl implements ArticleService {
             linkPickupToArticle(article);
         }
         return article;
+    }
+
+    @Override
+    public List<Article> getByStatus(ArticleStatus articleStatus) {
+        List<Article> articles = articleDAO.readAll();
+        if (articles != null) {
+            articles = articles.stream()
+                    .filter(article -> article.readStatus() == articleStatus)
+                            .collect(Collectors.toList());
+            // Association with Pickup
+            articles.forEach(article -> linkPickupToArticle(article));
+        }
+        return articles;
     }
 
     /**
