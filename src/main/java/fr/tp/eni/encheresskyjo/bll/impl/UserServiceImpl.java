@@ -27,10 +27,57 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void createUser(User user) {
-        boolean isValid = true;
         BusinessException businessException = new BusinessException();
+        boolean isValid = validateUserForCreate(user, businessException);
 
-        //username and email
+        if (!isValid) {
+            businessException.addKey(BusinessCode.VALID_USER);
+            throw businessException;
+
+        } else {
+            if(!isUserUnique(user, businessException)) {
+                businessException.addKey(BusinessCode.VALID_USER_UNIQUENESS);
+                throw businessException;
+            }
+            this.userDAO.create(user);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateUser(User user) {
+
+        BusinessException businessException = new BusinessException();
+        boolean isValid = validateUserForUpdate(user, businessException);
+
+        if (isValid) {
+            this.userDAO.updateAll(user);
+        } else {
+            businessException.addKey(BusinessCode.VALID_USER);
+            throw businessException;
+        }
+
+    }
+
+    private boolean validateUserForCreate(User user, BusinessException businessException) {
+        boolean isValid = true;
+
+        isValid = isUsernameValid(user.getUsername(), businessException);
+        isValid &= isFirstnameValid(user.getFirstName(), businessException);
+        isValid &= isLastnameValid(user.getLastName(), businessException);
+        isValid &= isEmailValid(user.getEmail(), businessException);
+        isValid &= isPhoneValid(user.getTelephone(), businessException);
+        isValid &= isStreetValid(user.getStreet(), businessException);
+        isValid &= isZipValid(user.getZip(), businessException);
+        isValid &= isCityValid(user.getCity(), businessException);
+        isValid &= isPasswordValid(user.getPassword(), user.getPasswordConfirm(), businessException);
+
+        return isValid;
+    }
+
+    private boolean validateUserForUpdate(User user, BusinessException businessException) {
+        boolean isValid = true;
+
         isValid = isUsernameValid(user.getUsername(), businessException);
         isValid &= isFirstnameValid(user.getFirstName(), businessException);
         isValid &= isLastnameValid(user.getLastName(), businessException);
@@ -40,46 +87,29 @@ public class UserServiceImpl implements UserService {
         isValid &= isZipValid(user.getZip(), businessException);
         isValid &= isCityValid(user.getCity(), businessException);
 
-        isValid &= isPasswordValid(user.getPassword(), user.getPasswordConfirm(), businessException);
-
-        isValid &= isUserUnique(user, businessException);
-
-        if (isValid) {
-            // TODO Spring Security - BCryptPasswordEncoder
-
-            User newUser = new User();
-            newUser.setUsername(user.getUsername());
-            newUser.setLastName(user.getLastName());
-            newUser.setFirstName(user.getFirstName());
-            newUser.setEmail(user.getEmail());
-            newUser.setTelephone(user.getTelephone());
-            newUser.setStreet(user.getStreet());
-            newUser.setZip(user.getZip());
-            newUser.setCity(user.getCity());
-            // password with {bcrypt}
-            newUser.setPassword(user.getPassword());
-            newUser.setCredit(0);
-            newUser.setAdmin(false);
-
-            userDAO.create(newUser);
-        } else {
-            throw businessException;
+        // Only validate the password if it is filled in (not null or blank)
+        if (user.getPassword() != null && !user.getPassword().isBlank()) {
+            isValid &= isPasswordValid(user.getPassword(), user.getPasswordConfirm(), businessException);
         }
+
+        return isValid;
     }
 
     @Override
-    public User LoadUser(int userId) {
+    public User loadUser(int userId) {
         return userDAO.readById(userId);
     }
 
+
+
     @Override
-    public void ChangePassword(String email, String newPassword) {
+    public void changePassword(String email, String newPassword) {
         // TODO
         userDAO.updatePassword(email, newPassword);
     }
 
     @Override
-    public void deleteProfile(int userId) {
+    public void deleteUser(int userId) {
         userDAO.delete(userId);
     }
 

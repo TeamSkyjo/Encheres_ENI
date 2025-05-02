@@ -3,6 +3,8 @@ package fr.tp.eni.encheresskyjo.exception;
 public class BusinessCode {
 
     // USER
+    public static final String VALID_USER = "validation_user";
+    public static final String VALID_USER_UNIQUENESS = "validation.user.uniqueness";
     public static final String VALID_USER_USERNAME_BLANK = "validation.user.username.blank";
     public static final String VALID_USER_USERNAME_LENGTH_MAX = "validation.user.username.length.max";
     public static final String VALID_USER_USERNAME_UNIQUENESS = "validation.user.username.uniqueness";

@@ -92,4 +92,24 @@ public class TestUserService {
             System.out.println("BusinessException keys: " + e.getKeys());
         }
     }
+
+    @Test
+    public void testUpdateUser_valid() {
+        User user = userService.loadUser(1);
+        System.out.println(user);
+
+        user.setUsername("machin");
+        user.setTelephone("0678987654");
+        user.setCity("Paris");
+        user.setPassword("MotDePasseValide=123");
+        user.setPasswordConfirm("MotDePasseValide=123");
+
+        try {
+            userService.updateUser(user);
+            System.out.println("User : update successful");
+        } catch (BusinessException businessException){
+            System.out.println(businessException.getKeys());
+        }
+
+    }
 }
