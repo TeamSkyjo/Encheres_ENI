@@ -183,7 +183,6 @@ public class ArticleDAOImpl implements ArticleDAO {
         mapSqlParameterSource.addValue("no_article", articleId);
 
         namedParameterJdbcTemplate.update(DELETE, mapSqlParameterSource);
-
     }
 
     @Override
