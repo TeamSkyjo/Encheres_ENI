@@ -8,6 +8,7 @@ import fr.tp.eni.encheresskyjo.dal.*;
 import fr.tp.eni.encheresskyjo.exception.BusinessCode;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ import java.util.List;
  * @Version 1.0
  * Class to secure the connection between the data & user for the Articles.
  */
-// TODO : test all three methods in TestArticleService
 @Service
 public class ArticleServiceImpl implements ArticleService {
 
@@ -39,32 +39,89 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public void createArticle(Article article) {
-        boolean isValid = true;
+
         BusinessException businessException = new BusinessException();
+        boolean isValid = validateArticle(article, businessException);
 
-        isValid = isNameValid(article.getArticleName(), businessException);
-        isValid &= isDescriptionValid(article.getDescription(), businessException);
-        isValid &= areDatesValid(article.getStartDate(), article.getEndDate(), businessException);
-        isValid &= isStartingPriceValid(article.getStartingPrice(), businessException);
-        isValid &= isImageUrlValid(article.getImageUrl(), businessException);
-        isValid &= isCategoryValid(article.getCategory(), businessException);
-        isValid &= isPickupValid(article.getPickup(), businessException);
-        // Méthode à mettre en fin pour des raisons de sécurité
-        // Il y a un appel en BDD donc on vérifie les champs avant
-        isValid &= isArticleUnique(article, businessException);
-
-        if (isValid) {
+        if (!isValid) {
+            businessException.addKey(BusinessCode.VALID_ARTICLE);
+            throw businessException;
+        } else {
+            if(!isArticleUnique(article, businessException)) {
+                businessException.addKey(BusinessCode.VALID_ARTICLE_UNIQUE);
+                throw businessException;
+            }
             this.articleDAO.create(article);
+            // Create associated Pickup
+            Pickup pickup = new Pickup();
+            pickup.setArticle(article);
+            pickup.setCity(article.getSeller().getCity());
+            pickup.setStreet(article.getSeller().getStreet());
+            pickup.setZip(article.getSeller().getZip());
+            article.setPickup(pickup);
+            if (isPickupValid(article.getPickup(), businessException)) {
+                this.pickupDAO.create(pickup);
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateArticle(Article article) {
+
+        BusinessException businessException = new BusinessException();
+        boolean isValid = validateArticle(article, businessException);
+
+        if (isValid && isPickupValid(article.getPickup(), businessException)) {
+            this.articleDAO.update(article);
+            this.pickupDAO.update(article.getPickup());
         } else {
             businessException.addKey(BusinessCode.VALID_ARTICLE);
             throw businessException;
         }
     }
 
+    private boolean validateArticle(Article article, BusinessException businessException) {
+        boolean isValid = true;
+
+        isValid &= isNameValid(article.getArticleName(), businessException);
+        isValid &= isDescriptionValid(article.getDescription(), businessException);
+        isValid &= areDatesValid(article.getStartDate(), article.getEndDate(), businessException);
+        isValid &= isStartingPriceValid(article.getStartingPrice(), businessException);
+        isValid &= isImageUrlValid(article.getImageUrl(), businessException);
+        isValid &= isCategoryValid(article.getCategory(), businessException);
+
+        return isValid;
+    }
+
+    @Override
+    public Article getArticleById(int articleId) {
+        Article article = articleDAO.readByID(articleId);
+        if (article != null) {
+            // Association with Pickup
+            linkPickupToArticle(article);
+        }
+        return article;
+    }
+
+    /**
+     * Private method to centralize the link between an article and its pickup location
+     * @param article
+     */
+    private void linkPickupToArticle(Article article) {
+        Pickup pickup = pickupDAO.read(article.getArticleId());
+        article.setPickup(pickup);
+    }
+
     @Override
     public List<Article> getArticles() {
         List<Article> articles = articleDAO.readAll();
+        if (articles != null) {
+            // Association with Pickup
+            articles.forEach(article -> linkPickupToArticle(article));
+        }
         return articles;
     }
 
@@ -81,17 +138,21 @@ public class ArticleServiceImpl implements ArticleService {
             }
         }
         else {
-            boolean isValid = true ;
-            isValid = isCategoryValid(category,businessException);
-
-            if (pattern == null || pattern.isEmpty()) {
-                filteredArticles = articleDAO.readByCategory(category.getLabel());
+            if(isCategoryValid(category, businessException)) {
+                if (pattern == null || pattern.isEmpty()) {
+                    filteredArticles = articleDAO.readByCategory(category.getCategoryId());
+                } else {
+                    filteredArticles = articleDAO.readByName(pattern).stream()
+                            .filter(article -> article.getCategory().equals(category))
+                            .toList();
+                }
+            } else {
+                throw businessException;
             }
-            else {
-                filteredArticles = articleDAO.readByName(pattern).stream()
-                        .filter(article -> article.getCategory().equals(category))
-                        .toList();
-            }
+        }
+        if (filteredArticles != null) {
+            // Association with Pickup
+            filteredArticles.forEach(article -> linkPickupToArticle(article));
         }
         return filteredArticles;
     }
@@ -193,9 +254,9 @@ public class ArticleServiceImpl implements ArticleService {
     private boolean isImageUrlValid(String imageURL, BusinessException businessException) {
         boolean isValid = true;
 
-        String URLValidationRegex = "https?:\\/\\/[^\\s\"]+\\.(?:jpe?g|png|gif)(?:\\?[^\\s\"]*)?\n";
+        String URLValidationRegex = "https?://[^\\s\"]+\\.(?i)(jpg|jpeg|png|gif)(\\?.*)?";
 
-        if (!imageURL.isEmpty() && !imageURL.matches(URLValidationRegex)) {
+        if (imageURL != null && !imageURL.matches(URLValidationRegex)) {
             isValid = false;
             businessException.addKey(BusinessCode.VALID_ARTICLE_IMAGEURL_PATTERN);
         }
@@ -209,15 +270,54 @@ public class ArticleServiceImpl implements ArticleService {
         if (pickup == null) {
             isValid = false;
             businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_NULL);
+        } else {
+            isValid = isStreetValid(pickup.getStreet(), businessException);
+            isValid &= isCityValid(pickup.getCity(), businessException);
+            isValid &= isZipValid(pickup.getZip(), businessException);
         }
-        else {
-            try {
-                pickupDAO.read(pickup.getArticle().getArticleId());
-            } catch ( RuntimeException e) {
-                isValid = false;
-                businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_UNKNOWN_ARTICLE_ID);
-            }
+
+        return isValid;
+    }
+
+    private boolean isStreetValid(String street, BusinessException businessException) {
+        boolean isValid = true;
+
+        if (street == null || street.isBlank()) {
+            isValid = false;
+            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_STREET_NULL);
+        } else if (street.length() > 30) {
+            isValid = false;
+            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_STREET_MAX);
         }
+
+        return isValid;
+    }
+
+    private boolean isZipValid(String zip, BusinessException businessException) {
+        boolean isValid = true;
+
+        if (zip == null || zip.isBlank()) {
+            isValid = false;
+            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_ZIP_NULL);
+        } else if (zip.length() > 10) {
+            isValid = false;
+            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_ZIP_MAX);
+        }
+
+        return isValid;
+    }
+
+    private boolean isCityValid(String city, BusinessException businessException) {
+        boolean isValid = true;
+
+        if (city == null || city.isBlank()) {
+            isValid = false;
+            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_CITY_NULL);
+        } else if (city.length() > 30) {
+            isValid = false;
+            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_CITY_MAX);
+        }
+
         return isValid;
     }
 
@@ -230,6 +330,4 @@ public class ArticleServiceImpl implements ArticleService {
 
         return isValid;
     }
-
-
 }
