@@ -1,6 +1,7 @@
 package fr.tp.eni.encheresskyjo.bll;
 
 import fr.tp.eni.encheresskyjo.bo.Article;
+import fr.tp.eni.encheresskyjo.bo.ArticleStatus;
 import fr.tp.eni.encheresskyjo.bo.Category;
 import fr.tp.eni.encheresskyjo.bo.Pickup;
 import fr.tp.eni.encheresskyjo.dal.UserDAO;
@@ -53,7 +54,7 @@ public class TestArticleService {
 
     @Test
     public void test_updateArticle() {
-        Article article = articleService.getArticleById(5);
+        Article article = articleService.getArticleById(1);
         article.setDescription("Dell XY12345, processeur Intel Core i5");
         article.getPickup().setCity("Bliblablou");
 
@@ -69,6 +70,13 @@ public class TestArticleService {
     public void test_getArticles() {
         List<Article> articles = articleService.getArticles();
         System.out.println("Articles récupérés : " + articles.size());
+        articles.forEach(System.out::println);
+    }
+
+    @Test
+    public void test_getByStatus() {
+        List<Article> articles = articleService.getByStatus(ArticleStatus.ONGOING);
+        System.out.println("Articles en cours : " + articles.size());
         articles.forEach(System.out::println);
     }
 

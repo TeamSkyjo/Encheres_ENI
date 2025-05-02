@@ -67,7 +67,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         BusinessException businessException = new BusinessException();
         boolean isValid = validateArticle(article, businessException);
-        isValid &= (article.readStatus() == ArticleStatus.ONGOING);
+        isValid &= (article.readStatus() == ArticleStatus.NOT_STARTED);
 
         if (isValid) {
             this.articleDAO.update(article);
