@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *  @Author Teamskyjo
- *  @Version 1.0
+ * @Author Teamskyjo
+ * @Version 1.0
  */
 
 @Service
@@ -41,7 +41,6 @@ public class UserServiceImpl implements UserService {
         isValid &= isCityValid(user.getCity(), businessException);
 
         isValid &= isPasswordValid(user.getPassword(), user.getPasswordConfirm(), businessException);
-
 
 
         if (isValid) {
@@ -144,11 +143,11 @@ public class UserServiceImpl implements UserService {
         }
 
         if (!email.matches(emailRegexValidation)) {
-                isValid = false;
-                businessException.addKey(BusinessCode.VALID_USER_EMAIL_FORMAT);
+            isValid = false;
+            businessException.addKey(BusinessCode.VALID_USER_EMAIL_FORMAT);
         } else if (email.length() > 30) {
-                isValid = false;
-                businessException.addKey(BusinessCode.VALID_USER_EMAIL_LENGTH_MAX);
+            isValid = false;
+            businessException.addKey(BusinessCode.VALID_USER_EMAIL_LENGTH_MAX);
         }
 
         User user = userDAO.readByEmail(email);
@@ -200,7 +199,7 @@ public class UserServiceImpl implements UserService {
         }
 
         return isValid;
-        }
+    }
 
 
     private boolean isZipValid(String zip, BusinessException businessException) {
@@ -214,8 +213,8 @@ public class UserServiceImpl implements UserService {
         }
 
         if (zip.length() > 10) {
-                isValid = false;
-                businessException.addKey(BusinessCode.VALID_ADDRESS_ZIP_LENGTH_MAX);
+            isValid = false;
+            businessException.addKey(BusinessCode.VALID_ADDRESS_ZIP_LENGTH_MAX);
         } else if (!zip.matches(postalCodeRegex)) {
             isValid = false;
             businessException.addKey(BusinessCode.VALID_ADDRESS_ZIP_FORMAT);
@@ -227,7 +226,6 @@ public class UserServiceImpl implements UserService {
 
     private boolean isCityValid(String city, BusinessException businessException) {
         boolean isValid = true;
-
 
 
         if (city == null || city.isBlank()) {
@@ -272,7 +270,6 @@ public class UserServiceImpl implements UserService {
         return isValid;
 
     }
-
 
 
 }
