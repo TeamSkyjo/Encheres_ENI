@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        data-th-replace="~{layouts/layout :: layout(
+                                                mainContent=~{:: main},
+                                                cssContent=~{},
+                                                cssContent2=~{:: link},
+                                                titleContent=~{:: title}
+                                            )}"
+>
+<title>Eni Enchères</title>
+<link rel="stylesheet" data-th-href="@{/css/tp-form.css}">
+
+<main>
+    <h1>Mon profil</h1>
+    <form action="#" method="post">
+
+        <ul class="flex-outer">
+            <li>
+                <label for="username">Pseudo :</label>
+                <input type="text" id="username" name="username" required autofocus>
+            </li>
+            <li>
+                <label for="lastName">Nom :</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </li>
+            <li>
+                <label for="firstName">Prénom :</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </li>
+            <li>
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" required>
+            </li>
+            <li>
+                <label for="phone">Téléphone :</label>
+                <input type="tel" id="phone" name="phone">
+            </li>
+            <li>
+                <label for="street">Rue :</label>
+                <input type="text" id="street" name="street" required>
+            </li>
+            <li>
+                <label for="zip">Code postal :</label>
+                <input type="text" id="zip" name="zip" required>
+            </li>
+            <li>
+                <label for="city">Ville :</label>
+                <input type="text" id="city" name="city" required>
+            </li>
+            <li>
+                <label for="password">Mot de passe :</label>
+                <input type="password" id="password" name="password" minlength="12" required>
+            </li>
+            <li>
+                <label for="pwd-confirm">Confirmation :</label>
+                <input type="password" id="pwd-confirm" name="pwd-confirm" required>
+            </li>
+            <li>
+                <button type="submit">Créer</button>
+            </li>
+            <li>
+                <button type="reset">Annuler</button>
+            </li>
+
+        </ul>
+
+    </form>
+
+
+</main>
+</html>

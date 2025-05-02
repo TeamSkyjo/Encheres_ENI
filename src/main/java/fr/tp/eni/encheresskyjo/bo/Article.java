@@ -80,7 +80,7 @@ public class Article {
         return endDate;
     }
 
-    public void setEndDate(LocalDate bidEndDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
@@ -146,8 +146,8 @@ public class Article {
         sb.append("articleId=").append(articleId);
         sb.append(", articleName='").append(articleName).append('\'');
         sb.append(", description='").append(description).append('\'');
-        sb.append(", bidStartDate=").append(startDate);
-        sb.append(", bidEndDate=").append(endDate);
+        sb.append(", startDate=").append(startDate);
+        sb.append(", endDate=").append(endDate);
         sb.append(", startingPrice=").append(startingPrice);
         sb.append(", sellingPrice=").append(sellingPrice);
         sb.append(", status='").append(status).append('\'');
