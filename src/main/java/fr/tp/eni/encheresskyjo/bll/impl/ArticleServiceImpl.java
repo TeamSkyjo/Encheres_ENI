@@ -16,8 +16,8 @@ import java.util.List;
 
 
 /**
- * @Author Teamskyjo
- * @Version 1.0
+ * @author Teamskyjo
+ * @version 1.0
  * Class to secure the connection between the data & user for the Articles.
  */
 @Service
@@ -55,15 +55,7 @@ public class ArticleServiceImpl implements ArticleService {
             }
             this.articleDAO.create(article);
             // Create associated Pickup
-            Pickup pickup = new Pickup();
-            pickup.setArticle(article);
-            pickup.setCity(article.getSeller().getCity());
-            pickup.setStreet(article.getSeller().getStreet());
-            pickup.setZip(article.getSeller().getZip());
-            article.setPickup(pickup);
-            if (isPickupValid(article.getPickup(), businessException)) {
-                this.pickupDAO.create(pickup);
-            }
+            this.pickupDAO.create(article.getArticleId(), article.getPickup());
         }
     }
 
@@ -74,9 +66,9 @@ public class ArticleServiceImpl implements ArticleService {
         BusinessException businessException = new BusinessException();
         boolean isValid = validateArticle(article, businessException);
 
-        if (isValid && isPickupValid(article.getPickup(), businessException)) {
+        if (isValid) {
             this.articleDAO.update(article);
-            this.pickupDAO.update(article.getPickup());
+            this.pickupDAO.update(article.getArticleId(), article.getPickup());
         } else {
             businessException.addKey(BusinessCode.VALID_ARTICLE);
             throw businessException;
@@ -92,8 +84,9 @@ public class ArticleServiceImpl implements ArticleService {
         isValid &= isStartingPriceValid(article.getStartingPrice(), businessException);
         isValid &= isImageUrlValid(article.getImageUrl(), businessException);
         isValid &= isCategoryValid(article.getCategory(), businessException);
+        isValid &= isPickupValid(article.getPickup(), businessException);
 
-        return isValid;
+            return isValid;
     }
 
     @Override
@@ -150,7 +143,7 @@ public class ArticleServiceImpl implements ArticleService {
                 throw businessException;
             }
         }
-        if (filteredArticles != null) {
+        if (filteredArticles != null && !filteredArticles.isEmpty()) {
             // Association with Pickup
             filteredArticles.forEach(article -> linkPickupToArticle(article));
         }
@@ -167,7 +160,7 @@ public class ArticleServiceImpl implements ArticleService {
         else {
             try {
                 categoryDAO.read(category.getCategoryId());
-            } catch ( RuntimeException e) {
+            } catch (RuntimeException e) {
                 isValid = false;
                 businessException.addKey(BusinessCode.VALID_ARTICLE_CATEGORY_UNKNOWN_ID);
             }
@@ -254,7 +247,7 @@ public class ArticleServiceImpl implements ArticleService {
     private boolean isImageUrlValid(String imageURL, BusinessException businessException) {
         boolean isValid = true;
 
-        String URLValidationRegex = "https?://[^\\s\"]+\\.(?i)(jpg|jpeg|png|gif)(\\?.*)?";
+        String URLValidationRegex = "(?i)^https?://[^\\s\"]+\\.(jpg|jpeg|png|gif)(\\?.*)?$";
 
         if (imageURL != null && !imageURL.matches(URLValidationRegex)) {
             isValid = false;
@@ -282,12 +275,19 @@ public class ArticleServiceImpl implements ArticleService {
     private boolean isStreetValid(String street, BusinessException businessException) {
         boolean isValid = true;
 
+        String streetValidationRegex = "^[0-9]{1,4}(?: ?[A-Za-z]{1,3})?\\s+[\\p{L}0-9 .,'-]+$";
+
         if (street == null || street.isBlank()) {
             isValid = false;
-            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_STREET_NULL);
-        } else if (street.length() > 30) {
-            isValid = false;
-            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_STREET_MAX);
+            businessException.addKey(BusinessCode.VALID_ADDRESS_STREET_NAME_BLANK);
+        } else {
+            if (street.length() > 30) {
+                isValid = false;
+                businessException.addKey(BusinessCode.VALID_ADDRESS_STREET_NAME_LENGTH_MAX);
+            } else if (!street.matches(streetValidationRegex)) {
+                isValid = false;
+                businessException.addKey(BusinessCode.VALID_ADDRESS_STREET_NAME_FORMAT);
+            }
         }
 
         return isValid;
@@ -296,12 +296,19 @@ public class ArticleServiceImpl implements ArticleService {
     private boolean isZipValid(String zip, BusinessException businessException) {
         boolean isValid = true;
 
+        String postalCodeRegex = "^(0[1-9]|[1-8][0-9]|9[0-8])[0-9]{3}$";
+
         if (zip == null || zip.isBlank()) {
+            businessException.addKey(BusinessCode.VALID_ADDRESS_ZIP_BLANK);
+            return false;
+        }
+
+        if (zip.length() > 10) {
             isValid = false;
-            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_ZIP_NULL);
-        } else if (zip.length() > 10) {
+            businessException.addKey(BusinessCode.VALID_ADDRESS_ZIP_LENGTH_MAX);
+        } else if (!zip.matches(postalCodeRegex)) {
             isValid = false;
-            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_ZIP_MAX);
+            businessException.addKey(BusinessCode.VALID_ADDRESS_ZIP_FORMAT);
         }
 
         return isValid;
@@ -311,11 +318,13 @@ public class ArticleServiceImpl implements ArticleService {
         boolean isValid = true;
 
         if (city == null || city.isBlank()) {
+            businessException.addKey(BusinessCode.VALID_ADDRESS_CITY_BLANK);
+            return false;
+        }
+
+        if (city.length() > 30) {
             isValid = false;
-            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_CITY_NULL);
-        } else if (city.length() > 30) {
-            isValid = false;
-            //businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_CITY_MAX);
+            businessException.addKey(BusinessCode.VALID_ADDRESS_CITY_LENGTH_MAX);
         }
 
         return isValid;

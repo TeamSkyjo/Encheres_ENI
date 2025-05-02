@@ -64,5 +64,3 @@ INSERT INTO ENCHERES (no_utilisateur, no_article, date_enchere, montant_enchere)
 (1, 2, DATEADD(DAY,-1,GETDATE()), 320),
 (2, 3, DATEADD(DAY,-2,GETDATE()), 260),
 (1, 4, DATEADD(DAY,-3,GETDATE()), 150);
-
-SELECT * FROM ARTICLES INNER JOIN ENCHERES ON ARTICLES.no_article = ENCHERES.no_article;

@@ -29,16 +29,16 @@ public class TestPickupDAO {
     public void test_create() {
         Article article = new Article();
         article.setArticleId(5);
-        Pickup pickup = new Pickup("rue des mouettes", "29000", "Quimper", article);
-        pickupDAO.create(pickup);
+        Pickup pickup = new Pickup("3 rue des mouettes", "29000", "Quimper");
+        pickupDAO.create(article.getArticleId(), pickup);
     }
 
     @Test
     public void test_update() {
         Article article = new Article();
-        article.setArticleId(5);
-        Pickup pickup = new Pickup("3 rue des mouettes", "29000", "Quimper", article);
-        pickupDAO.update(pickup);
+        article.setArticleId(4);
+        Pickup pickup = new Pickup("3 rue des mouettes", "29000", "Quimper");
+        pickupDAO.update(article.getArticleId(), pickup);
     }
 
     @Test
@@ -46,6 +46,4 @@ public class TestPickupDAO {
         Pickup pickup = pickupDAO.read(5);
         System.out.println(pickup);
     }
-
-
 }

@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -25,6 +26,7 @@ public class UserDAOImpl implements UserDAO {
 
     //DEPENDENCIES INJECTION
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     public UserDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 
@@ -32,7 +34,7 @@ public class UserDAOImpl implements UserDAO {
 
     //SQL REQUESTS
     private static final String INSERT = "INSERT INTO UTILISATEURS (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur)" +
-                                         "VALUES (:pseudo, :nom, :prenom, :email, :telephone, :rue, :code_postal, :ville, :mot_de_passe, :credit, :administrateur);";
+            "VALUES (:pseudo, :nom, :prenom, :email, :telephone, :rue, :code_postal, :ville, :mot_de_passe, :credit, :administrateur);";
     private static final String SELECT_BY_ID = "SELECT * FROM UTILISATEURS WHERE no_utilisateur = :no_utilisateur;";
     private static final String SELECT_BY_USERNAME = "SELECT * FROM UTILISATEURS WHERE pseudo = :pseudo;";
     private static final String SELECT_BY_EMAIL = "SELECT * FROM UTILISATEURS WHERE email = :email;";
@@ -45,6 +47,7 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * Method to create a new user in the database.
+     *
      * @param user
      */
     @Override
@@ -75,6 +78,7 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * Method to search for a user in database from an id
+     *
      * @param userId
      * @return User
      */
@@ -90,8 +94,10 @@ public class UserDAOImpl implements UserDAO {
         );
         return user;
     }
+
     /**
      * Method to search for a user in database from a username
+     *
      * @param username
      * @return User
      */
@@ -109,6 +115,7 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * Method to search for a user in database from an email
+     *
      * @param email
      * @return User
      */
@@ -126,6 +133,7 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * Method to update fields from a user, except id.
+     *
      * @param user
      */
     @Override
@@ -152,6 +160,7 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * Method to update the password from e-mail
+     *
      * @param email
      * @param newPassword
      */
@@ -168,6 +177,7 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * Method to delete a user in the database.
+     *
      * @param userId
      */
     @Override
