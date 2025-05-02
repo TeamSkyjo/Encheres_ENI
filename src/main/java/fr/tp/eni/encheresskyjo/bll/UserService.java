@@ -6,7 +6,8 @@ import fr.tp.eni.encheresskyjo.dto.RegisterDTO;
 public interface UserService {
 
     void createUser(User user);
-    User LoadUser(int userId);
-    void ChangePassword(String email, String newPassword);
-    void deleteProfile(int userId);
+    User loadUser(int userId);
+    void updateUser(User user);
+    void changePassword(String email, String newPassword);
+    void deleteUser(int userId);
 }

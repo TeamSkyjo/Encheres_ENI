@@ -1,7 +1,7 @@
 package fr.tp.eni.encheresskyjo.dto;
 
 /**
- * PAS UTILISE - INUTILE POUR LE MOMENT ?
+ * PAS UTILISE - A
  */
 public class RegisterDTO {
 
