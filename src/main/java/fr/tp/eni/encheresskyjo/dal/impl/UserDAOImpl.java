@@ -2,6 +2,7 @@ package fr.tp.eni.encheresskyjo.dal.impl;
 
 import fr.tp.eni.encheresskyjo.bo.User;
 import fr.tp.eni.encheresskyjo.dal.UserDAO;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -11,6 +12,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @Author TeamSkyjo
@@ -34,6 +36,7 @@ public class UserDAOImpl implements UserDAO {
     private static final String SELECT_BY_ID = "SELECT * FROM UTILISATEURS WHERE no_utilisateur = :no_utilisateur;";
     private static final String SELECT_BY_USERNAME = "SELECT * FROM UTILISATEURS WHERE pseudo = :pseudo;";
     private static final String SELECT_BY_EMAIL = "SELECT * FROM UTILISATEURS WHERE email = :email;";
+    private static final String SELECT_BY_USERNAME_OR_EMAIL = "SELECT pseudo, nom, prenom, email FROM UTILISATEURS WHERE pseudo = :pseudo OR email = :email;";
     private static final String UPDATE_USER = "UPDATE UTILISATEURS SET pseudo = :pseudo, nom = :nom, prenom=:prenom, email=:email, telephone = :telephone, rue=:rue, code_postal=:code_postal, ville=:ville, mot_de_passe=:mot_de_passe, credit= :credit, administrateur=:administrateur\n" +
             "WHERE no_utilisateur = :no_utilisateur;";
     private static final String UPDATE_PASSWORD = "UPDATE UTILISATEURS SET mot_de_passe=:mot_de_passe WHERE email=:email;";
@@ -176,6 +179,26 @@ public class UserDAOImpl implements UserDAO {
                 DELETE,
                 mapSqlParameterSource
         );
+    }
+
+    /**
+     * Checks whether the given user has a unique username and email in the database.
+     *
+     *  @param user the User object containing the username and email to check.
+     *  @return {@code true} if no user with the same username or email exists; {@code false} otherwise.
+     */
+    @Override
+    public boolean isUserUnique(User user) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("pseudo", user.getUsername());
+        mapSqlParameterSource.addValue("email", user.getEmail());
+
+        List<User> users = namedParameterJdbcTemplate.query(
+                SELECT_BY_USERNAME_OR_EMAIL,
+                mapSqlParameterSource,
+                new BeanPropertyRowMapper<>(User.class)
+        );
+        return users.isEmpty();
     }
 }
 

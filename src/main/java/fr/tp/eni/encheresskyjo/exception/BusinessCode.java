@@ -5,7 +5,6 @@ public class BusinessCode {
     // USER
     public static final String VALID_USER_USERNAME_BLANK = "validation.user.username.blank";
     public static final String VALID_USER_USERNAME_LENGTH_MAX = "validation.user.username.length.max";
-    public static final String VALID_USER_EXISTS_ALREADY = "validation.user.uniqueness";
     public static final String VALID_USER_FIRSTNAME_BLANK = "validation.user.firstname.blank";
     public static final String VALID_USER_FIRSTNAME_LENGTH_MAX = "validation.user.firstname.length.max";
     public static final String VALID_USER_LASTNAME_BLANK = "validation.user.lastname.blank";
@@ -13,7 +12,6 @@ public class BusinessCode {
     public static final String VALID_USER_EMAIL_BLANK= "validation.user.email.blank";
     public static final String VALID_USER_EMAIL_FORMAT = "validation.user.email.format";
     public static final String VALID_USER_EMAIL_LENGTH_MAX = "validation.user.email.length.max";
-    public static final String VALID_USER_EMAIL_EXISTS_ALREADY = "validation.user.email.uniqueness";
     public static final String VALID_USER_PHONE_FORMAT = "validation.user.phone.format";
     public static final String VALID_USER_PHONE_LENGTH_MAX = "validation.user.phone.length.max";
     public static final String VALID_ADDRESS_STREET_NAME_BLANK = "validation.address.street.blank";
@@ -27,6 +25,7 @@ public class BusinessCode {
     public static final String VALID_USER_PASSWORD_BLANK= "validation.user.password.blank";
     public static final String VALID_USER_PASSWORD_FORMAT = "validation.user.password.format";
     public static final String VALID_USER_PASSWORD_CONFIRM= "validation.user.password.confirm";
+    public static final String VALID_USER_UNIQUENESS = "validation.user.uniqueness";
 
     // ARTICLE
     public static final String VALID_ARTICLE = "validation.article";
