@@ -2,7 +2,6 @@ package fr.tp.eni.encheresskyjo.dal;
 
 import fr.tp.eni.encheresskyjo.bo.Article;
 import fr.tp.eni.encheresskyjo.bo.Bid;
-import fr.tp.eni.encheresskyjo.bo.Category;
 import fr.tp.eni.encheresskyjo.bo.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,19 +16,20 @@ public class TestBidDAO {
     @Autowired
     private BidDAO bidDAO;
 
+    @Autowired
+    private UserDAO userDAO;
+
+    @Autowired
+    private ArticleDAO articleDAO;
+
     @Test
     public void test_create() {
         Bid bid = new Bid();
         bid.setBidPrice(350);
         bid.setBidDate(LocalDate.now());
 
-        User buyer = new User();
-        buyer.setUserId(3);
-        bid.setBuyer(buyer);
-
-        Article article = new Article();
-        article.setArticleId(2);
-        bid.setArticle(article);
+        bid.setBuyer(userDAO.readById(2));
+        bid.setArticle(articleDAO.readByID(2));
 
         bidDAO.create(bid);
         System.out.println(bid);
@@ -65,13 +65,8 @@ public class TestBidDAO {
         bid.setBidPrice(350);
         bid.setBidDate(LocalDate.now());
 
-        User buyer = new User();
-        buyer.setUserId(3);
-        bid.setBuyer(buyer);
-
-        Article article = new Article();
-        article.setArticleId(2);
-        bid.setArticle(article);
+        bid.setBuyer(userDAO.readById(2));
+        bid.setArticle(articleDAO.readByID(2));
 
         bidDAO.delete(bid);
     }

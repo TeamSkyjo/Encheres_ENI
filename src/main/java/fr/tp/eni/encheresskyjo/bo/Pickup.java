@@ -8,8 +8,6 @@ public class Pickup {
     private String zip;
     private String city;
 
-    private Article article;
-
     public Pickup() {
     }
 
@@ -19,20 +17,12 @@ public class Pickup {
         this.city = city;
     }
 
-    public Pickup(String street, String zip, String city, Article article) {
-        this.street = street;
-        this.zip = zip;
-        this.city = city;
-        this.article = article;
-    }
-
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Pickup{");
         sb.append("street='").append(street).append('\'');
         sb.append(", zip='").append(zip).append('\'');
         sb.append(", city='").append(city).append('\'');
-        sb.append(", article=").append(article);
         sb.append('}');
         return sb.toString();
     }
@@ -41,12 +31,12 @@ public class Pickup {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Pickup retrait = (Pickup) o;
-        return Objects.equals(street, retrait.street) && Objects.equals(zip, retrait.zip) && Objects.equals(city, retrait.city) && Objects.equals(article, retrait.article);
+        return Objects.equals(street, retrait.street) && Objects.equals(zip, retrait.zip) && Objects.equals(city, retrait.city);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(street, zip, city, article);
+        return Objects.hash(street, zip, city);
     }
 
     public String getStreet() {
@@ -71,13 +61,5 @@ public class Pickup {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public Article getArticle() {
-        return article;
-    }
-
-    public void setArticle(Article article) {
-        this.article = article;
     }
 }

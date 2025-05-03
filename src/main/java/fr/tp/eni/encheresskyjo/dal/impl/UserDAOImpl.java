@@ -2,6 +2,7 @@ package fr.tp.eni.encheresskyjo.dal.impl;
 
 import fr.tp.eni.encheresskyjo.bo.User;
 import fr.tp.eni.encheresskyjo.dal.UserDAO;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -9,8 +10,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @Author TeamSkyjo
@@ -23,13 +26,15 @@ public class UserDAOImpl implements UserDAO {
 
     //DEPENDENCIES INJECTION
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     public UserDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 
     }
 
     //SQL REQUESTS
-    private static final String INSERT = "INSERT INTO UTILISATEURS VALUES (:pseudo, :nom, :prenom, :email, :telephone, :rue, :code_postal, :ville, :mot_de_passe, :credit, :administrateur);";
+    private static final String INSERT = "INSERT INTO UTILISATEURS (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur)" +
+            "VALUES (:pseudo, :nom, :prenom, :email, :telephone, :rue, :code_postal, :ville, :mot_de_passe, :credit, :administrateur);";
     private static final String SELECT_BY_ID = "SELECT * FROM UTILISATEURS WHERE no_utilisateur = :no_utilisateur;";
     private static final String SELECT_BY_USERNAME = "SELECT * FROM UTILISATEURS WHERE pseudo = :pseudo;";
     private static final String SELECT_BY_EMAIL = "SELECT * FROM UTILISATEURS WHERE email = :email;";
@@ -42,6 +47,7 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * Method to create a new user in the database.
+     *
      * @param user
      */
     @Override
@@ -72,6 +78,7 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * Method to search for a user in database from an id
+     *
      * @param userId
      * @return User
      */
@@ -87,8 +94,10 @@ public class UserDAOImpl implements UserDAO {
         );
         return user;
     }
+
     /**
      * Method to search for a user in database from a username
+     *
      * @param username
      * @return User
      */
@@ -106,6 +115,7 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * Method to search for a user in database from an email
+     *
      * @param email
      * @return User
      */
@@ -123,6 +133,7 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * Method to update fields from a user, except id.
+     *
      * @param user
      */
     @Override
@@ -149,6 +160,7 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * Method to update the password from e-mail
+     *
      * @param email
      * @param newPassword
      */
@@ -165,6 +177,7 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * Method to delete a user in the database.
+     *
      * @param userId
      */
     @Override
@@ -176,12 +189,53 @@ public class UserDAOImpl implements UserDAO {
                 mapSqlParameterSource
         );
     }
+
+    /**
+     * Checks if the email already exists in the database.
+     *
+     * @param email the email to check.
+     * @return {@code true} if no user with the same email exists; {@code false} otherwise.
+     */
+    @Override
+    public boolean isEmailUnique(String email) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("email", email);
+
+        List<User> users = namedParameterJdbcTemplate.query(
+                SELECT_BY_EMAIL,
+                mapSqlParameterSource,
+                new BeanPropertyRowMapper<>(User.class)
+        );
+
+        return users.isEmpty();
+    }
+
+    /**
+     * Checks if the username already exists in the database.
+     *
+     * @param username the username to check.
+     * @return {@code true} if no user with the same username exists; {@code false} otherwise.
+     */
+    @Override
+    public boolean isUsernameUnique(String username) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("pseudo", username);
+
+        List<User> users = namedParameterJdbcTemplate.query(
+                SELECT_BY_USERNAME,
+                mapSqlParameterSource,
+                new BeanPropertyRowMapper<>(User.class)
+        );
+
+        return users.isEmpty();
+    }
+
 }
 
 /**
  * @Author TeamSkyjo
  * @Version 1.0
- * Class to RowMap Users from the database (in french) to User object.
+ * Class to RowMap Users from the database (in French) to User object.
  */
 class UserRowMapper implements RowMapper<User> {
 

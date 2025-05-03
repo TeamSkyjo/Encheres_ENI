@@ -18,6 +18,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @Author TeamSkyjo
+ * @Version 1.0
+ * Class to connect the database to the "Article" object.
+ */
+
 @Repository
 public class ArticleDAOImpl implements ArticleDAO {
 
@@ -65,7 +71,7 @@ public class ArticleDAOImpl implements ArticleDAO {
                     "INNER JOIN CATEGORIES c ON a.no_categorie = c.no_categorie\n" +
                     "WHERE c.no_categorie = :categoryId";
 
-    // sans le sellingPrice
+
     private static final String UPDATE =
             "UPDATE ARTICLES \n" +
                     "SET nom_article = :nom_article," +
@@ -94,6 +100,10 @@ public class ArticleDAOImpl implements ArticleDAO {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
+    /**
+     * Inserts a new Article into the database.
+     * @param article the new Article object to be created and persisted in the database.
+     */
     @Override
     public void create(Article article) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -120,6 +130,11 @@ public class ArticleDAOImpl implements ArticleDAO {
     }
 
 
+    /**
+     * Retrieves an article from the database using its id.
+     * @param articleId the ID of the article to retrieve.
+     * @return Article the object corresponding to the given ID.
+     */
     @Override
     public Article readByID(int articleId) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -135,12 +150,23 @@ public class ArticleDAOImpl implements ArticleDAO {
         return article;
     }
 
+    /**
+     *  Retrieves all Article records from the database.
+      * @return a list of all articles.
+     */
     @Override
     public List<Article> readAll() {
         List<Article> articles = jdbcTemplate.query(READ_ALL, new ArticleRowMapper());
         return articles;
     }
 
+    /**
+     * Retrieves a list of Article records whose name matches the given pattern.
+     * The search is case-insensitive.
+     *
+     * @param pattern the name pattern to search for.
+     * @return a list of matching articles.
+     */
     @Override
     public List<Article> readByName(String pattern) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -151,6 +177,13 @@ public class ArticleDAOImpl implements ArticleDAO {
     }
 
 
+    /**
+     * Retrieves a list of Article records that belong to categories matching the given label.
+     * The search is case-insensitive.
+     *
+     * @param libelle the category label to search for.
+     * @return a list of articles matching the category.
+     */
     @Override
     public List<Article> readByCategory(int categoryId) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -161,6 +194,11 @@ public class ArticleDAOImpl implements ArticleDAO {
 
     }
 
+    /**
+     * Updates an existing Article in the database with new values.
+     *
+     * @param article the article containing data to update.
+     */
     @Override
     public void update(Article article) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -177,15 +215,27 @@ public class ArticleDAOImpl implements ArticleDAO {
 
     }
 
+    /**
+     * Deletes the Article with the given ID from the database.
+     *
+     * @param articleId the ID of the article to delete.
+     */
     @Override
     public void delete(int articleId) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("no_article", articleId);
 
         namedParameterJdbcTemplate.update(DELETE, mapSqlParameterSource);
-
     }
 
+    /**
+     * Checks whether the given Article is unique for the user,
+     * based on the article name and the seller's user ID.
+     *
+     * @param article the article to check for uniqueness.
+     * @return {@code true} if no other article with the same name exists for the user;
+     *         {@code false} otherwise.
+     */
     @Override
     public boolean isArticleUnique(Article article) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -202,6 +252,15 @@ public class ArticleDAOImpl implements ArticleDAO {
     }
 }
 
+
+/**
+ * @Author TeamSkyjo
+ * @Version 1.0
+ * Maps a row from the database (containing article data in French column names)
+ * to an Article object with nested User (seller) and Category.
+ *
+ * This class is used to convert the result set of an SQL query into a fully populated Article.
+ */
 class ArticleRowMapper implements RowMapper<Article> {
 
     @Override
