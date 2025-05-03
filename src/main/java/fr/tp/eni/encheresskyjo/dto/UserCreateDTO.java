@@ -1,10 +1,13 @@
-package fr.tp.eni.encheresskyjo.bo;
+package fr.tp.eni.encheresskyjo.dto;
 
-import java.util.Objects;
+/**
+ * Formulaire de création de compte: utilisateur soumet les champs
+ * Contrôleur reçoit un UserCreateDTO
+ * BLL valide les données, hashe mdp, transforme DTO en User, appelle userDAO.create(user)
+ * DAO construit la requête SQL INSERT
+ */
+public class UserCreateDTO {
 
-public class User {
-
-    private int userId;
     private String username;
     private String lastName;
     private String firstName;
@@ -14,13 +17,12 @@ public class User {
     private String zip;
     private String city;
     private String password;
-    private int credit;
-    private boolean admin;
+    private String passwordConfirm;
 
-    public User() {
+    public UserCreateDTO() {
     }
 
-    public User(String username, String lastName, String firstName, String email, String telephone, String street, String zip, String city, String password, int credit, boolean admin) {
+    public UserCreateDTO(String username, String lastName, String firstName, String email, String telephone, String street, String zip, String city, String password, String passwordConfirm) {
         this.username = username;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -30,31 +32,7 @@ public class User {
         this.zip = zip;
         this.city = city;
         this.password = password;
-        this.credit = credit;
-        this.admin = admin;
-    }
-
-    public User(int userId, String username, String lastName, String firstName, String email, String telephone, String street, String zip, String city, String password, int credit, boolean admin) {
-        this.userId = userId;
-        this.username = username;
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.email = email;
-        this.telephone = telephone;
-        this.street = street;
-        this.zip = zip;
-        this.city = city;
-        this.password = password;
-        this.credit = credit;
-        this.admin = admin;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+        this.passwordConfirm = passwordConfirm;
     }
 
     public String getUsername() {
@@ -129,27 +107,18 @@ public class User {
         this.password = password;
     }
 
-    public int getCredit() {
-        return credit;
+    public String getPasswordConfirm() {
+        return passwordConfirm;
     }
 
-    public void setCredit(int credit) {
-        this.credit = credit;
-    }
-
-    public boolean isAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
     }
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("User{");
-        sb.append("userId=").append(userId);
-        sb.append(", username='").append(username).append('\'');
+        final StringBuffer sb = new StringBuffer("UserCreateDTO{");
+        sb.append("username='").append(username).append('\'');
         sb.append(", lastName='").append(lastName).append('\'');
         sb.append(", firstName='").append(firstName).append('\'');
         sb.append(", email='").append(email).append('\'');
@@ -157,21 +126,7 @@ public class User {
         sb.append(", street='").append(street).append('\'');
         sb.append(", zip='").append(zip).append('\'');
         sb.append(", city='").append(city).append('\'');
-        sb.append(", credit=").append(credit);
-        sb.append(", admin=").append(admin);
         sb.append('}');
         return sb.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        User that = (User) o;
-        return userId == that.userId;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(userId);
     }
 }
