@@ -1,12 +1,13 @@
 package fr.tp.eni.encheresskyjo.dto;
 
 /**
- * Formulaire de création de compte: utilisateur soumet les champs
+ * Récupère les informations des Formulaires de Création et modification
+ *
  * Contrôleur reçoit un UserCreateDTO
  * BLL valide les données, hashe mdp, transforme DTO en User, appelle userDAO.create(user)
  * DAO construit la requête SQL INSERT
  */
-public class UserCreateDTO {
+public class UserInputDTO {
 
     private String username;
     private String lastName;
@@ -19,10 +20,10 @@ public class UserCreateDTO {
     private String password;
     private String passwordConfirm;
 
-    public UserCreateDTO() {
+    public UserInputDTO() {
     }
 
-    public UserCreateDTO(String username, String lastName, String firstName, String email, String telephone, String street, String zip, String city, String password, String passwordConfirm) {
+    public UserInputDTO(String username, String lastName, String firstName, String email, String telephone, String street, String zip, String city, String password, String passwordConfirm) {
         this.username = username;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -117,7 +118,7 @@ public class UserCreateDTO {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("UserCreateDTO{");
+        final StringBuffer sb = new StringBuffer("UserInputDTO{");
         sb.append("username='").append(username).append('\'');
         sb.append(", lastName='").append(lastName).append('\'');
         sb.append(", firstName='").append(firstName).append('\'');
