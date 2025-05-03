@@ -271,7 +271,7 @@ public class ArticleServiceImpl implements ArticleService {
             isValid = false;
             businessException.addKey(BusinessCode.VALID_ARTICLE_PICKUP_NULL);
         } else {
-            isValid = isStreetValid(pickup.getStreet(), businessException);
+            isValid &= isStreetValid(pickup.getStreet(), businessException);
             isValid &= isCityValid(pickup.getCity(), businessException);
             isValid &= isZipValid(pickup.getZip(), businessException);
         }
@@ -322,12 +322,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     private boolean isArticleUnique(Article article, BusinessException businessException) {
-        boolean isValid = articleDAO.isArticleUnique(article);
 
-        if (!isValid) {
-            businessException.addKey(BusinessCode.VALID_ARTICLE_UNIQUE);
-        }
-
-        return isValid;
+        return articleDAO.isArticleUnique(article);
     }
 }
