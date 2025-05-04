@@ -3,11 +3,15 @@ package fr.tp.eni.encheresskyjo.bll;
 import fr.tp.eni.encheresskyjo.bo.User;
 import fr.tp.eni.encheresskyjo.dal.UserDAO;
 import fr.tp.eni.encheresskyjo.dto.UserCreateDTO;
+import fr.tp.eni.encheresskyjo.dto.UserGeneralDTO;
+import fr.tp.eni.encheresskyjo.dto.UserUpdateDTO;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -96,45 +100,79 @@ public class TestUserService {
 
     @Test
     public void testLoadUser_valid() {
-        User user = userDAO.readByUsername("movieFan");
-        System.out.println("user in DB:\n" + user);
+        userService.createUser(new UserCreateDTO(
+                "movieFan",
+                "Almodovar",
+                "Pedro",
+                "p.almodovar@email.com",
+                null,
+                "5 somewhere",
+                "67345",
+                "MadridInFrance",
+                "MotDePasse123!",
+                "MotDePasse123!"
+        ));
+        UserGeneralDTO dto = userService.loadUser("movieFan");
+        System.out.println("user loaded: " + dto);
 
-        System.out.println("user loaded: ");
-        System.out.println(userService.loadUser("movieFan"));
     }
 
     @Test
     public void testLoadUser_fail() {
-        User user = userDAO.readByUsername("movieFan");
-        System.out.println("user in DB:\n" + user);
+        // user doesn't exist
+        try {
+            UserGeneralDTO dto = userService.loadUser("pseudo");
+            System.out.println("user loaded: " + dto);
+        } catch(BusinessException e) {
+            System.out.println("BusinessException keys: " + e.getKeys());
+        }
 
-        System.out.println("user loaded: ");
-        System.out.println(userService.loadUser("movieFan"));
+    }
+
+    @Test
+    public void testDeleteUser_valid() {
+        // TODO : contraintes de clés étrangères
+        int userId = 1;
+
+        userService.deleteUser(userId);
+
+        try {
+            User deletedUser = userDAO.readById(userId);
+
+            if (deletedUser == null) {
+                System.out.println("User with id " + userId + " has been successfully deleted.");
+            } else {
+                System.out.println("User with id " + userId + " still exists.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error deleting user: " + e.getMessage());
+        }
+
     }
 
 
-
-    // can't retrieve password from DB, always null
-    // -> RowMapper -> DTO !!!
     @Test
     public void testUpdateUser_valid() {
-//        User user = userService.loadUser(5);
-//        System.out.println(user);
-//        System.out.println(user.getPassword());
+        // TODO: ne fonctionne toujours pas !
 
-        //user.setUsername("machin");
-        //user.setTelephone("0678987654");
-        //user.setCity("Paris");
-        //user.getPassword();
-//        user.setPassword("MotDePasseValide=123");
-//        user.setPasswordConfirm("MotDePasseValide=123");
+        User user = userDAO.readById(1);
+        System.out.println("\nAvant update : " + user);
 
-//        try {
-//            userService.updateUser(user);
-//            System.out.println("User : update successful");
-//        } catch (BusinessException businessException){
-//            System.out.println(businessException.getKeys());
-//        }
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setId(1);
+        userUpdateDTO.setUsername("Jojo");
+        userUpdateDTO.setLastName("Almodovar");
+        userUpdateDTO.setCity("Madrid");
+
+        try {
+            userService.updateUser(userUpdateDTO);
+
+            User updatedUser = userDAO.readById(1);
+            System.out.println("\nAfter update : " + updatedUser);
+
+        } catch (BusinessException businessException){
+            System.out.println("Error : " + businessException.getKeys());
+        }
 
     }
 }
