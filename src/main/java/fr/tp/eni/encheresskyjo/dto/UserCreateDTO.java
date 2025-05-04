@@ -1,13 +1,22 @@
 package fr.tp.eni.encheresskyjo.dto;
 
 /**
- * Récupère les informations des Formulaires de Création et modification
  *
- * Contrôleur reçoit un UserCreateDTO
- * BLL valide les données, hashe mdp, transforme DTO en User, appelle userDAO.create(user)
- * DAO construit la requête SQL INSERT
+ * Data Transfert Object used to handle user input when creating a user.
+ *
+ * <p>
+ *     This class holds all necessary user fields, including password and password confirmation,
+ *     which are required for validation before persisting the user.
+ * </p>
+ * <p>
+ *     <strong>Note:</strong> The {@code passwordConfirm} field is used only for validation purposes
+ *     and is not mapped to the User business object or stored in the database.
+ * </p>
+ *
+ * @author TeamSkyjo
+ * @version 1.0.
  */
-public class UserInputDTO {
+public class UserCreateDTO {
 
     private String username;
     private String lastName;
@@ -20,10 +29,10 @@ public class UserInputDTO {
     private String password;
     private String passwordConfirm;
 
-    public UserInputDTO() {
+    public UserCreateDTO() {
     }
 
-    public UserInputDTO(String username, String lastName, String firstName, String email, String telephone, String street, String zip, String city, String password, String passwordConfirm) {
+    public UserCreateDTO(String username, String lastName, String firstName, String email, String telephone, String street, String zip, String city, String password, String passwordConfirm) {
         this.username = username;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -118,7 +127,7 @@ public class UserInputDTO {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("UserInputDTO{");
+        final StringBuffer sb = new StringBuffer("UserCreateDTO{");
         sb.append("username='").append(username).append('\'');
         sb.append(", lastName='").append(lastName).append('\'');
         sb.append(", firstName='").append(firstName).append('\'');

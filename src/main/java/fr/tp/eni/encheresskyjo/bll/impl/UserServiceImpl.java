@@ -2,11 +2,11 @@ package fr.tp.eni.encheresskyjo.bll.impl;
 
 import fr.tp.eni.encheresskyjo.bll.UserService;
 import fr.tp.eni.encheresskyjo.bo.User;
+import fr.tp.eni.encheresskyjo.converter.UserCreateDtoToUserConverter;
 import fr.tp.eni.encheresskyjo.dal.UserDAO;
-import fr.tp.eni.encheresskyjo.dto.RegisterDTO;
+import fr.tp.eni.encheresskyjo.dto.UserCreateDTO;
 import fr.tp.eni.encheresskyjo.exception.BusinessCode;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,86 +18,98 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserServiceImpl implements UserService {
     private UserDAO userDAO;
+    private UserCreateDtoToUserConverter userCreateDtoToUserConverter;
 
-    public UserServiceImpl(UserDAO userDAO) {
+    public UserServiceImpl(UserDAO userDAO, UserCreateDtoToUserConverter userCreateDtoToUserConverter) {
         this.userDAO = userDAO;
+        this.userCreateDtoToUserConverter = userCreateDtoToUserConverter;
     }
 
-
+    /**
+     * Creates a new user in the system.
+     *
+     *  <p>
+     *      <ol>
+     *          <li>Validates the input data according to the business rules.</li>
+     *          <li>Checks for username and email uniqueness.</li>
+     *          <li>Converts the input DTO into a User business object.</li>
+     *          <li>Persists the User object using the DAL.</li>
+     *          </ol>
+     *  </p>
+     *
+     * @param dto the user input dto containing user details
+     * @throws BusinessException if validation fails or if the user is not unique.
+     */
     @Transactional
     @Override
-    public void createUser(User user) {
+    public void createUser(UserCreateDTO dto) {
         BusinessException businessException = new BusinessException();
-        boolean isValid = validateUserForCreate(user, businessException);
+        boolean isValid = validateUser(dto, businessException);
 
         if (!isValid) {
             businessException.addKey(BusinessCode.VALID_USER);
             throw businessException;
 
         } else {
-            if(!isUserUnique(user, businessException)) {
+            if(!isUserUnique(dto, businessException)) {
                 businessException.addKey(BusinessCode.VALID_USER_UNIQUENESS);
                 throw businessException;
             }
-            this.userDAO.create(user);
+
+            User user = userCreateDtoToUserConverter.convert(dto);
+            userDAO.create(user);
         }
     }
 
+    /**
+     *
+     * @param dto
+     */
     @Override
     @Transactional
-    public void updateUser(User user) {
+    public void updateUser(UserCreateDTO dto) {
+        //User existingUser = userDAO.readById(user.getUserId());
+
 
         BusinessException businessException = new BusinessException();
-        boolean isValid = validateUserForUpdate(user, businessException);
+        boolean isValid = validateUser(dto, businessException);
 
-        if (isValid) {
-            this.userDAO.updateAll(user);
-        } else {
-            businessException.addKey(BusinessCode.VALID_USER);
-            throw businessException;
-        }
+        // TODO : converter UserInputDTO -> User
+
+//        if (isValid) {
+//            this.userDAO.updateAll(dto);
+//        } else {
+//            businessException.addKey(BusinessCode.VALID_USER);
+//            throw businessException;
+//        }
 
     }
 
-    private boolean validateUserForCreate(User user, BusinessException businessException) {
+    private boolean validateUser(UserCreateDTO dto, BusinessException businessException) {
         boolean isValid = true;
 
-        isValid = isUsernameValid(user.getUsername(), businessException);
-        isValid &= isFirstnameValid(user.getFirstName(), businessException);
-        isValid &= isLastnameValid(user.getLastName(), businessException);
-        isValid &= isEmailValid(user.getEmail(), businessException);
-        isValid &= isPhoneValid(user.getTelephone(), businessException);
-        isValid &= isStreetValid(user.getStreet(), businessException);
-        isValid &= isZipValid(user.getZip(), businessException);
-        isValid &= isCityValid(user.getCity(), businessException);
-        isValid &= isPasswordValid(user.getPassword(), user.getPasswordConfirm(), businessException);
+        isValid = isUsernameValid(dto.getUsername(), businessException);
+        isValid &= isFirstnameValid(dto.getFirstName(), businessException);
+        isValid &= isLastnameValid(dto.getLastName(), businessException);
+        isValid &= isEmailValid(dto.getEmail(), businessException);
+        isValid &= isPhoneValid(dto.getTelephone(), businessException);
+        isValid &= isStreetValid(dto.getStreet(), businessException);
+        isValid &= isZipValid(dto.getZip(), businessException);
+        isValid &= isCityValid(dto.getCity(), businessException);
+        isValid &= isPasswordValid(dto.getPassword(), dto.getPasswordConfirm(), businessException);
 
         return isValid;
     }
 
-    private boolean validateUserForUpdate(User user, BusinessException businessException) {
-        boolean isValid = true;
+//  Passer par une DTO :
+    // DAO: readById() -> retourne User
+    // BLL: convertit en DTO
+    // Contrôleur: passe UserDTO dans Formulaire
 
-        isValid = isUsernameValid(user.getUsername(), businessException);
-        isValid &= isFirstnameValid(user.getFirstName(), businessException);
-        isValid &= isLastnameValid(user.getLastName(), businessException);
-        isValid &= isEmailValid(user.getEmail(), businessException);
-        isValid &= isPhoneValid(user.getTelephone(), businessException);
-        isValid &= isStreetValid(user.getStreet(), businessException);
-        isValid &= isZipValid(user.getZip(), businessException);
-        isValid &= isCityValid(user.getCity(), businessException);
-
-        // Only validate the password if it is filled in (not null or blank)
-        if (user.getPassword() != null && !user.getPassword().isBlank()) {
-            isValid &= isPasswordValid(user.getPassword(), user.getPasswordConfirm(), businessException);
-        }
-
-        return isValid;
-    }
-
+    // profil d'un autre utilisateur (lien depuis pseudo)
     @Override
-    public User loadUser(int userId) {
-        return userDAO.readById(userId);
+    public User loadUser(String username) {
+        return userDAO.readByUsername(username);
     }
 
 
@@ -108,6 +120,7 @@ public class UserServiceImpl implements UserService {
         userDAO.updatePassword(email, newPassword);
     }
 
+    //TODO
     @Override
     public void deleteUser(int userId) {
         userDAO.delete(userId);
@@ -289,9 +302,10 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private boolean isUserUnique(User user, BusinessException businessException) {
-        boolean isUsernameUnique = userDAO.isUsernameUnique(user.getUsername());
-        boolean isEmailUnique = userDAO.isEmailUnique(user.getEmail());
+
+    private boolean isUserUnique(UserCreateDTO dto, BusinessException businessException) {
+        boolean isUsernameUnique = userDAO.isUsernameUnique(dto.getUsername());
+        boolean isEmailUnique = userDAO.isEmailUnique(dto.getEmail());
 
         if (!isUsernameUnique) {
             businessException.addKey(BusinessCode.VALID_USER_USERNAME_UNIQUENESS);
