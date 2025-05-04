@@ -1,9 +1,13 @@
 package fr.tp.eni.encheresskyjo.dto;
 
 /**
- * Formulaire d'affichage de profil
+ * Data Transfer Object used to handle general user information common to user creation, update or profile display operations.
+ *
+ * @author TeamSkyjo
+ * @version version 1.0
  */
-public class UserDisplayDTO {
+public class UserGeneralDTO {
+
     private String username;
     private String lastName;
     private String firstName;
@@ -13,10 +17,10 @@ public class UserDisplayDTO {
     private String zip;
     private String city;
 
-    public UserDisplayDTO() {
+    public UserGeneralDTO() {
     }
 
-    public UserDisplayDTO(String username, String lastName, String firstName, String email, String telephone, String street, String zip, String city) {
+    public UserGeneralDTO(String username, String lastName, String firstName, String email, String telephone, String street, String zip, String city) {
         this.username = username;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -93,7 +97,7 @@ public class UserDisplayDTO {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("UserDisplayDTO{");
+        final StringBuffer sb = new StringBuffer("UserGeneralDTO{");
         sb.append("username='").append(username).append('\'');
         sb.append(", lastName='").append(lastName).append('\'');
         sb.append(", firstName='").append(firstName).append('\'');
