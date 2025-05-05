@@ -3,9 +3,11 @@ package fr.tp.eni.encheresskyjo.bll.impl;
 import fr.tp.eni.encheresskyjo.bll.CategoryService;
 import fr.tp.eni.encheresskyjo.bo.Category;
 import fr.tp.eni.encheresskyjo.dal.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class CategoryServiceImpl implements CategoryService {
 
     //Dependencies Injection
