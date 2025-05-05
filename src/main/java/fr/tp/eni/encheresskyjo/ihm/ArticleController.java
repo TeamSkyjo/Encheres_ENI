@@ -29,8 +29,6 @@ import java.util.List;
  * @Version 1.0
  * Class to control map the views for the article webpages
  */
-
-
 @Controller
 public class ArticleController {
 
