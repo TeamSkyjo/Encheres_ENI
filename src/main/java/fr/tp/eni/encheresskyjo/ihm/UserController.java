@@ -16,8 +16,6 @@ public class UserController {
         this.userService = userService;
     }
 
-
-
     /**
      * map to another user's profile WHEN USER IS LOGGED IN.
      * @param username
