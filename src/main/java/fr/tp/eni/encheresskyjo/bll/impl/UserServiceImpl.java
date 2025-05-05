@@ -295,6 +295,11 @@ public class UserServiceImpl implements UserService {
         userDAO.delete(userId);
     }
 
+    @Override
+    public User getByUsername(String username) {
+        return userDAO.readByUsername(username);
+    }
+
 
     private boolean isUsernameValid(String username, BusinessException businessException) {
         boolean isValid = true;

@@ -7,6 +7,7 @@ import fr.tp.eni.encheresskyjo.bll.UserService;
 import fr.tp.eni.encheresskyjo.bo.Article;
 import fr.tp.eni.encheresskyjo.bo.ArticleStatus;
 import fr.tp.eni.encheresskyjo.bo.Category;
+import fr.tp.eni.encheresskyjo.bo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.security.Principal;
 import java.util.List;
 
 
@@ -39,6 +41,16 @@ public class ArticleController {
         this.categoryService = categoryService;
         this.bidService = bidService;
         this.userService = userService;
+    }
+
+    // Add loggedUser in the Model
+    // To do in every Controller
+    @ModelAttribute("loggedUser")
+    public User loggedUser(Principal principal) {
+        if (principal != null) {
+            return userService.getByUsername(principal.getName());
+        }
+        return null;
     }
 
     //mapping
@@ -80,7 +92,6 @@ public class ArticleController {
         model.addAttribute("categories", categories);
         return "index";
     }
-
 
     @GetMapping("/article")
     public String displayArticle(
