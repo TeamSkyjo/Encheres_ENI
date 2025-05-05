@@ -26,6 +26,14 @@ UPDATE UTILISATEURS SET mot_de_passe='testestest' WHERE email='laety@vrd.fr';
 
 DELETE FROM UTILISATEURS WHERE no_utilisateur=11;
 
+
+-- repartir avec le jeu de données de base
+DELETE FROM UTILISATEURS WHERE no_utilisateur>4;
+DBCC CHECKIDENT ('UTILISATEURS', RESEED, 4);
+SELECT * FROM UTILISATEURS;
+
+
+
 SELECT * FROM RETRAITS ; 
 SELECT * FROM ARTICLES ;
 
@@ -46,8 +54,8 @@ VALUES ('movieFan', 'Almodovar', 'Pedro', 'p.almodovar@email.com', null, '5 some
 
 DELETE FROM UTILISATEURS WHERE no_utilisateur>4;
 
--- aprï¿½s le DELETE, pour repartir ï¿½ auto-incrï¿½mentation de l'id ï¿½ partir du jeu de donnï¿½es initial
--- la prochaine donnï¿½e insï¿½rï¿½e aura l'id 5
+-- après le DELETE, pour repartir à auto-incrémentation de l'id à partir du jeu de données initial
+-- la prochaine donnée insérée aura l'id 5
 DBCC CHECKIDENT ('UTILISATEURS', RESEED, 4);
 
 SELECT * FROM UTILISATEURS;
