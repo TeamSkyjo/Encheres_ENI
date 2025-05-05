@@ -39,6 +39,7 @@ public class WebSecurityConfiguration {
 //                            .requestMatchers("/css/*").permitAll()
 //                            .requestMatchers("/images/*").permitAll()
 //                            .anyRequest().authenticated();
+                    auth.requestMatchers(HttpMethod.POST, "/inscription").permitAll();
                     auth.anyRequest().permitAll();
                 }
         );

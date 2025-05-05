@@ -93,7 +93,6 @@
     </form>
 
 
-
     <div class="bidlist">
       <div data-th-each="article: ${articles}" class="bidcards">
 
@@ -103,8 +102,7 @@
         <p data-th-text = "'Date de fin : ' + ${article.endDate}"></p>
 
         <p>
-          data-th-text = "Vendeur :"
-          <a data-th-href="@{/profil(username=${article.seller.username})}" data-th-text="${article.seller.username}"></a>
+          <a data-th-href="@{/profil(username=${article.seller.username})}" data-th-text="'Vendeur :' + ${article.seller.username}"></a>
         </p>
 
       </div>

@@ -12,6 +12,7 @@ import fr.tp.eni.encheresskyjo.dto.UserUpdateDTO;
 import fr.tp.eni.encheresskyjo.exception.BusinessCode;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,7 +73,10 @@ public class UserServiceImpl implements UserService {
                 throw businessException;
             }
 
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            String encodedPassword = encoder.encode(dto.getPassword());
             User user = userCreateDtoToUserConverter.convert(dto);
+            user.setPassword("{bcrypt}" + encodedPassword);
             userDAO.create(user);
         }
     }
