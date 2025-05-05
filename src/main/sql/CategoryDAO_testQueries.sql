@@ -29,3 +29,10 @@ DELETE FROM ARTICLES WHERE no_article > 4;
 -- après le DELETE, pour repartir à auto-incrémentation de l'id à partir du jeu de données initial
 -- la prochaine donnée insérée aura l'id 5
 DBCC CHECKIDENT ('ARTICLES', RESEED, 4);
+
+-- Insertion
+INSERT INTO CATEGORIES VALUES ('Voitures');
+
+-- Suppression
+DELETE FROM CATEGORIES WHERE no_categorie = 4;
+DELETE FROM CATEGORIES WHERE no_categorie = 54;

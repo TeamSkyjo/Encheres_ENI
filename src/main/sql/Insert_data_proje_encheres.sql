@@ -24,19 +24,19 @@ SET IDENTITY_INSERT UTILISATEURS ON;
 
 INSERT INTO UTILISATEURS (no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES
 (1, 'techguy', 'Martin', 'Lucas', 'lucas.martin@email.com', '0601020304', '12 rue de l''Info', '75001', 'Paris', 
- '$2a$10$kHbAVAt47pD.9mFChqZ1jOS3Cu9csyhKUk.ZqxShspqVEIQntFtfa', 1500, 0),
+ '{bcrypt}$2a$12$mZmizxD.C0Y55LaOudITNuKrOmROLrUBLxSOo9j733ghXAKyzi.lW', 1500, 0),
 (2, 'meublequeen', 'Durand', 'Claire', 'claire.durand@email.com', '0602030405', '8 avenue des Meubles', '69000', 'Lyon', 
- '$2a$10$7VqBS8C0D1pR14zEV0cC4OExzDqS.5IdgoF1g8hSpIbEM4FhdwIyu', 1200, 0),
+ '{bcrypt}$2a$12$wrGC3yx6Lvo1wvZvonfdJOR14TsJFT5dHMxlXpdbtbtoBiQ.NjK8m', 1200, 0),
 (3, 'sporty', 'Lemoine', 'Julien', 'julien.lemoine@email.com', NULL, '45 rue des Sports', '31000', 'Toulouse', 
- '$2a$10$HQrl0N0d9ktUkZC7v0X.ZOivvVDViQrHQGLZGuGb6I/NXko2bFVo2', 1000, 0),
+ '{bcrypt}$2a$12$NHhiOwfP8ZMs9d9r./ED0eFk4BTADsCOleJsuqB3SK/skdKoKMuUm', 1000, 0),
 (4, 'admin', 'Admin', 'Super', 'admin@site.com', '0600000000', '1 rue de l''Admin', '99999', 'Webtown', 
- '$2a$10$eEbzZpW94b5LqWZL2iHpiONOCgujj2crhTmwT1zAFmZYzLbwK3mx6', 9999, 1);
+ '{bcrypt}$2a$12$oKuuPMKR9mXQZWHQEGKYBO46LKkrQx0el0Ahlhetvs9tp2Q9rtp1q', 9999, 1);
 
 --Mots de passe : 
---techguy	pass123	$2a$10$kHbAVAt47pD.9mFChqZ1jOS3Cu9csyhKUk.ZqxShspqVEIQntFtfa
---meublequeen	secret	$2a$10$7VqBS8C0D1pR14zEV0cC4OExzDqS.5IdgoF1g8hSpIbEM4FhdwIyu
---sporty	foot2024	$2a$10$HQrl0N0d9ktUkZC7v0X.ZOivvVDViQrHQGLZGuGb6I/NXko2bFVo2
---admin	adminpass	$2a$10$eEbzZpW94b5LqWZL2iHpiONOCgujj2crhTmwT1zAFmZYzLbwK3mx6
+--techguy		pass123		$2a$12$mZmizxD.C0Y55LaOudITNuKrOmROLrUBLxSOo9j733ghXAKyzi.lW
+--meublequeen	secret		$2a$12$wrGC3yx6Lvo1wvZvonfdJOR14TsJFT5dHMxlXpdbtbtoBiQ.NjK8m
+--sporty		foot2024	$2a$12$NHhiOwfP8ZMs9d9r./ED0eFk4BTADsCOleJsuqB3SK/skdKoKMuUm
+--admin			adminpass	$2a$12$oKuuPMKR9mXQZWHQEGKYBO46LKkrQx0el0Ahlhetvs9tp2Q9rtp1q
 
 SET IDENTITY_INSERT UTILISATEURS OFF;
 
