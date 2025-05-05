@@ -101,8 +101,8 @@
         <p data-th-text = "'Meilleure offre : ' + ${article.sellingPrice}">Prix : </p>
         <p data-th-text = "'Date de fin : ' + ${article.endDate}"></p>
 
-        <p>
-          <a data-th-href="@{/profil(username=${article.seller.username})}" data-th-text="'Vendeur :' + ${article.seller.username}"></a>
+        <p>Vendeur :
+          <a data-th-href="@{/profil(username=${article.seller.username})}" data-th-text="${article.seller.username}"></a>
         </p>
 
       </div>
