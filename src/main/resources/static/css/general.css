@@ -19,6 +19,7 @@ header li {
 
 /* Header */
 header {
+	color: white;
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
@@ -39,12 +40,12 @@ header li {
 
 header a {
 	text-decoration: none;
-	color: #555;
+	color: white;
 	transition: all 0.3s ease 0s;
 }
 
 header a:hover {
-	color: rgb(0, 128, 192);
+	color: rgba(255, 222, 173, 0.83);
 }
 
 main {
@@ -71,9 +72,7 @@ main h1 {
 /* 
 Module 04 - TP 2
 Remplacement de la couleur des liens par défaut à blanc*/
-header a {
-	color: white;
-}
+
 
 /* 
 Module 04 - TP 6
