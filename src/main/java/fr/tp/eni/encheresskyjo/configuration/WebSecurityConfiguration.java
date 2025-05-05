@@ -44,12 +44,15 @@ public class WebSecurityConfiguration {
                 }
         );
 
-//        http.formLogin(login -> {
-//            login.loginPage("/login");
-//            login.defaultSuccessUrl("/login_success");
-//            login.permitAll();
-//        });
-        http.formLogin(Customizer.withDefaults());
+        // Use default Spring login form
+//        http.formLogin(Customizer.withDefaults());
+
+        // Use personalized login form
+        http.formLogin(login -> {
+            login.loginPage("/login");
+            login.defaultSuccessUrl("/login_success");
+            login.permitAll();
+        });
 
         http.logout(logout -> {
             logout.invalidateHttpSession(true);

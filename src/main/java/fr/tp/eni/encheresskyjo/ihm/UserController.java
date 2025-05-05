@@ -31,8 +31,6 @@ public class UserController {
     }
 
 
-
-
     /**
      * map to another user's profile WHEN USER IS LOGGED IN.
      * @param username
@@ -48,31 +46,4 @@ public class UserController {
 
         return "/user/profile";
     }
-
-//    @GetMapping("/monprofil")
-//    public String displayMyProfile(
-//            Principal
-//
-//    )
-
-
-//    @GetMapping("/films/detail")
-//    public String afficherUnFilm(
-//            @RequestParam(name="id", required = true) long id,
-//            Model model
-//    ) {
-//        Film film =  this.filmService.consulterFilmParId(id);
-//        model.addAttribute("film", film);
-//        return "film/details";
-//    }
-//
-//    @GetMapping("/films")
-//    public String afficherFilms(
-//            Model model
-//    ) {
-//        List<Film> films = this.filmService.consulterFilms();
-//        model.addAttribute("films", films);
-//        return "film/list";
-//    }
-
 }

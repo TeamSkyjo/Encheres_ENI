@@ -3,6 +3,9 @@ package fr.tp.eni.encheresskyjo.ihm;
 import fr.tp.eni.encheresskyjo.bll.UserService;
 import fr.tp.eni.encheresskyjo.dto.UserCreateDTO;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
+import fr.tp.eni.encheresskyjo.bll.UserService;
+import fr.tp.eni.encheresskyjo.bo.User;
+import fr.tp.eni.encheresskyjo.exception.BusinessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,13 +22,21 @@ import java.security.Principal;
 public class SecurityController {
     private final UserService userService;
 
-//    private ContexteService contexteService;
 
     public SecurityController(
-//            ContexteService contexteService
-            UserService userService) {
-//        this.contexteService = contexteService;
+            UserService userService
+    ) {
         this.userService = userService;
+    }
+
+    // Add loggedUser in the Model
+    // To do in every Controller
+    @ModelAttribute("loggedUser")
+    public User loggedUser(Principal principal) {
+        if (principal != null) {
+            return userService.getByUsername(principal.getName());
+        }
+        return null;
     }
 
     @GetMapping("/login")
@@ -64,9 +75,11 @@ public class SecurityController {
 
 //    @GetMapping("/login_success")
 //    public String loginSuccess(
+    @GetMapping("/login_success")
+    public String loginSuccess(
 //            @ModelAttribute("membreSession") Membre membreSession,
 //            Principal principal
-//    ) {
+    ) {
 //        String mail = principal.getName();
 //        Membre membre = contexteService.charger(mail);
 //
@@ -76,35 +89,6 @@ public class SecurityController {
 //        membreSession.setPrenom(membre.getPrenom());
 //        membreSession.setNom(membre.getNom());
 //
-//        return "redirect:/films";
-//    }
-
-//    @GetMapping("/inscription")
-//    public String displayRegisterForm(
-//            Model model
-//    ) {
-//        RegisterDTO registerDTO = new RegisterDTO();
-//        model.addAttribute("registerdto", registerDTO);
-//
-//        return "/register";
-//    }
-
-//    @PostMapping("/inscription")
-//    public String register(
-//            @ModelAttribute("registerdto") RegisterDTO registerDTO,
-//            BindingResult bindingResult,
-//            Model model
-//    ) {
-//        try {
-//            contexteService.createUser(registerDTO);
-//            return "redirect:/login";
-//        } catch (BusinessException exception) {
-//            exception.getKeys().forEach(key -> {
-//                ObjectError error = new ObjectError("globalError", key);
-//                bindingResult.addError(error);
-//            });
-//            model.addAttribute("registerdto", registerDTO);
-//            return "/register";
-//        }
-//    }
+        return "redirect:/";
+    }
 }
