@@ -7,8 +7,8 @@ GO
 DROP TABLE IF EXISTS ROLES;
 
 CREATE TABLE ROLES(	
-	ROLE NVARCHAR(50) NOT NULL, 
-	IS_ADMIN int NOT NULL,
+	role NVARCHAR(50) NOT NULL, 
+	is_admin int NOT NULL,
 	PRIMARY KEY (ROLE, IS_ADMIN)
 );
 
@@ -20,4 +20,11 @@ INSERT INTO ROLES (ROLE, IS_ADMIN) VALUES ('ROLE_ADMIN',1);
 -- SELECT pseudo, password, 1 AS enabled FROM UTILISATEURS WHERE pseudo = ?;
 SELECT pseudo, mot_de_passe, 1 AS enabled FROM UTILISATEURS WHERE pseudo = 'techguy';
 
--- SELECT * FROM UTILISATEURS;
+SELECT * FROM UTILISATEURS;
+
+-- Récupération des rôles
+-- SELECT pseudo, ROLE FROM UTILISATEURS INNER JOIN ROLES ON administrateur = is_admin WHERE pseudo = ?;
+SELECT pseudo, ROLE FROM UTILISATEURS
+INNER JOIN ROLES ON administrateur = is_admin WHERE pseudo = 'techguy';
+SELECT pseudo, ROLE FROM UTILISATEURS
+INNER JOIN ROLES ON administrateur = is_admin WHERE pseudo = 'admin';
