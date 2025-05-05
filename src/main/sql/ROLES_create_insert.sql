@@ -1,0 +1,23 @@
+USE Projet_Encheres;
+GO
+
+-- Table des rôles
+-- Si UTILISATEURS.administrateur = 1 : ROLE_ADMIN et ROLE_MEMBRE
+-- Sinon : ROLE_MEMBRE
+DROP TABLE IF EXISTS ROLES;
+
+CREATE TABLE ROLES(	
+	ROLE NVARCHAR(50) NOT NULL, 
+	IS_ADMIN int NOT NULL,
+	PRIMARY KEY (ROLE, IS_ADMIN)
+);
+
+INSERT INTO ROLES (ROLE, IS_ADMIN) VALUES ('ROLE_MEMBRE',0);
+INSERT INTO ROLES (ROLE, IS_ADMIN) VALUES ('ROLE_MEMBRE',1);
+INSERT INTO ROLES (ROLE, IS_ADMIN) VALUES ('ROLE_ADMIN',1);
+
+-- Requête pour récupérer les identifiants
+-- SELECT pseudo, password, 1 AS enabled FROM UTILISATEURS WHERE pseudo = ?;
+SELECT pseudo, mot_de_passe, 1 AS enabled FROM UTILISATEURS WHERE pseudo = 'techguy';
+
+-- SELECT * FROM UTILISATEURS;
