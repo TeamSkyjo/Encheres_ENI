@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        data-th-replace="~{layouts/layout :: layout(
+                                                mainContent=~{:: main},
+                                                cssContent=~{:: link},
+                                                cssContent2=~{:: link},
+                                                titleContent=~{:: title}
+                                            )}"
+>
+
+<link rel="stylesheet" data-th-href="@{/css/tp-form.css}">
+<link rel="stylesheet" data-th-href="@{/css/tp-error.css}">
+
+<title data-th-text="#{login.title}"></title>
+
+<main>
+    <h1 data-th-text="#{login.h1}"></h1>
+    <form data-th-action="@{/login}" method="post">
+        <ul class="flex-outer">
+            <li>
+                <label for="username" data-th-text="#{login.form.username}"></label>
+                <input type="text" id="username" name="username" required autofocus>
+            </li>
+            <li>
+                <label for="password" data-th-text="#{login.form.password}"></label>
+                <input type="password" id="password" name="password" required>
+            </li>
+            <li>
+                <button type="submit" data-th-text="#{login.form.button}"></button>
+            </li>
+        </ul>
+    </form>
+</main>
+</html>
