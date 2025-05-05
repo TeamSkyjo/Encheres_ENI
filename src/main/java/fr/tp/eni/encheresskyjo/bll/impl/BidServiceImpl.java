@@ -5,9 +5,11 @@ import fr.tp.eni.encheresskyjo.bo.Article;
 import fr.tp.eni.encheresskyjo.bo.Bid;
 import fr.tp.eni.encheresskyjo.bo.User;
 import fr.tp.eni.encheresskyjo.dal.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class BidServiceImpl implements BidService {
 
     //Dependencies Injection
