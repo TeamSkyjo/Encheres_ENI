@@ -10,10 +10,10 @@
                                             )}"
 >
 
-<title>Eni Enchères</title>
+<title data-th-text="#{article.create.title}"></title>
 <link rel="stylesheet" data-th-href="@{/css/bidlist.css}">
 
 <main>
-    <form data-th-replace="~{fragments/fragment-article-form :: article-form('')}"></form>
+  <form data-th-replace="~{fragments/fragment-article-form :: article-form('create')}"></form>
 </main>
 </html>

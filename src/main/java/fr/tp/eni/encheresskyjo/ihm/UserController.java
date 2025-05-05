@@ -16,11 +16,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/inscription")
-    public String displayRegistrationForm(Model model) {
 
-        return "/register";
-    }
 
     /**
      * map to another user's profile WHEN USER IS LOGGED IN.
