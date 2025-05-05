@@ -3,6 +3,7 @@ package fr.tp.eni.encheresskyjo.exception;
 public class BusinessCode {
 
     // USER
+    public static final String USER_NOT_FOUND = "user_not_found";
     public static final String VALID_USER = "validation_user";
     public static final String VALID_USER_UNIQUENESS = "validation.user.uniqueness";
     public static final String VALID_USER_USERNAME_BLANK = "validation.user.username.blank";
@@ -29,6 +30,7 @@ public class BusinessCode {
     public static final String VALID_USER_PASSWORD_BLANK= "validation.user.password.blank";
     public static final String VALID_USER_PASSWORD_FORMAT = "validation.user.password.format";
     public static final String VALID_USER_PASSWORD_CONFIRM= "validation.user.password.confirm";
+    public static final String VALID_USER_PASSWORD_CURRENT_BLANK = "validation.user.password.current.blank"; // TO DELETE AFTER SPRING SECURITY
 
 
     // ARTICLE

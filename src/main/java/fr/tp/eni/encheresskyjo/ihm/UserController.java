@@ -19,4 +19,10 @@ public class UserController {
 
         return "/register";
     }
+
+    @GetMapping("/profil")
+    public String displayUserProfile(Model model) {
+
+        return "/user/profile";
+    }
 }

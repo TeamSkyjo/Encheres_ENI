@@ -2,11 +2,16 @@ package fr.tp.eni.encheresskyjo.bll;
 
 import fr.tp.eni.encheresskyjo.bo.User;
 import fr.tp.eni.encheresskyjo.dal.UserDAO;
+import fr.tp.eni.encheresskyjo.dto.UserCreateDTO;
+import fr.tp.eni.encheresskyjo.dto.UserGeneralDTO;
+import fr.tp.eni.encheresskyjo.dto.UserUpdateDTO;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -22,20 +27,20 @@ public class TestUserService {
 
     @Test
     public void testCreateUser_valid() {
-        User user = new User();
-        user.setUsername("Jojo89");
-        user.setLastName("Lapin");
-        user.setFirstName("Jojo");
-        user.setEmail("jojo89@gmail.com");
-        user.setTelephone("");
-        user.setStreet("4 rue du terrier");
-        user.setZip("89024");
-        user.setCity("LapinVille");
-        user.setPassword("Pa$$w0rdlong");
-        user.setPasswordConfirm("Pa$$w0rdlong");
+        UserCreateDTO userCreateDTO = new UserCreateDTO();
+        userCreateDTO.setUsername("Jojo89");
+        userCreateDTO.setLastName("Lapin");
+        userCreateDTO.setFirstName("Jojo");
+        userCreateDTO.setEmail("jojo89@gmail.com");
+        userCreateDTO.setTelephone("");
+        userCreateDTO.setStreet("4 rue du terrier");
+        userCreateDTO.setZip("89024");
+        userCreateDTO.setCity("LapinVille");
+        userCreateDTO.setPassword("Pa$$w0rdlong");
+        userCreateDTO.setPasswordConfirm("Pa$$w0rdlong");
 
         try {
-            userService.createUser(user);
+            userService.createUser(userCreateDTO);
         } catch (BusinessException e) {
             System.out.println("BusinessException keys: " + e.getKeys());
         }
@@ -45,27 +50,27 @@ public class TestUserService {
 
         assertNotNull(createdUser, "User should be in the database");
 
-        System.out.println("Created user: " + user);
+        System.out.println("Created user: " + createdUser);
 
     }
 
     @Test
     public void testCreateUser_usernameFail() {
         // username already in database: techguy
-        User user = new User();
-        user.setUsername("techguy");
-        user.setLastName("Lapin");
-        user.setFirstName("Jojo");
-        user.setEmail("jojo89@gmail.com");
-        user.setTelephone("");
-        user.setStreet("4 rue du terrier");
-        user.setZip("89024");
-        user.setCity("LapinVille");
-        user.setPassword("Pa$$w0rdlong");
-        user.setPasswordConfirm("Pa$$w0rdlong");
+        UserCreateDTO userCreateDTO = new UserCreateDTO();
+        userCreateDTO.setUsername("techguy");
+        userCreateDTO.setLastName("Lapin");
+        userCreateDTO.setFirstName("Jojo");
+        userCreateDTO.setEmail("jojo89@gmail.com");
+        userCreateDTO.setTelephone("");
+        userCreateDTO.setStreet("4 rue du terrier");
+        userCreateDTO.setZip("89024");
+        userCreateDTO.setCity("LapinVille");
+        userCreateDTO.setPassword("Pa$$w0rdlong");
+        userCreateDTO.setPasswordConfirm("Pa$$w0rdlong");
 
         try {
-            userService.createUser(user);
+            userService.createUser(userCreateDTO);
         } catch (BusinessException e) {
             System.out.println("BusinessException keys: " + e.getKeys());
         }
@@ -74,41 +79,99 @@ public class TestUserService {
     @Test
     public void testCreateUser_emailFail() {
         // email already in database: julien.lemoine@email.com
-        User user = new User();
-        user.setUsername("Jojo89");
-        user.setLastName("Lapin");
-        user.setFirstName("Jojo");
-        user.setEmail("julien.lemoine@email.com");
-        user.setTelephone("");
-        user.setStreet("4 rue du terrier");
-        user.setZip("89024");
-        user.setCity("LapinVille");
-        user.setPassword("Pa$$w0rdlong");
-        user.setPasswordConfirm("Pa$$w0rdlong");
+        UserCreateDTO userCreateDTO = new UserCreateDTO();
+        userCreateDTO.setUsername("Jojo89");
+        userCreateDTO.setLastName("Lapin");
+        userCreateDTO.setFirstName("Jojo");
+        userCreateDTO.setEmail("julien.lemoine@email.com");
+        userCreateDTO.setTelephone("");
+        userCreateDTO.setStreet("4 rue du terrier");
+        userCreateDTO.setZip("89024");
+        userCreateDTO.setCity("LapinVille");
+        userCreateDTO.setPassword("Pa$$w0rdlong");
+        userCreateDTO.setPasswordConfirm("Pa$$w0rdlong");
 
         try {
-            userService.createUser(user);
+            userService.createUser(userCreateDTO);
         } catch (BusinessException e) {
             System.out.println("BusinessException keys: " + e.getKeys());
         }
     }
 
     @Test
-    public void testUpdateUser_valid() {
-        User user = userService.loadUser(1);
-        System.out.println(user);
+    public void testLoadUser_valid() {
+        userService.createUser(new UserCreateDTO(
+                "movieFan",
+                "Almodovar",
+                "Pedro",
+                "p.almodovar@email.com",
+                null,
+                "5 somewhere",
+                "67345",
+                "MadridInFrance",
+                "MotDePasse123!",
+                "MotDePasse123!"
+        ));
+        UserGeneralDTO dto = userService.loadUser("movieFan");
+        System.out.println("user loaded: " + dto);
 
-        user.setUsername("machin");
-        user.setTelephone("0678987654");
-        user.setCity("Paris");
-        user.setPassword("MotDePasseValide=123");
-        user.setPasswordConfirm("MotDePasseValide=123");
+    }
+
+    @Test
+    public void testLoadUser_fail() {
+        // user doesn't exist
+        try {
+            UserGeneralDTO dto = userService.loadUser("pseudo");
+            System.out.println("user loaded: " + dto);
+        } catch(BusinessException e) {
+            System.out.println("BusinessException keys: " + e.getKeys());
+        }
+
+    }
+
+    @Test
+    public void testDeleteUser_valid() {
+        // TODO : contraintes de clés étrangères
+        int userId = 1;
+
+        userService.deleteUser(userId);
 
         try {
-            userService.updateUser(user);
-            System.out.println("User : update successful");
+            User deletedUser = userDAO.readById(userId);
+
+            if (deletedUser == null) {
+                System.out.println("User with id " + userId + " has been successfully deleted.");
+            } else {
+                System.out.println("User with id " + userId + " still exists.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error deleting user: " + e.getMessage());
+        }
+
+    }
+
+
+    @Test
+    public void testUpdateUser_valid() {
+        // TODO: ne fonctionne toujours pas !
+
+        User user = userDAO.readById(1);
+        System.out.println("\nAvant update : " + user);
+
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setId(1);
+        userUpdateDTO.setUsername("Jojo");
+        userUpdateDTO.setLastName("Almodovar");
+        userUpdateDTO.setCity("Madrid");
+
+        try {
+            userService.updateUser(userUpdateDTO);
+
+            User updatedUser = userDAO.readById(1);
+            System.out.println("\nAfter update : " + updatedUser);
+
         } catch (BusinessException businessException){
-            System.out.println(businessException.getKeys());
+            System.out.println("Error : " + businessException.getKeys());
         }
 
     }

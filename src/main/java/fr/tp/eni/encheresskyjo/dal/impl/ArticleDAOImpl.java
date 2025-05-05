@@ -181,7 +181,7 @@ public class ArticleDAOImpl implements ArticleDAO {
      * Retrieves a list of Article records that belong to categories matching the given label.
      * The search is case-insensitive.
      *
-     * @param libelle the category label to search for.
+     * @param categoryId the Id of the category to search for.
      * @return a list of articles matching the category.
      */
     @Override
