@@ -73,9 +73,4 @@ public class SecurityController {
 //            return "/register";
 //        }
 //    }
-
-//    @ModelAttribute("membreSession")
-//    public Membre membreSession() {
-//        return new Membre();
-//    }
 }
