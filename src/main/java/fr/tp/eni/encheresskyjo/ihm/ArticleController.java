@@ -58,7 +58,7 @@ public class ArticleController {
     }
 
     //mapping
-    @GetMapping("/")
+    @GetMapping("/encheres")
     public String home(Model model) {
         List<Article> articles = articleService.getArticles();
         model.addAttribute("articles", articles);

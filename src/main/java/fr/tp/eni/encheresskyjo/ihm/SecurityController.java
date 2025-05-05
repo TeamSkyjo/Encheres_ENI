@@ -39,7 +39,7 @@ public class SecurityController {
         return null;
     }
 
-    @GetMapping("/login")
+    @GetMapping("/")
     public String login() {
         return "login";
     }
