@@ -39,7 +39,6 @@ public class ArticleController {
     private CategoryService categoryService;
     private BidService bidService;
     private UserService userService;
-    private CategoryService categoryService;
 
     public ArticleController(ArticleService articleService, CategoryService categoryService, BidService bidService, UserService userService) {
         this.articleService = articleService;
