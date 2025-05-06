@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
             UserToUserGeneralDTOConverter userToUserGeneralDTOConverter,
             UserCreateDtoToUserConverter userCreateDtoToUserConverter,
             UserUpdateDtoToUserConverter userUpdateDtoToUserConverter
-            ) {
+    ) {
         this.userDAO = userDAO;
         this.userToUserGeneralDTOConverter = userToUserGeneralDTOConverter;
         this.userCreateDtoToUserConverter = userCreateDtoToUserConverter;
@@ -45,14 +45,14 @@ public class UserServiceImpl implements UserService {
     /**
      * Creates a new user in the system.
      *
-     *  <p>
-     *      <ol>
-     *          <li>Validates the input data according to the business rules.</li>
-     *          <li>Checks for username and email uniqueness.</li>
-     *          <li>Converts the input DTO into a User business object.</li>
-     *          <li>Persists the User object using the DAL.</li>
-     *          </ol>
-     *  </p>
+     * <p>
+     *     <ol>
+     *         <li>Validates the input data according to the business rules.</li>
+     *         <li>Checks for username and email uniqueness.</li>
+     *         <li>Converts the input DTO into a User business object.</li>
+     *         <li>Persists the User object using the DAL.</li>
+     *         </ol>
+     * </p>
      *
      * @param dto the user input dto containing user details
      * @throws BusinessException if validation fails or if the user is not unique.
@@ -62,17 +62,12 @@ public class UserServiceImpl implements UserService {
     public void createUser(UserCreateDTO dto) {
         BusinessException businessException = new BusinessException();
         boolean isValid = validateCreateUser(dto, businessException);
+        isValid &= isUserUnique(dto, businessException);
 
         if (!isValid) {
             businessException.addKey(BusinessCode.VALID_USER);
             throw businessException;
-
         } else {
-            if(!isUserUnique(dto, businessException)) {
-                businessException.addKey(BusinessCode.VALID_USER_UNIQUENESS);
-                throw businessException;
-            }
-
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             String encodedPassword = encoder.encode(dto.getPassword());
             User user = userCreateDtoToUserConverter.convert(dto);
@@ -83,6 +78,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Updates an existing user's information.
+     *
      * @param dto the UserUpdateDTO containing updated user data.
      * @throws BusinessException if validation fails.
      */
@@ -131,7 +127,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Validates the general user information fields
-     * @param dto the UserGeneralDTO containing the user general information.
+     *
+     * @param dto               the UserGeneralDTO containing the user general information.
      * @param businessException the object to collect any validation errors.
      * @return true if all general user fields are valid; false otherwise.
      */
@@ -153,7 +150,8 @@ public class UserServiceImpl implements UserService {
     /**
      * Validate the creation of a user by checking both general user information
      * and password rules.
-     * @param dto the UserCreateDTO containing the user information to validate.
+     *
+     * @param dto               the UserCreateDTO containing the user information to validate.
      * @param businessException the object to collect any validation errors.
      * @return true if all fields and password validation pass; false otherwise.
      */
@@ -165,7 +163,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Validate the user update request, including password change attempt.
-     * @param dto the DTO containing user update information.
+     *
+     * @param dto               the DTO containing user update information.
      * @param businessException an exception object used to store validation errors.
      * @return true if the user update is valid, false otherwise.
      */
@@ -233,18 +232,12 @@ public class UserServiceImpl implements UserService {
         if (dto.getNewPasswordConfirm() != null && !dto.getNewPasswordConfirm().isBlank()) {
             return true;
         }
-
         return false;
-
     }
-
 
     /**
      * Retrieves the profile information of a user by their username.
-     *
-     * <p>
-     *     When a user is logged in, they can view the profiles of other users by clicking on their username.
-     * </p>
+     * When a user is logged in, they can view the profiles of other users by clicking on their username.
      *
      * @param username the username of the user whose profile is to be displayed.
      * @return a UserGeneralDTO containing general profile information of the specified user.
@@ -279,8 +272,8 @@ public class UserServiceImpl implements UserService {
      * Deletes a user account by its ID.
      *
      * <p>
-     *     This method is used when a logged-in user chooses to delete their own account,
-     *     or by an administrator to delete another user's account.
+     * This method is used when a logged-in user chooses to delete their own account,
+     * or by an administrator to delete another user's account.
      * </p>
      *
      * @param userId the ID of the user to be deleted.
