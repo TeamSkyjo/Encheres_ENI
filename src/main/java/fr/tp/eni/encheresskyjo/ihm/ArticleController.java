@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.ArrayList;
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -61,7 +62,8 @@ public class ArticleController {
 
     @GetMapping("/encheres")
     public String home(Model model) {
-        List<Article> articles = articleService.getArticles();
+        List<Article> articles = articleService.getArticles().stream()
+                .filter(a->a.readStatus().equals(ArticleStatus.ONGOING)).collect(Collectors.toList());
         model.addAttribute("articles", articles);
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
@@ -91,7 +93,9 @@ public class ArticleController {
             Category category = categoryService.getCategoryById(Integer.parseInt(categoryId));
             articles = articleService.getFilteredArticles(pattern, category);
         }
-        model.addAttribute("articles", articles);
+        List<Article> filteredArticles = articles.stream()
+                .filter(a->a.readStatus().equals(ArticleStatus.ONGOING)).collect(Collectors.toList());
+        model.addAttribute("articles", filteredArticles);
 
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);

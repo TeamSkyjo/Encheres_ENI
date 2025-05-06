@@ -39,6 +39,12 @@ public class WebSecurityConfiguration {
 //                            .requestMatchers("/css/*").permitAll()
 //                            .requestMatchers("/images/*").permitAll()
 //                            .anyRequest().authenticated();
+                    auth
+                            .requestMatchers(HttpMethod.GET, "/profil").hasRole("MEMBRE")
+                            .requestMatchers(HttpMethod.GET, "/searchBidsOrSales").hasRole("MEMBRE")
+                            .requestMatchers(HttpMethod.GET, "/article/details").hasRole("MEMBRE")
+                            .requestMatchers(HttpMethod.GET, "/article/creer").hasRole("MEMBRE");
+
                     auth.requestMatchers(HttpMethod.POST, "/inscription").permitAll();
                     auth.anyRequest().permitAll();
                 }
