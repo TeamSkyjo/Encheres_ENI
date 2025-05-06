@@ -151,6 +151,7 @@ public class Article {
         sb.append(", endDate=").append(endDate);
         sb.append(", startingPrice=").append(startingPrice);
         sb.append(", sellingPrice=").append(sellingPrice);
+        sb.append(", imageUrl='").append(imageUrl).append('\'');
         sb.append(", seller=").append(seller);
         sb.append(", category=").append(category);
         sb.append(", pickup=").append(pickup);

@@ -44,6 +44,11 @@ public class SecurityController {
         return "login";
     }
 
+    @GetMapping("/login_success")
+    public String loginSuccess() {
+        return "redirect:/";
+    }
+
     @GetMapping("/inscription")
     public String displayRegistrationForm(Model model) {
         UserCreateDTO userCreateDTO = new UserCreateDTO();
@@ -57,23 +62,20 @@ public class SecurityController {
             BindingResult bindingResult,
             Model model
     ) {
-        try {
-            userService.createUser((userCreateDTO));
-            System.out.println(userCreateDTO);
-            return "redirect:/";
-        } catch (BusinessException exception) {
-            exception.getKeys().forEach(key -> {
-                ObjectError error = new ObjectError("globalError", key);
-                bindingResult.addError(error);
-            });
-            model.addAttribute("userCreateDTO", userCreateDTO);
-            System.out.println(exception.getKeys());
+        if (!bindingResult.hasErrors()) {
+            try {
+                userService.createUser(userCreateDTO);
+                return "redirect:/login";
+            } catch (BusinessException exception) {
+                exception.getKeys().forEach(key -> {
+                    ObjectError error = new ObjectError("globalError", key);
+                    bindingResult.addError(error);
+                });
+                System.out.println(exception.getKeys());
+                return "/register";
+            }
+        } else {
             return "/register";
         }
-    }
-
-    @GetMapping("/login_success")
-    public String loginSuccess() {
-        return "redirect:/";
     }
 }

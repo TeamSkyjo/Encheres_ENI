@@ -44,7 +44,6 @@ public class TestArticleDAO {
         int articleId = 1;
         // Ordi portable Lenovo
         System.out.println(articleDAO.readByID(articleId));
-
     }
 
     @Test

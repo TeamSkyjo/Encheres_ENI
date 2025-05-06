@@ -209,15 +209,15 @@ public class ArticleServiceImpl implements ArticleService {
 
         if (description == null || description.isBlank()) {
             isValid = false;
-            businessException.addKey(BusinessCode.VALID_ARTICLE_DESCRIPTION_NAME_BLANK);
+            businessException.addKey(BusinessCode.VALID_ARTICLE_DESCRIPTION_BLANK);
         } else {
             if (description.length() > 300) {
                 isValid = false;
-                businessException.addKey(BusinessCode.VALID_ARTICLE_DESCRIPTION_NAME_LENGTH_MAX);
+                businessException.addKey(BusinessCode.VALID_ARTICLE_DESCRIPTION_LENGTH_MAX);
             }
             if (description.length() < 10) {
                 isValid = false;
-                businessException.addKey(BusinessCode.VALID_ARTICLE_DESCRIPTION_NAME_LENGTH_MIN);
+                businessException.addKey(BusinessCode.VALID_ARTICLE_DESCRIPTION_LENGTH_MIN);
             }
         }
 

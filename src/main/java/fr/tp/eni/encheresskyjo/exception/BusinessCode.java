@@ -3,8 +3,8 @@ package fr.tp.eni.encheresskyjo.exception;
 public class BusinessCode {
 
     // USER
-    public static final String USER_NOT_FOUND = "user_not_found";
-    public static final String VALID_USER = "validation_user";
+    public static final String USER_NOT_FOUND = "validation.user.not.found";
+    public static final String VALID_USER = "validation.user";
     public static final String VALID_USER_UNIQUENESS = "validation.user.uniqueness";
     public static final String VALID_USER_USERNAME_BLANK = "validation.user.username.blank";
     public static final String VALID_USER_USERNAME_LENGTH_MAX = "validation.user.username.length.max";
@@ -38,9 +38,9 @@ public class BusinessCode {
     public static final String VALID_ARTICLE_NAME_BLANK = "validation.article.name.blank";
     public static final String VALID_ARTICLE_NAME_LENGTH_MAX = "validation.article.name.length.max";
     public static final String VALID_ARTICLE_NAME_LENGTH_MIN = "validation.article.name.length.min";
-    public static final String VALID_ARTICLE_DESCRIPTION_NAME_BLANK = "validation.article.description.name.blank";
-    public static final String VALID_ARTICLE_DESCRIPTION_NAME_LENGTH_MAX = "validation.article.description.name.length.max";
-    public static final String VALID_ARTICLE_DESCRIPTION_NAME_LENGTH_MIN = "validation.article.description.name.length.min";
+    public static final String VALID_ARTICLE_DESCRIPTION_BLANK = "validation.article.description.blank";
+    public static final String VALID_ARTICLE_DESCRIPTION_LENGTH_MAX = "validation.article.description.length.max";
+    public static final String VALID_ARTICLE_DESCRIPTION_LENGTH_MIN = "validation.article.description.length.min";
     public static final String VALID_ARTICLE_STARTDATE_NULL = "validation.article.startdate.null";
     public static final String VALID_ARTICLE_STARTDATE_BEFORE = "validation.article.startdate.before";
     public static final String VALID_ARTICLE_ENDDATE_NULL = "validation.article.enddate.null";
