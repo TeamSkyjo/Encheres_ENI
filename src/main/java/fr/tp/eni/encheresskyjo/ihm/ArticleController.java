@@ -72,23 +72,58 @@ public class ArticleController {
 
     @GetMapping("/rechercheUtilisateur")
     public String searchByBidsOrSales(@RequestParam(required = false) String bidsorsales,
+                                      @RequestParam(required = false) String sales,
+                                      @RequestParam(required = false) String bids,
                                       Principal principal,
                                       Model model) {
         List<Article> articles = new ArrayList<>();
         List<Article> filteredArticles = new ArrayList<>();
         User user = userService.getByUsername(principal.getName());
         if (bidsorsales.equals("bids")) {
-            articles = bidService.getBidsByUser(user.getUserId());
-            filteredArticles = articles.stream()
+            if (bids == null || bids.isBlank()) {
+                bids = "ongoing";
+            }
+            if ("all".equals(bids)) {
+                articles = articleService.getArticles();
+                filteredArticles = articles.stream()
                         .filter(a->a.readStatus().equals(ArticleStatus.ONGOING))
                         .collect(Collectors.toList());
+                System.out.println("Get in Enchères ouvertes");
+            }
+            else if ("win".equals(bids)) {
+                filteredArticles = bidService.getBidsWonByUser(user.getUserId());
+                System.out.println("Get in Mes enchères remportées");
+            }
+            else {
+                articles = bidService.getBidsByUser(user.getUserId());
+                filteredArticles = articles.stream()
+                        .filter(a->a.readStatus().equals(ArticleStatus.ONGOING))
+                        .collect(Collectors.toList());
+                System.out.println("Get in Mes enchères en cours");
+            }
         }
         else if (bidsorsales.equals("sales")) {
-            articles = articleService.getArticles();
-            filteredArticles = articles.stream()
+            articles = articleService.getArticles().stream()
                     .filter(a->a.getSeller().equals(user))
                     .collect(Collectors.toList());
-
+            if (sales == null || sales.isBlank()) {
+                sales = "ongoing"; // valeur par défaut
+            }
+            if ("ended".equals(sales)) {
+                filteredArticles=articles.stream()
+                        .filter(a->a.readStatus().equals(ArticleStatus.ENDED))
+                        .collect(Collectors.toList());
+            }
+            else if ("not_started".equals(sales)) {
+                filteredArticles=articles.stream()
+                        .filter(a->a.readStatus().equals(ArticleStatus.NOT_STARTED))
+                        .collect(Collectors.toList());
+            }
+            else {
+                filteredArticles=articles.stream()
+                        .filter(a->a.readStatus().equals(ArticleStatus.ONGOING))
+                        .collect(Collectors.toList());
+            }
         }
         else {
             articles = articleService.getArticles();
@@ -96,10 +131,12 @@ public class ArticleController {
                     .filter(a->a.readStatus().equals(ArticleStatus.ONGOING))
                     .collect(Collectors.toList());
         }
+        model.addAttribute("bidsorsales", bidsorsales);
+        model.addAttribute("bids", bids);
+        model.addAttribute("sales", sales);
         model.addAttribute("articles", filteredArticles);
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
-        model.addAttribute("bidsorsales", bidsorsales);
         return "index";
     }
 

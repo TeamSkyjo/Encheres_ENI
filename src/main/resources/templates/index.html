@@ -54,15 +54,24 @@
                            onchange="this.form.submit()">
                     <label for="bids">Achats</label>
                     <div>
-                        <input type="radio" name="bids" id="allbids" value="allbids"
-                               data-th-disabled="${bidsorsales != 'bids'}">
-                        <label for="allbids">Enchères ouvertes</label>
-                        <input type="radio" name="bids" id="ongoingbids" checked value="ongoingbids"
-                               data-th-disabled="${bidsorsales != 'bids'}">
-                        <label for="ongoingbids">Mes enchères en cours</label>
-                        <input type="radio" name="bids" id="winbids" value="winbids"
-                               data-th-disabled="${bidsorsales != 'bids'}">
-                        <label for="winbids">Mes enchères remportées</label>
+                        <input type="radio"
+                               data-th-checked="${bids=='all'}"
+                               name="bids" id="all" value="all"
+                               data-th-disabled="${bidsorsales != 'bids'}"
+                               onchange="this.form.submit()">
+                        <label for="all">Enchères ouvertes</label>
+                        <input type="radio"
+                               data-th-checked="${bids=='ongoing'}"
+                               name="bids" id="ongoing" value="ongoing"
+                               data-th-disabled="${bidsorsales != 'bids'}"
+                               onchange="this.form.submit()">
+                        <label for="ongoing">Mes enchères en cours</label>
+                        <input type="radio"
+                               data-th-checked="${bids=='win'}"
+                               name="bids" id="win" value="win"
+                               data-th-disabled="${bidsorsales != 'bids'}"
+                               onchange="this.form.submit()">
+                        <label for="win">Mes enchères remportées</label>
 
                     </div>
                 </div>
@@ -75,15 +84,24 @@
                        onchange="this.form.submit()">
                 <label for="sales">Mes ventes</label>
                 <div>
-                    <input type="radio" checked name="sales" id="mysales" value="mysales"
-                           data-th-disabled="${bidsorsales != 'sales'}">
-                    <label for="mysales">Mes ventes en cours</label>
-                    <input type="radio" name="sales" id="waitingsales" value="waitingsales"
-                           data-th-disabled="${bidsorsales != 'sales'}">
-                    <label for="waitingsales">Ventes non débutées</label>
-                    <input type="radio" name="sales" id="endedsales" value="endedsales"
-                           data-th-disabled="${bidsorsales != 'sales'}">
-                    <label for="endedsales">Ventes terminées</label>
+                    <input type="radio"
+                           data-th-checked="${sales=='ongoing'}"
+                           name="sales" id="ongoing" value="ongoing"
+                           data-th-disabled="${bidsorsales != 'sales'}"
+                           onchange="this.form.submit()">
+                    <label for="ongoing">Mes ventes en cours</label>
+                    <input type="radio"
+                           data-th-checked="${sales=='not_started'}"
+                           name="sales" id="not_started" value="not_started"
+                           data-th-disabled="${bidsorsales != 'sales'}"
+                           onchange="this.form.submit()">
+                    <label for="not_started">Ventes non débutées</label>
+                    <input type="radio"
+                           data-th-checked="${sales=='ended'}"
+                           name="sales" id="ended" value="ended"
+                           data-th-disabled="${bidsorsales != 'sales'}"
+                           onchange="this.form.submit()">
+                    <label for="ended">Ventes terminées</label>
 
                 </div>
             </div>
