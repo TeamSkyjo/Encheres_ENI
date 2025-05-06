@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.security.Principal;
 import java.util.List;
@@ -33,6 +35,8 @@ import java.util.stream.Collectors;
  */
 @Controller
 public class ArticleController {
+
+    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir");
 
     //Dependencies injection
     private ArticleService articleService;
@@ -58,6 +62,7 @@ public class ArticleController {
 
     @GetMapping("/")
     public String redirectHome() {
+        System.out.println(UPLOAD_DIRECTORY);
         return "redirect:/encheres";
     }
 
@@ -151,14 +156,21 @@ public class ArticleController {
     }
 
     @PostMapping("/article/creer")
-    public String createArticle(
+    public String createArticle (
+            @RequestParam("imageFile") MultipartFile imageFile,
             @Valid @ModelAttribute("article") Article article,
             BindingResult bindingResult,
             Model model,
             Principal principal
-    ) {
+    ) throws IOException {
         if (!bindingResult.hasErrors()) {
             try {
+//                if (!imageFile.isEmpty()) {
+//                    // Par exemple : sauvegarder sur disque
+//                    String filename = imageFile.getOriginalFilename();
+//                    byte[] bytes = imageFile.getBytes();
+//                    // ...
+//                }
                 article.setSeller(userService.getByUsername(principal.getName()));
                 System.out.println(article);
                 articleService.createArticle(article);

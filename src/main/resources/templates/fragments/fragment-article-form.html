@@ -1,4 +1,5 @@
-<form data-th-fragment="article-form(action)" data-th-action="@{${action}}" method="post" data-th-object="${article}">
+<form data-th-fragment="article-form(action)" data-th-action="@{${action}}" method="post"
+      data-th-object="${article}" enctype="multipart/form-data">
     <h1 data-th-if="${#strings.isEmpty(action)}" data-th-text="#{view-article-detail.h1}"></h1>
     <h1 data-th-unless="${#strings.isEmpty(action)}" data-th-text="#{view-article-form.h1}"></h1>
     <!--    <h2 data-th-replace="~{fragments/fragment-errors.html :: errors}"></h2>-->
@@ -33,9 +34,8 @@
             <input type="number" name="bestBid" id="bestBid">
         </li>
         <li data-th-unless="${#strings.isEmpty(action)}">
-            <label for="imageURL" data-th-text="#{frag-article-form.imageUrl}"></label>
-            <input type="file" id="imageURL" name="imageURL" accept="image/png, image/jpeg, image/gif, image/jpg"
-                   data-th-unless="${#strings.isEmpty(action)}"/>
+            <label for="imageFile" data-th-text="#{frag-article-form.imageUrl}"></label>
+            <input type="file" id="imageFile" name="imageFile" accept="image/*"/>
             <!-- <div data-th-replace="~{fragments/fragment-error :: error(imageURL)}"></div>-->
         </li>
         <li>
