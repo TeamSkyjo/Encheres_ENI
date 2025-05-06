@@ -70,18 +70,40 @@ public class ArticleController {
         return "index";
     }
 
-    @GetMapping("/searchBidsOrSales")
+    @GetMapping("/rechercheUtilisateur")
     public String searchByBidsOrSales(@RequestParam(required = false) String bidsorsales,
+                                      Principal principal,
                                       Model model) {
-        model.addAttribute("bidsorsales", bidsorsales);
-        List<Article> articles = articleService.getArticles();
-        model.addAttribute("articles", articles);
+        List<Article> articles = new ArrayList<>();
+        List<Article> filteredArticles = new ArrayList<>();
+        User user = userService.getByUsername(principal.getName());
+        if (bidsorsales.equals("bids")) {
+            articles = bidService.getBidsByUser(user.getUserId());
+            filteredArticles = articles.stream()
+                        .filter(a->a.readStatus().equals(ArticleStatus.ONGOING))
+                        .collect(Collectors.toList());
+        }
+        else if (bidsorsales.equals("sales")) {
+            articles = articleService.getArticles();
+            filteredArticles = articles.stream()
+                    .filter(a->a.getSeller().equals(user))
+                    .collect(Collectors.toList());
+
+        }
+        else {
+            articles = articleService.getArticles();
+            filteredArticles = articles.stream()
+                    .filter(a->a.readStatus().equals(ArticleStatus.ONGOING))
+                    .collect(Collectors.toList());
+        }
+        model.addAttribute("articles", filteredArticles);
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
+        model.addAttribute("bidsorsales", bidsorsales);
         return "index";
     }
 
-    @GetMapping("/searchArticles")
+    @GetMapping("/rechercheArticle")
     public String searchByArticles(@RequestParam(required = false) String pattern,
                                    @RequestParam(required = false) String categoryId,
                                    Model model) {
