@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.ArrayList;
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -61,25 +62,48 @@ public class ArticleController {
 
     @GetMapping("/encheres")
     public String home(Model model) {
-        List<Article> articles = articleService.getArticles();
+        List<Article> articles = articleService.getArticles().stream()
+                .filter(a->a.readStatus().equals(ArticleStatus.ONGOING)).collect(Collectors.toList());
         model.addAttribute("articles", articles);
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
         return "index";
     }
 
-    @GetMapping("/searchBidsOrSales")
+    @GetMapping("/rechercheUtilisateur")
     public String searchByBidsOrSales(@RequestParam(required = false) String bidsorsales,
+                                      Principal principal,
                                       Model model) {
-        model.addAttribute("bidsorsales", bidsorsales);
-        List<Article> articles = articleService.getArticles();
-        model.addAttribute("articles", articles);
+        List<Article> articles = new ArrayList<>();
+        List<Article> filteredArticles = new ArrayList<>();
+        User user = userService.getByUsername(principal.getName());
+        if (bidsorsales.equals("bids")) {
+            articles = bidService.getBidsByUser(user.getUserId());
+            filteredArticles = articles.stream()
+                        .filter(a->a.readStatus().equals(ArticleStatus.ONGOING))
+                        .collect(Collectors.toList());
+        }
+        else if (bidsorsales.equals("sales")) {
+            articles = articleService.getArticles();
+            filteredArticles = articles.stream()
+                    .filter(a->a.getSeller().equals(user))
+                    .collect(Collectors.toList());
+
+        }
+        else {
+            articles = articleService.getArticles();
+            filteredArticles = articles.stream()
+                    .filter(a->a.readStatus().equals(ArticleStatus.ONGOING))
+                    .collect(Collectors.toList());
+        }
+        model.addAttribute("articles", filteredArticles);
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
+        model.addAttribute("bidsorsales", bidsorsales);
         return "index";
     }
 
-    @GetMapping("/searchArticles")
+    @GetMapping("/rechercheArticle")
     public String searchByArticles(@RequestParam(required = false) String pattern,
                                    @RequestParam(required = false) String categoryId,
                                    Model model) {
@@ -91,7 +115,9 @@ public class ArticleController {
             Category category = categoryService.getCategoryById(Integer.parseInt(categoryId));
             articles = articleService.getFilteredArticles(pattern, category);
         }
-        model.addAttribute("articles", articles);
+        List<Article> filteredArticles = articles.stream()
+                .filter(a->a.readStatus().equals(ArticleStatus.ONGOING)).collect(Collectors.toList());
+        model.addAttribute("articles", filteredArticles);
 
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
