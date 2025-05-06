@@ -1,9 +1,6 @@
 package fr.tp.eni.encheresskyjo.bll;
 
-import fr.tp.eni.encheresskyjo.bo.Article;
-import fr.tp.eni.encheresskyjo.bo.Bid;
-import fr.tp.eni.encheresskyjo.bo.Category;
-import fr.tp.eni.encheresskyjo.bo.Pickup;
+import fr.tp.eni.encheresskyjo.bo.*;
 import fr.tp.eni.encheresskyjo.dal.BidDAO;
 import fr.tp.eni.encheresskyjo.dal.UserDAO;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
@@ -22,6 +19,8 @@ public class TestBidService {
     private BidService bidService;
     @Autowired
     private ArticleService articleService;
+    @Autowired
+    private UserService userService;
 
     @Test
     public void test_getBestBid() {
@@ -31,81 +30,47 @@ public class TestBidService {
         Bid bid = bidService.getBestBid(article);
         System.out.println(bid);
     }
+
+    @Test
+    public void test_createBid() {
+        Article article = articleService.getArticleById(2);
+        User user = userService.getByUsername("meublequeen");
+        bidService.createBid(user, article, 560);
+    }
+
+    @Test
+    public void test_bidClosure() {
+        Article article = articleService.getArticleById(4);
+        Bid bestBid = bidService.getBestBid(article);
+        System.out.println(bestBid);
+
+        bidService.closeBid(article);
+        System.out.println(article);
+
+    }
+
+    @Test
+    public void test_bidClosure_fail() {
+        // Vélo de course / seller: 3 (sporty) / fin enchères 2025-05-05
+        Article article = articleService.getArticleById(3);
+        Bid bestBid = bidService.getBestBid(article);
+        System.out.println(bestBid);
+
+        try {
+            bidService.closeBid(article);
+            System.out.println(article);
+        } catch(BusinessException e) {
+            System.out.println("BusinessException : " + e.getKeys());
+        }
+
+    }
+
+//    //Test to verify that the method linkUserAndArticletoBid works properly. The method was modified from private to public for the test.
 //    @Test
-//    public void test_createArticle() {
-//        Article article = new Article();
-//        article.setArticleName("Chaise gaming");
-//        article.setDescription("Chaise ergonomique confortable pour de longues heures de jeu.");
-//        article.setStartDate(LocalDate.now().plusDays(1));
-//        article.setEndDate(LocalDate.now().plusDays(7));
-//        article.setStartingPrice(100);
-//        article.setImageUrl("https://example.com/chaise.jpg");
-//
-//        Category category = new Category();
-//        category.setCategoryId(1);
-//        article.setCategory(category);
-//
-//        article.setSeller(userDAO.readById(2));
-//
-//        Pickup pickup = new Pickup();
-//        pickup.setCity(article.getSeller().getCity());
-//        pickup.setZip(article.getSeller().getZip());
-//        pickup.setStreet(article.getSeller().getStreet());
-//        article.setPickup(pickup);
-//
-//        try {
-//            articleService.createArticle(article);
-//            System.out.println("Article créé avec succès");
-//        } catch (BusinessException businessException) {
-//            System.out.println(businessException.getKeys());
-//        }
-//    }
-//
-//    @Test
-//    public void test_updateArticle() {
-//        Article article = articleService.getArticleById(5);
-//        article.setDescription("Dell XY12345, processeur Intel Core i5");
-//        article.getPickup().setCity("Bliblablou");
-//
-//        try {
-//            articleService.updateArticle(article);
-//            System.out.println("Article mis à jour avec succès");
-//        } catch (BusinessException businessException) {
-//            System.out.println(businessException.getKeys());
-//        }
-//    }
-//
-//    @Test
-//    public void test_getArticles() {
-//        List<Article> articles = articleService.getArticles();
-//        System.out.println("Articles récupérés : " + articles.size());
-//        articles.forEach(System.out::println);
-//    }
-//
-//    @Test
-//    public void test_getFilteredArticles() {
-//        String pattern = "o";
-//        Category category = new Category();
-//        category.setCategoryId(1);
-//
-//        // With both filters
-//        List<Article> articles = articleService.getFilteredArticles(pattern, category);
-//        System.out.println("Articles filtrés par pattern ET category : " + articles.size());
-//        articles.forEach(System.out::println);
-//
-//        // No filters
-//        articles = articleService.getFilteredArticles(null, null);
-//        System.out.println("Articles sans filtres : " + articles.size());
-//        articles.forEach(System.out::println);
-//
-//        // Filtered by category only
-//        articles = articleService.getFilteredArticles(null, category);
-//        System.out.println("Articles filtrés par category : " + articles.size());
-//        articles.forEach(System.out::println);
-//
-//        // Filtered by pattern only
-//        articles = articleService.getFilteredArticles(pattern, null);
-//        System.out.println("Articles filtrés par pattern : " + articles.size());
-//        articles.forEach(System.out::println);
+//    public void test_linkUserAndArticleToBid() {
+//        Article article = articleService.getArticleById(4);
+//        Bid bid = bidService.getBestBid(article);
+//        bidService.linkUserAndArticleToBid(bid);
+//        System.out.println(bid);
 //    }
 }

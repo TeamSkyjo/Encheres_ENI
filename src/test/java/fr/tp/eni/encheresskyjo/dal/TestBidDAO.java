@@ -70,4 +70,13 @@ public class TestBidDAO {
 
         bidDAO.delete(bid);
     }
+
+    @Test
+    public void test_update(){
+        LocalDate today = LocalDate.now();
+        User user = userDAO.readById(2);
+        Article article = articleDAO.readByID(3);
+        Bid bid = new Bid(today, 270, user, article);
+        bidDAO.update(bid);
+    }
 }

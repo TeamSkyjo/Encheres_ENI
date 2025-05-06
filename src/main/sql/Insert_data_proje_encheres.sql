@@ -48,7 +48,22 @@ INSERT INTO ARTICLES (no_article, nom_article, description, date_debut_encheres,
 (1, 'Ordinateur portable', 'PC portable Lenovo, 16Go RAM, 512Go SSD', DATEADD(DAY,+1,GETDATE()), DATEADD(DAY,+3,GETDATE()), 500, NULL, 'https://picsum.photos/200', 1, 1),
 (2, 'Canapé 3 places', 'Canapé en tissu gris, très confortable', DATEADD(DAY,-1,GETDATE()), DATEADD(DAY,+1,GETDATE()), 300, NULL, 'https://picsum.photos/200', 2, 2),
 (3, 'Vélo de course', 'Vélo BTWIN, très bon état, taille M', DATEADD(DAY,-4,GETDATE()), GETDATE(), 250, NULL, 'https://picsum.photos/200', 3, 3),
-(4, 'Veste en cuir', 'Veste cuir noir, taille L', DATEADD(DAY,-5,GETDATE()), DATEADD(DAY,-2,GETDATE()), 100, NULL, 'https://picsum.photos/200', 2, 4);
+(4, 'Veste en cuir', 'Veste cuir noir, taille L', DATEADD(DAY,-5,GETDATE()), DATEADD(DAY,-2,GETDATE()), 100, NULL, 'https://picsum.photos/200', 2, 4),
+
+-- Informatique
+(5, 'Écran 27 pouces', 'Écran IPS Full HD, parfait pour le télétravail', DATEADD(DAY,-2,GETDATE()), DATEADD(DAY,+1,GETDATE()), 120, NULL, 'https://picsum.photos/200', 1, 1),
+(6, 'Clavier mécanique', 'Clavier RGB switches bleus, AZERTY', DATEADD(DAY,+2,GETDATE()), DATEADD(DAY,+5,GETDATE()), 60, NULL, 'https://picsum.photos/200', 3, 1),
+-- Catégorie 2 : Ameublement
+(7, 'Chaise de bureau ergonomique', 'Chaise réglable, très bon état', DATEADD(DAY,-3,GETDATE()), DATEADD(DAY,-1,GETDATE()), 80, NULL, 'https://picsum.photos/200', 2, 2),
+(8, 'Table basse bois massif', 'Table en chêne 100x60 cm', DATEADD(DAY,-1,GETDATE()), DATEADD(DAY,+2,GETDATE()), 90, NULL, 'https://picsum.photos/200', 1, 2),
+
+-- Catégorie 3 : Sport & Loisirs
+(9, 'Tapis de yoga', 'Tapis antidérapant, 6 mm, violet', DATEADD(DAY,+1,GETDATE()), DATEADD(DAY,+4,GETDATE()), 25, NULL, 'https://picsum.photos/200', 3, 3),
+(10, 'Raquette de tennis', 'Raquette Babolat Pure Drive, bon état', DATEADD(DAY,-6,GETDATE()), DATEADD(DAY,-2,GETDATE()), 70, NULL, 'https://picsum.photos/200', 2, 3),
+
+-- Catégorie 4 : Vêtements
+(11, 'Jean slim homme', 'Taille 42, couleur bleu foncé', DATEADD(DAY,-2,GETDATE()), DATEADD(DAY,+1,GETDATE()), 30, NULL, 'https://picsum.photos/200', 1, 4),
+(12, 'Robe été fleurie', 'Robe légère, taille M, comme neuve', DATEADD(DAY,-5,GETDATE()), DATEADD(DAY,-1,GETDATE()), 45, NULL, 'https://picsum.photos/200', 3, 4);
 
 SET IDENTITY_INSERT ARTICLES OFF;
 
@@ -70,3 +85,10 @@ INSERT INTO ENCHERES (no_utilisateur, no_article, date_enchere, montant_enchere)
 INSERT INTO ROLES (ROLE, IS_ADMIN) VALUES ('ROLE_MEMBRE',0);
 INSERT INTO ROLES (ROLE, IS_ADMIN) VALUES ('ROLE_MEMBRE',1);
 INSERT INTO ROLES (ROLE, IS_ADMIN) VALUES ('ROLE_ADMIN',1);
+
+
+-- Scénarios
+-- Article 1 = enchère à venir- article sans enchère
+-- article 2 = enchère en cours - article avec une enchère
+-- article 3 = article avec plusieurs enchères
+-- article 4 = enchère terminée avec une enchère

@@ -28,6 +28,8 @@ public class BidDAOImpl implements BidDAO {
     private static final String SELECT_BY_USER_ID = "SELECT no_utilisateur, no_article, date_enchere, montant_enchere FROM ENCHERES WHERE no_utilisateur = :userId;";
     private static final String INSERT = "INSERT INTO ENCHERES VALUES (:buyerId, :articleId, :bidDate, :bidPrice);";
     private static final String DELETE = "DELETE FROM ENCHERES WHERE no_utilisateur = :userId AND no_article = :articleId;";
+    private static final String UPDATE = "UPDATE ENCHERES SET date_enchere=:bidDate, montant_enchere=:bidPrice WHERE no_utilisateur = :buyerId AND no_article = :articleId;";
+
 
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -92,6 +94,21 @@ public class BidDAOImpl implements BidDAO {
                 DELETE,
                 mapSqlParameterSource
         );
+    }
+
+    @Override
+    public void update(Bid bid) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("buyerId", bid.getBuyer().getUserId());
+        mapSqlParameterSource.addValue("articleId", bid.getArticle().getArticleId());
+        mapSqlParameterSource.addValue("bidDate", bid.getBidDate());
+        mapSqlParameterSource.addValue("bidPrice", bid.getBidPrice());
+
+        namedParameterJdbcTemplate.update(
+                UPDATE,
+                mapSqlParameterSource
+        );
+
     }
 }
 

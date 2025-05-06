@@ -58,5 +58,8 @@ public class BusinessCode {
     public static final String VALID_BID_ARTICLE_NULL = "validation.bid.article.null";
     public static final String VALID_BID_PRICE_LOWER_BEST_BID = "validation.bid.price.lower.best.bid";
     public static final String VALID_BID_PRICE_LOWER_STARTING_PRICE = "validation.bid.price.lower.start.price";
-
+    public static final String VALID_BID_DATE_BEFORE_START = "validation.bid.date.before.start";
+    public static final String VALID_BID_DATE_AFTER_END = "validation.bid.date.after.end";
+    public static final String BID_ARTICLE_ALREADY_CLOSED = "bid_article_already_closed";
+    public static final String BID_NOT_ENDED = "bid_not_ended";
 }

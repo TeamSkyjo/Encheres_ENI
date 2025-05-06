@@ -16,7 +16,7 @@
 <main class="center-main">
     <section class="center-section">
         <h1> Liste des enchères </h1>
-        <form method="get" class="columnform" data-th-action="@{/searchArticles}">
+        <form method="get" class="columnform" data-th-action="@{/rechercheArticle}">
             <div class="formcolumn1">
                 <div class="searchcard">
                     <h3>Filtrer les enchères par : </h3>
@@ -41,7 +41,7 @@
         </form>
 
         <form data-th-if="${#authorization.expression('isAuthenticated')}"
-              method="get" data-th-action="@{/searchBidsOrSales}" class="columnform">
+              method="get" data-th-action="@{/rechercheUtilisateur}" class="columnform">
             <div class="searchcard">
                 <h3>Mes ventes et achats </h3>
             </div>
@@ -57,7 +57,7 @@
                         <input type="radio" name="bids" id="allbids" value="allbids"
                                data-th-disabled="${bidsorsales != 'bids'}">
                         <label for="allbids">Enchères ouvertes</label>
-                        <input type="radio" name="bids" id="ongoingbids" value="ongoingbids"
+                        <input type="radio" name="bids" id="ongoingbids" checked value="ongoingbids"
                                data-th-disabled="${bidsorsales != 'bids'}">
                         <label for="ongoingbids">Mes enchères en cours</label>
                         <input type="radio" name="bids" id="winbids" value="winbids"
@@ -75,7 +75,7 @@
                        onchange="this.form.submit()">
                 <label for="sales">Mes ventes</label>
                 <div>
-                    <input type="radio" name="sales" id="mysales" value="mysales"
+                    <input type="radio" checked name="sales" id="mysales" value="mysales"
                            data-th-disabled="${bidsorsales != 'sales'}">
                     <label for="mysales">Mes ventes en cours</label>
                     <input type="radio" name="sales" id="waitingsales" value="waitingsales"
