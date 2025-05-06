@@ -9,6 +9,7 @@ import fr.tp.eni.encheresskyjo.bo.Article;
 import fr.tp.eni.encheresskyjo.bo.ArticleStatus;
 import fr.tp.eni.encheresskyjo.bo.Category;
 import fr.tp.eni.encheresskyjo.bo.User;
+import fr.tp.eni.encheresskyjo.exception.BusinessException;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -146,9 +147,8 @@ public class ArticleController {
                                    Model model) {
         List<Article> articles = new ArrayList<>();
         if (categoryId != null && categoryId.equals("0")) {
-            articles = articleService.getFilteredArticles(pattern,null);
-        }
-        else {
+            articles = articleService.getFilteredArticles(pattern, null);
+        } else {
             Category category = categoryService.getCategoryById(Integer.parseInt(categoryId));
             articles = articleService.getFilteredArticles(pattern, category);
         }
@@ -163,10 +163,10 @@ public class ArticleController {
 
     @GetMapping("/article/details")
     public String displayArticle(
-            @RequestParam(name="id", required = true) int id,
+            @RequestParam(name = "id", required = true) int id,
             Model model
     ) {
-        Article article =  this.articleService.getArticleById(id);
+        Article article = this.articleService.getArticleById(id);
         model.addAttribute("article", article);
         return "article/details";
     }
@@ -187,39 +187,33 @@ public class ArticleController {
         }
     }
 
-//    @PostMapping("/films/creer")
-//    public String creerFilm(
-//            @ModelAttribute("membreSession") Membre membreSession,
-//            @Valid @ModelAttribute("film") Film film,
-//            BindingResult bindingResult,
-//            Model model
-//    ) {
-//        if (membreSession.isAdmin()) {
-//            if (!bindingResult.hasErrors()) {
-//                try {
-//                    filmService.creerFilm(film, membreSession);
-//                } catch (BusinessException exception) {
-//                    exception.getKeys().forEach(key -> {
-//                        ObjectError error = new ObjectError("globalError", key);
-//                        bindingResult.addError(error);
-//                    });
-//                    List<Genre> genres = filmService.consulterGenres();
-//                    List<Participant> participants = filmService.consulterParticipants();
-//                    model.addAttribute("genres", genres);
-//                    model.addAttribute("participants", participants);
-//                    return "/film/creer";
-//                }
-//            } else {
-//                List<Genre> genres = filmService.consulterGenres();
-//                List<Participant> participants = filmService.consulterParticipants();
-//                model.addAttribute("genres", genres);
-//                model.addAttribute("participants", participants);
-//                return "/film/creer";
-//            }
-//        } else {
-//            logger.warn("Utilisateur non administrateur");
-//        }
-//
-//        return "redirect:/films";
-//    }
+    @PostMapping("/article/creer")
+    public String createArticle(
+            @Valid @ModelAttribute("article") Article article,
+            BindingResult bindingResult,
+            Model model,
+            Principal principal
+    ) {
+        if (!bindingResult.hasErrors()) {
+            try {
+                article.setSeller(userService.getByUsername(principal.getName()));
+                System.out.println(article);
+                articleService.createArticle(article);
+            } catch (BusinessException exception) {
+                exception.getKeys().forEach(key -> {
+                    ObjectError error = new ObjectError("globalError", key);
+                    bindingResult.addError(error);
+                });
+                List<Category> categories = categoryService.getAllCategories();
+                model.addAttribute("categories", categories);
+                System.out.println(exception.getKeys());
+                return "article/create";
+            }
+        } else {
+            List<Category> categories = categoryService.getAllCategories();
+            model.addAttribute("categories", categories);
+            return "article/create";
+        }
+        return "redirect:/encheres";
+    }
 }

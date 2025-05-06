@@ -11,9 +11,11 @@
 >
 <title>Eni Enchères</title>
 <link rel="stylesheet" data-th-href="@{/css/tp-form.css}">
+<link rel="stylesheet" data-th-href="@{/css/tp-error.css}">
 
 <main>
-    <h1>Mon profil</h1>
+    <h1 data-th-text="'Créer mon profil'"></h1>
+    <p class=cards data-th-each="keyError: ${#fields.errors('global')}" data-th-text="#{${keyError}}"></p>
     <form data-th-action="@{/inscription}" method="post" data-th-object="${userCreateDTO}">
 
         <ul class="flex-outer">

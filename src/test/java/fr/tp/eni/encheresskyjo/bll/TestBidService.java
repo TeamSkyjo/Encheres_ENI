@@ -40,13 +40,28 @@ public class TestBidService {
 
     @Test
     public void test_bidClosure() {
-        // Vélo de course / seller: 3 (sporty) / fin enchères 2025-05-05
-        Article article = articleService.getArticleById(3);
+        Article article = articleService.getArticleById(4);
         Bid bestBid = bidService.getBestBid(article);
         System.out.println(bestBid);
 
         bidService.closeBid(article);
         System.out.println(article);
+
+    }
+
+    @Test
+    public void test_bidClosure_fail() {
+        // Vélo de course / seller: 3 (sporty) / fin enchères 2025-05-05
+        Article article = articleService.getArticleById(3);
+        Bid bestBid = bidService.getBestBid(article);
+        System.out.println(bestBid);
+
+        try {
+            bidService.closeBid(article);
+            System.out.println(article);
+        } catch(BusinessException e) {
+            System.out.println("BusinessException : " + e.getKeys());
+        }
 
     }
 
