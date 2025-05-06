@@ -69,17 +69,27 @@ SET IDENTITY_INSERT ARTICLES OFF;
 
 -- Insertion des retraits
 INSERT INTO RETRAITS (no_article, rue, code_postal, ville) VALUES
-(1, '12 rue de l''Info', '75001', 'Paris'),
-(2, '8 avenue des Meubles', '69000', 'Lyon'),
-(3, '45 rue des Sports', '31000', 'Toulouse'),
-(4, '8 avenue des Meubles', '69000', 'Lyon');
+(1, '12 rue de l''Info', '75001', 'Paris'),        -- Utilisateur 1
+(2, '8 avenue des Meubles', '69000', 'Lyon'),      -- Utilisateur 2
+(3, '45 rue des Sports', '31000', 'Toulouse'),     -- Utilisateur 3
+(4, '10 rue du Parc', '33000', 'Bordeaux'),        -- Utilisateur 2
+(5, '12 rue de l''Info', '75001', 'Paris'),        -- Utilisateur 1
+(6, '45 rue des Sports', '31000', 'Toulouse'),     -- Utilisateur 3
+(7, '8 avenue des Meubles', '69000', 'Lyon'),      -- Utilisateur 2
+(8, '12 rue de l''Info', '75001', 'Paris'),        -- Utilisateur 1
+(9, '45 rue des Sports', '31000', 'Toulouse'),     -- Utilisateur 3
+(10, '8 avenue des Meubles', '69000', 'Lyon'),     -- Utilisateur 2
+(11, '12 rue de l''Info', '75001', 'Paris'),       -- Utilisateur 1
+(12, '45 rue des Sports', '31000', 'Toulouse');    -- Utilisateur 3
 
--- Insertion des ench�res
+
+-- Insertion des enchères
 INSERT INTO ENCHERES (no_utilisateur, no_article, date_enchere, montant_enchere) VALUES
 (3, 4, DATEADD(DAY,-5,GETDATE()), 110),
 (1, 2, DATEADD(DAY,-1,GETDATE()), 320),
 (2, 3, DATEADD(DAY,-2,GETDATE()), 260),
 (1, 4, DATEADD(DAY,-3,GETDATE()), 150);
+
 
 -- Insertion des rôles
 INSERT INTO ROLES (ROLE, IS_ADMIN) VALUES ('ROLE_MEMBRE',0);
