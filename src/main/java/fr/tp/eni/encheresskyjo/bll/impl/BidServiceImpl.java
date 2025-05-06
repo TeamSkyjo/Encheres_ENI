@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -161,12 +162,23 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
-    public List<Bid> getBidsByUser(int userId) {
-        return List.of();
+    public List<Article> getBidsByUser(int userId) {
+        List<Bid> userBids = bidDAO.readByUser(userId);
+        List<Article> articles = new ArrayList<>();
+        for (Bid bid : userBids) {
+            Article article = articleDAO.readByID(bid.getArticle().getArticleId());
+            articles.add(article);
+        }
+        return articles;
     }
 
     @Override
-    public List<Bid> getBidsWonByUser(int userId) {
+    public List<Article> getBidsWonByUser(int userId) {
+        //TODO: as soon as the closure of bid is done.
+        // Recover the list of the bids for the user
+        // Recover the status of each these bids.
+        // For those who are closed, check whether the sellingprice = bidingprice of current user.
+        // loop to recover each article for each bid ? Depend if we want to load the biding price.
         return List.of();
     }
 }
