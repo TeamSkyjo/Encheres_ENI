@@ -45,10 +45,10 @@ SET IDENTITY_INSERT UTILISATEURS OFF;
 SET IDENTITY_INSERT ARTICLES ON;
 
 INSERT INTO ARTICLES (no_article, nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, url_image, no_utilisateur, no_categorie) VALUES
-(1, 'Ordinateur portable', 'PC portable Lenovo, 16Go RAM, 512Go SSD', DATEADD(DAY,+1,GETDATE()), DATEADD(DAY,+3,GETDATE()), 500, NULL, 'https://example.com/pc.jpg', 1, 1),
-(2, 'Canapé 3 places', 'Canapé en tissu gris, très confortable', DATEADD(DAY,-1,GETDATE()), DATEADD(DAY,+1,GETDATE()), 300, NULL, 'https://example.com/canape.jpg', 2, 2),
-(3, 'Vélo de course', 'Vélo BTWIN, très bon état, taille M', DATEADD(DAY,-4,GETDATE()), GETDATE(), 250, NULL, 'https://example.com/velo.jpg', 3, 3),
-(4, 'Veste en cuir', 'Veste cuir noir, taille L', DATEADD(DAY,-5,GETDATE()), DATEADD(DAY,-2,GETDATE()), 100, NULL, 'https://example.com/veste.jpg', 2, 4);
+(1, 'Ordinateur portable', 'PC portable Lenovo, 16Go RAM, 512Go SSD', DATEADD(DAY,+1,GETDATE()), DATEADD(DAY,+3,GETDATE()), 500, NULL, 'https://picsum.photos/200', 1, 1),
+(2, 'Canapé 3 places', 'Canapé en tissu gris, très confortable', DATEADD(DAY,-1,GETDATE()), DATEADD(DAY,+1,GETDATE()), 300, NULL, 'https://picsum.photos/200', 2, 2),
+(3, 'Vélo de course', 'Vélo BTWIN, très bon état, taille M', DATEADD(DAY,-4,GETDATE()), GETDATE(), 250, NULL, 'https://picsum.photos/200', 3, 3),
+(4, 'Veste en cuir', 'Veste cuir noir, taille L', DATEADD(DAY,-5,GETDATE()), DATEADD(DAY,-2,GETDATE()), 100, NULL, 'https://picsum.photos/200', 2, 4);
 
 SET IDENTITY_INSERT ARTICLES OFF;
 

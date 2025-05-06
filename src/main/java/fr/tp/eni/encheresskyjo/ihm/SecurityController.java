@@ -39,11 +39,10 @@ public class SecurityController {
         return null;
     }
 
-    @GetMapping("/")
+    @GetMapping("/login")
     public String login() {
         return "login";
     }
-
 
     @GetMapping("/inscription")
     public String displayRegistrationForm(Model model) {
@@ -73,22 +72,8 @@ public class SecurityController {
         }
     }
 
-//    @GetMapping("/login_success")
-//    public String loginSuccess(
     @GetMapping("/login_success")
-    public String loginSuccess(
-//            @ModelAttribute("membreSession") Membre membreSession,
-//            Principal principal
-    ) {
-//        String mail = principal.getName();
-//        Membre membre = contexteService.charger(mail);
-//
-//        membreSession.setId(membre.getId());
-//        membreSession.setPseudo(membre.getPseudo());
-//        membreSession.setAdmin(membre.isAdmin());
-//        membreSession.setPrenom(membre.getPrenom());
-//        membreSession.setNom(membre.getNom());
-//
+    public String loginSuccess() {
         return "redirect:/";
     }
 }

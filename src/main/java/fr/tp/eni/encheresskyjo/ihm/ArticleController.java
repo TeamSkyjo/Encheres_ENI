@@ -45,7 +45,6 @@ public class ArticleController {
         this.userService = userService;
     }
 
-    // Add loggedUser in the Model
     // To do in every Controller
     @ModelAttribute("loggedUser")
     public User loggedUser(Principal principal) {
@@ -55,7 +54,11 @@ public class ArticleController {
         return null;
     }
 
-    //mapping
+    @GetMapping("/")
+    public String redirectHome() {
+        return "redirect:/encheres";
+    }
+
     @GetMapping("/encheres")
     public String home(Model model) {
         List<Article> articles = articleService.getArticles();
