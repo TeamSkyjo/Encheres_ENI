@@ -1,22 +1,57 @@
 /*Affichage enchères*/
 .bidlist {
-    display : flex;
+    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    padding : 50px ;
+    padding: 50px;
+}
+
+.bidlist a {
+    text-decoration: none;
 }
 
 .bidcards {
+    position: relative;
     padding: 30px;
     margin: 10px;
     border: 1px solid cadetblue;
     border-radius: 5px;
     max-width: 300px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
+    cursor: pointer;
 }
-.bidcards>img {
-    width : 300px;
-    max-height: 300px;
+
+.bidcards:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.bidcards > img {
+    max-width: 300px;
     margin-bottom: 15px;
+}
+
+.bidcards > * :not(a) {
+    position: relative;
+    z-index: 2;
+}
+
+.card-link-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    text-indent: -9999px;
+    background: transparent;
+    display: block;
+}
+
+.seller-link {
+    margin-left: 0.5rem;
+    text-decoration: underline;
+    z-index: 3;
+    position: relative;
 }
 
 /*Formulaire de recherche*/
@@ -35,6 +70,7 @@
     align-content: space-evenly;
     text-align: left;
 }
+
 .searchcard {
     margin-bottom: 10px;
     display: flex;
@@ -42,18 +78,21 @@
     align-items: center;
 }
 
-.searchcard>label {
-    flex : 1 0 120px;
+.searchcard > label {
+    flex: 1 0 120px;
     max-width: 220px;
 }
-.searchcard>label+* {
+
+.searchcard > label + * {
     flex: 1 0 220px;
 }
-.searchcard>input {
+
+.searchcard > input {
     flex: 1 0 220px;
     height: 30px;
 }
-.searchcard>div {
+
+.searchcard > div {
     margin-left: 15px;
 }
 
@@ -61,13 +100,14 @@
 button {
     border-radius: 15px;
     background-color: cadetblue;
-    color : white;
+    color: white;
     font-size: 1rem;
     border: 0;
     width: 160px;
     height: 80px;
-    margin : 15px
+    margin: 15px
 }
+
 button:hover {
     background-color: darkcyan;
 }

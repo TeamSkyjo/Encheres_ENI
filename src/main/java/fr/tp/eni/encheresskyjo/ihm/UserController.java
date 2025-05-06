@@ -30,19 +30,20 @@ public class UserController {
         return null;
     }
 
-    /**
-     * map to another user's profile WHEN USER IS LOGGED IN.
-     * @param username
-     * @param model
-     * @return
-     */
     @GetMapping("/profil")
     public String displayUserProfile(
-            @RequestParam(name="username", required=true) String username,
+            @RequestParam(name="username", required=false) String username,
+            Principal principal,
             Model model) {
-        UserGeneralDTO user = this.userService.loadUser(username);
-        model.addAttribute("user", user);
-
-        return "/user/profile";
+        try {
+            UserGeneralDTO user = userService.loadUser(username);
+            model.addAttribute("user", user);
+            return "user/profile";
+        } catch (Exception e) {
+            UserGeneralDTO user = userService.loadUser(principal.getName());
+            model.addAttribute("user", user);
+            return "user/my-profile";
+        }
     }
+
 }

@@ -14,102 +14,101 @@
 <link rel="stylesheet" data-th-href="@{/css/bidlist.css}">
 
 <main class="center-main">
-  <section class="center-section">
-    <h1> Liste des enchères </h1>
+    <section class="center-section">
+        <h1> Liste des enchères </h1>
+        <form method="get" class="columnform" data-th-action="@{/searchArticles}">
+            <div class="formcolumn1">
+                <div class="searchcard">
+                    <h3>Filtrer les enchères par : </h3>
+                </div>
+                <div class="searchcard">
+                    <input type="text" name="pattern" id="pattern" placeholder="Le nom de l'article contient :">
+                </div>
+                <div class="searchcard">
+                    <label for="categoryId">Catégories : </label>
+                    <select name="categoryId" id="categoryId">
+                        <option value="0" selected>Toutes les catégories</option>
+                        <option data-th-each="category: ${categories}"
+                                data-th-value="${category.categoryId}"
+                                data-th-text="${category.label}"></option>
+                    </select>
+                </div>
+            </div>
 
+            <div>
+                <button type="submit">Rechercher</button>
+            </div>
+        </form>
 
-    <form method="get" class="columnform" data-th-action="@{/searchArticles}">
-      <div class="formcolumn1">
-        <div class="searchcard">
-          <h3>Filtrer les enchères par : </h3>
+        <form data-th-if="${#authorization.expression('isAuthenticated')}"
+              method="get" data-th-action="@{/searchBidsOrSales}" class="columnform">
+            <div class="searchcard">
+                <h3>Mes ventes et achats </h3>
+            </div>
+
+            <div class="searchcard">
+                <div>
+                    <input data-th-checked="${bidsorsales == 'bids'}"
+                           type="radio" name="bidsorsales" id="bids"
+                           value="bids"
+                           onchange="this.form.submit()">
+                    <label for="bids">Achats</label>
+                    <div>
+                        <input type="radio" name="bids" id="allbids" value="allbids"
+                               data-th-disabled="${bidsorsales != 'bids'}">
+                        <label for="allbids">Enchères ouvertes</label>
+                        <input type="radio" name="bids" id="ongoingbids" value="ongoingbids"
+                               data-th-disabled="${bidsorsales != 'bids'}">
+                        <label for="ongoingbids">Mes enchères en cours</label>
+                        <input type="radio" name="bids" id="winbids" value="winbids"
+                               data-th-disabled="${bidsorsales != 'bids'}">
+                        <label for="winbids">Mes enchères remportées</label>
+
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <input data-th-checked="${bidsorsales == 'sales'}"
+                       type="radio" name="bidsorsales" id="sales"
+                       value="sales"
+                       onchange="this.form.submit()">
+                <label for="sales">Mes ventes</label>
+                <div>
+                    <input type="radio" name="sales" id="mysales" value="mysales"
+                           data-th-disabled="${bidsorsales != 'sales'}">
+                    <label for="mysales">Mes ventes en cours</label>
+                    <input type="radio" name="sales" id="waitingsales" value="waitingsales"
+                           data-th-disabled="${bidsorsales != 'sales'}">
+                    <label for="waitingsales">Ventes non débutées</label>
+                    <input type="radio" name="sales" id="endedsales" value="endedsales"
+                           data-th-disabled="${bidsorsales != 'sales'}">
+                    <label for="endedsales">Ventes terminées</label>
+
+                </div>
+            </div>
+        </form>
+
+        <div class="bidlist">
+            <div class="bidcards" data-th-each="article : ${articles}">
+                <!-- Toute la carte est cliquable via ce lien masqué qui couvre la carte -->
+                <a class="card-link-overlay"
+                   data-th-href="@{/article/details(id=${article.articleId})}"
+                   aria-label="Voir les détails de l'article"></a>
+                <!-- Contenu de la carte -->
+                <img data-th-src="@{${article.imageUrl}}" alt="Image de l'article à vendre">
+                <h4 data-th-text="${article.articleName}">Titre</h4>
+                <p data-th-text="'Meilleure offre : ' + ${article.sellingPrice}">Prix</p>
+                <p data-th-text="'Date de fin : ' + ${article.endDate}">Date de fin</p>
+                <p>
+                    Vendeur :
+                    <a class="seller-link"
+                       title="Voir le profil du vendeur"
+                       data-th-href="@{/profil(username=${article.seller.username})}"
+                       data-th-text="${article.seller.username}"></a>
+                </p>
+            </div>
         </div>
-        <div class="searchcard">
-          <input type="text" name="pattern" id="pattern" placeholder="Le nom de l'article contient :">
-        </div>
-        <div class="searchcard">
-          <label for="categoryId">Catégories : </label>
-          <select name="categoryId" id="categoryId">
-            <option value="0" selected>Toutes les catégories</option>
-            <option data-th-each="category: ${categories}"
-                    data-th-value="${category.categoryId}"
-                    data-th-text="${category.label}"></option>
-          </select>
-        </div>
-      </div>
-
-      <div >
-        <button type="submit">Rechercher</button>
-      </div>
-
-    </form>
-
-    <form data-th-if="${#authorization.expression('isAuthenticated')}"
-            method="get" data-th-action="@{/searchBidsOrSales}" class="columnform">
-      <div class="searchcard">
-        <h3>Mes ventes et achats </h3>
-      </div>
-
-      <div class="searchcard">
-        <div>
-          <input data-th-checked="${bidsorsales == 'bids'}"
-                 type="radio" name="bidsorsales" id="bids"
-                 value="bids"
-                 onchange="this.form.submit()">
-          <label for="bids">Achats</label>
-          <div>
-            <input type="radio" name="bids" id="allbids" value="allbids"
-                   data-th-disabled="${bidsorsales != 'bids'}">
-            <label for="allbids">Enchères ouvertes</label>
-            <input type="radio" name="bids" id="ongoingbids" value="ongoingbids"
-                   data-th-disabled="${bidsorsales != 'bids'}">
-            <label for="ongoingbids">Mes enchères en cours</label>
-            <input type="radio" name="bids" id="winbids" value="winbids"
-                   data-th-disabled="${bidsorsales != 'bids'}">
-            <label for="winbids">Mes enchères remportées</label>
-
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <input data-th-checked="${bidsorsales == 'sales'}"
-               type="radio" name="bidsorsales" id="sales"
-               value="sales"
-               onchange="this.form.submit()">
-        <label for="sales">Mes ventes</label>
-        <div>
-          <input type="radio" name="sales" id="mysales" value="mysales"
-                 data-th-disabled="${bidsorsales != 'sales'}">
-          <label for="mysales">Mes ventes en cours</label>
-          <input type="radio" name="sales" id="waitingsales" value="waitingsales"
-                 data-th-disabled="${bidsorsales != 'sales'}">
-          <label for="waitingsales">Ventes non débutées</label>
-          <input type="radio" name="sales" id="endedsales" value="endedsales"
-                 data-th-disabled="${bidsorsales != 'sales'}">
-          <label for="endedsales">Ventes terminées</label>
-
-        </div>
-      </div>
-    </form>
-
-
-    <div class="bidlist">
-      <div data-th-each="article: ${articles}" class="bidcards">
-
-        <img data-th-src="@{(${article.imageUrl})}" alt="image de l'article à vendre">
-        <h4 data-th-text = "${article.articleName}">Titre </h4>
-        <p data-th-text = "'Meilleure offre : ' + ${article.sellingPrice}">Prix : </p>
-        <p data-th-text = "'Date de fin : ' + ${article.endDate}"></p>
-
-        <p>Vendeur :
-          <a data-th-href="@{/profil(username=${article.seller.username})}" data-th-text="${article.seller.username}"></a>
-        </p>
-
-      </div>
-
-    </div>
-
-
-  </section>
+    </section>
 </main>
 </html>

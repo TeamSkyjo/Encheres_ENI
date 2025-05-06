@@ -7,14 +7,13 @@
 <!--            <a data-th-href="@{/?lang=en}"><img data-th-src="@{/images/English.webp}" alt="English"></a>-->
 <!--        </div>-->
         <p>
-            <a data-th-href="@{/}">
+            <a data-th-href="@{/encheres}">
                 Enchères entre particuliers
             </a>
-
         </p>
         <p>
             <em data-th-if="${loggedUser != null}"
-                data-th-text="'Salut ' + ${loggedUser.firstName} + ' !'">
+                data-th-text="'Salut ' + ${loggedUser.firstName} + ' ! (' + ${loggedUser.credit} + ' crédits)'">
             </em>
         </p>
     </div>
@@ -25,7 +24,7 @@
                 </a>
             </li>
             <li data-th-if="${#authorization.expression('isAuthenticated')}">
-                <a data-th-href="@{/}">
+                <a data-th-href="@{/article/creer}">
                     Vendre un article
                 </a>
             </li>
@@ -34,11 +33,11 @@
                     Mon profil
                 </a>
             </li>
-            <li data-th-unless="${#authorization.expression('isAuthenticated')}">
-                <a data-th-href="@{/inscription}">S'inscrire</a>
-            </li>
             <li data-th-if="${#authorization.expression('isAuthenticated')}">
                 <a data-th-href="@{/logout}">Déconnexion</a>
+            </li>
+            <li data-th-unless="${#authorization.expression('isAuthenticated')}">
+                <a data-th-href="@{/inscription}">S'inscrire</a>
             </li>
             <li data-th-unless="${#authorization.expression('isAuthenticated')}">
                 <a data-th-href="@{/login}">Se connecter</a>
