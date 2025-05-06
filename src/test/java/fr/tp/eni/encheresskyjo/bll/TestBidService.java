@@ -1,8 +1,10 @@
 package fr.tp.eni.encheresskyjo.bll;
 
 import fr.tp.eni.encheresskyjo.bo.Article;
+import fr.tp.eni.encheresskyjo.bo.Bid;
 import fr.tp.eni.encheresskyjo.bo.Category;
 import fr.tp.eni.encheresskyjo.bo.Pickup;
+import fr.tp.eni.encheresskyjo.dal.BidDAO;
 import fr.tp.eni.encheresskyjo.dal.UserDAO;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
 import org.junit.jupiter.api.Test;
@@ -15,12 +17,20 @@ import java.util.List;
 @SpringBootTest
 public class TestBidService {
 
-//    @Autowired
-//    private ArticleService articleService;
-//
-//    @Autowired
-//    private UserDAO userDAO;
-//
+
+    @Autowired
+    private BidService bidService;
+    @Autowired
+    private ArticleService articleService;
+
+    @Test
+    public void test_getBestBid() {
+        Article article = articleService.getArticleById(4);
+        System.out.println(article);
+
+        Bid bid = bidService.getBestBid(article);
+        System.out.println(bid);
+    }
 //    @Test
 //    public void test_createArticle() {
 //        Article article = new Article();

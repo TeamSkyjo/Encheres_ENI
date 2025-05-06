@@ -5,8 +5,11 @@ import fr.tp.eni.encheresskyjo.bo.Article;
 import fr.tp.eni.encheresskyjo.bo.Bid;
 import fr.tp.eni.encheresskyjo.bo.User;
 import fr.tp.eni.encheresskyjo.dal.*;
+import fr.tp.eni.encheresskyjo.exception.BusinessCode;
+import fr.tp.eni.encheresskyjo.exception.BusinessException;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -39,13 +42,69 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
-    public void createBid(Bid bid) {
+    public void createBid(User user, Article article, int bidPrice) {
+        BusinessException businessException = new BusinessException();
+        boolean isValid = true ;
 
+        isValid = isUserValid(user, businessException);
+        isValid &= isArticleValid(article, businessException);
+        isValid &= isBidPriceValid(bidPrice, article, businessException);
+
+        if (isValid) {
+            //TODO : @Transactionnal ?
+            //TODO : Récupérer l'ancien utilisateur
+            // récupérer le montant de son enchère
+            // recréditer le montant sur son compte
+
+            //TODO: enlever le montant du bid à l'utilisateur en cours
+            // mettre à jour le sellingprice dans l'article
+            // Créer le bid !
+
+        }
+        else {
+            throw businessException;
+        }
+    }
+
+    private boolean isUserValid (User user, BusinessException businessException) {
+        boolean isValid = true ;
+        if (userDAO.readById((user.getUserId())) == null) {
+            isValid = false;
+            businessException.addKey(BusinessCode.VALID_BID_USER_NULL);
+        }
+        return isValid;
+    }
+
+    private boolean isArticleValid (Article article, BusinessException businessException) {
+        boolean isValid = true ;
+        if (articleDAO.readByID((article.getArticleId())) == null) {
+            isValid = false;
+            businessException.addKey(BusinessCode.VALID_BID_ARTICLE_NULL);
+        }
+        return isValid;
+    }
+
+    private boolean isBidPriceValid (int bidPrice, Article article, BusinessException businessException) {
+        boolean isValid = true ;
+        Bid bestBid = getBestBid(article);
+        if (bestBid.getBidPrice() > bidPrice) {
+            isValid = false;
+            businessException.addKey(BusinessCode.VALID_BID_PRICE_LOWER_BEST_BID);
+        }
+        if (article.getStartingPrice() > bidPrice) {
+            isValid = false;
+            businessException.addKey(BusinessCode.VALID_BID_PRICE_LOWER_STARTING_PRICE);
+        }
+        return isValid;
     }
 
     @Override
     public Bid getBestBid(Article article) {
-        return null;
+        List<Bid> bids = bidDAO.readByArticle(article.getArticleId());
+        Bid maxBid = bids.stream()
+                .max(Comparator.comparingInt(Bid::getBidPrice))
+                .orElse(null);
+        return maxBid;
     }
 
     @Override
