@@ -68,4 +68,9 @@ public class TestUserDAO {
         userDAO.delete(10);
     }
 
+    @Test
+    public void test_updateCredit() {
+        userDAO.updateCredit(1,1250);
+    }
+
 }

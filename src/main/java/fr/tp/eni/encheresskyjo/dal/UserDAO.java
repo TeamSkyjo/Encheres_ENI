@@ -17,4 +17,5 @@ public interface UserDAO {
     void delete(int userId);
     boolean isEmailUnique(String email);
     boolean isUsernameUnique(String username);
+    void updateCredit(int userId, int credit);
 }

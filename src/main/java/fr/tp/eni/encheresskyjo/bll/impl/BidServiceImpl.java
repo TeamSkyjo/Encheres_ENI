@@ -8,7 +8,9 @@ import fr.tp.eni.encheresskyjo.dal.*;
 import fr.tp.eni.encheresskyjo.exception.BusinessCode;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
@@ -31,39 +33,90 @@ public class BidServiceImpl implements BidService {
     }
 
     /**
+     * This methods allow the creation of a new bid for an article.
+     * First : it checks whether the bid, user, article is valid. if so :
+     * Second : it recovers the last bid to get the credit back to the former best-bider.
+     * Third : it creates the new bid and update the credit of the ongoing bider.
+     * @param user
+     * @param article
+     * @param bidPrice
+     */
+    @Transactional
+    @Override
+    public void createBid(User user, Article article, int bidPrice) {
+        BusinessException businessException = new BusinessException();
+        boolean isValid = true ;
+        LocalDate now = LocalDate.now();
+
+        isValid = isUserValid(user, businessException);
+        isValid &= isArticleValid(article, businessException);
+        isValid &= isBidPriceValid(bidPrice, article, businessException);
+        isValid &= isDateValid(article, now, businessException);
+
+        if (isValid) {
+            //Give back its credits to the last best bider.
+            creditLastBuyer(article);
+            //collect credits of the actual user
+            int userCreditUpdated = user.getCredit()-bidPrice;
+            user.setCredit(userCreditUpdated);
+            userDAO.updateCredit(user.getUserId(), userCreditUpdated);
+            //Create new bid - depending if the buyer has already tried to buy this article.
+            Bid newBid = new Bid(now, bidPrice, user, article);
+            List<Bid> userBids= bidDAO.readByUser(user.getUserId());
+            Bid lastBid = userBids.stream()
+                            .filter(b -> b.getArticle().equals(article))
+                            .filter(b ->b.getBuyer().equals(user))
+                            .findFirst()
+                            .orElse(null);
+            if (lastBid != null) {
+                bidDAO.update(newBid);
+            }
+            else {
+                bidDAO.create(newBid);
+            }
+        }
+        else {
+            throw businessException;
+        }
+    }
+
+    /**
+     * Private methode to give back credit to the last buyer in case a new bid is made.
+     * @param article
+     */
+    private void creditLastBuyer(Article article) {
+        Bid lastBid = getBestBid(article);
+        linkUserAndArticleToBid(lastBid);
+        User lastBuyer = lastBid.getBuyer();
+        int lastBidPrice = lastBid.getBidPrice();
+        int lastCredit = lastBuyer.getCredit();
+        int newCredit = lastCredit + lastBidPrice;
+        lastBuyer.setCredit(newCredit);
+        userDAO.updateCredit(lastBuyer.getUserId(), newCredit);
+    }
+
+    /**
      * Private method to centralize the link between a bid, its user and the article
      * @param bid
      */
-    private void linkUserAndArticleToBid(Bid bid) {
+    void linkUserAndArticleToBid(Bid bid) {
         User buyer = userDAO.readById(bid.getBuyer().getUserId());
         bid.setBuyer(buyer);
         Article article = articleDAO.readByID((bid.getArticle().getArticleId()));
         bid.setArticle(article);
     }
 
-    @Override
-    public void createBid(User user, Article article, int bidPrice) {
-        BusinessException businessException = new BusinessException();
+    private boolean isDateValid(Article article, LocalDate now, BusinessException businessException) {
         boolean isValid = true ;
-
-        isValid = isUserValid(user, businessException);
-        isValid &= isArticleValid(article, businessException);
-        isValid &= isBidPriceValid(bidPrice, article, businessException);
-
-        if (isValid) {
-            //TODO : @Transactionnal ?
-            //TODO : Récupérer l'ancien utilisateur
-            // récupérer le montant de son enchère
-            // recréditer le montant sur son compte
-
-            //TODO: enlever le montant du bid à l'utilisateur en cours
-            // mettre à jour le sellingprice dans l'article
-            // Créer le bid !
-
+        if (article.getStartDate().isAfter(now)) {
+            isValid = false ;
+            businessException.addKey(BusinessCode.VALID_BID_DATE_BEFORE_START);
         }
-        else {
-            throw businessException;
+        if (article.getEndDate().isBefore(now)) {
+            isValid = false ;
+            businessException.addKey(BusinessCode.VALID_BID_DATE_AFTER_END);
         }
+        return isValid;
     }
 
     private boolean isUserValid (User user, BusinessException businessException) {
