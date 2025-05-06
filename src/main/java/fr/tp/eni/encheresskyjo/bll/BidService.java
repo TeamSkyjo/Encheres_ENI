@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface BidService {
     void createBid(User user, Article article, int bidPrice);
+    void closeBid(Article article);
     Bid getBestBid(Article article);
     List<Article> getBidsByUser(int userId);
     List<Article> getBidsWonByUser(int userId);

@@ -2,6 +2,7 @@ package fr.tp.eni.encheresskyjo.bll.impl;
 
 import fr.tp.eni.encheresskyjo.bll.BidService;
 import fr.tp.eni.encheresskyjo.bo.Article;
+import fr.tp.eni.encheresskyjo.bo.ArticleStatus;
 import fr.tp.eni.encheresskyjo.bo.Bid;
 import fr.tp.eni.encheresskyjo.bo.User;
 import fr.tp.eni.encheresskyjo.dal.*;
@@ -120,6 +121,8 @@ public class BidServiceImpl implements BidService {
         return isValid;
     }
 
+
+
     private boolean isUserValid (User user, BusinessException businessException) {
         boolean isValid = true ;
         if (userDAO.readById((user.getUserId())) == null) {
@@ -150,6 +153,50 @@ public class BidServiceImpl implements BidService {
             businessException.addKey(BusinessCode.VALID_BID_PRICE_LOWER_STARTING_PRICE);
         }
         return isValid;
+    }
+
+    /**
+     * end date, insert selling price, credit seller
+     * and check buyer uncredit ?
+     *
+     * @param article
+     */
+    @Override
+    public void closeBid(Article article) {
+        BusinessException businessException = new BusinessException();
+
+        // Checks if bid already closed
+        if (article.getSellingPrice() != 0) {
+            businessException.addKey(BusinessCode.BID_ARTICLE_ALREADY_CLOSED);
+            throw businessException;
+        }
+
+        // Checks if selling date is over
+        ArticleStatus status = article.readStatus();
+        System.out.println("Statut : " +status);
+
+        if (status != ArticleStatus.ENDED) {
+            businessException.addKey(BusinessCode.BID_NOT_ENDED);
+            throw businessException;
+        }
+
+
+        Bid bestBid = getBestBid(article);
+        System.out.println("\nBest bid : " + bestBid);
+
+        // update Article selling price
+        int bestPrice = bestBid.getBidPrice();
+        article.setSellingPrice(bestPrice);
+        articleDAO.update(article);
+        System.out.println("\nupdated article : " + article);
+
+        // update seller credit
+        User seller = article.getSeller();
+        System.out.println("\n Seller credit before : " + seller.getCredit());
+        seller.setCredit(seller.getCredit() + bestPrice);
+        userDAO.updateCredit(seller.getUserId(), seller.getCredit());
+        System.out.println("\n Seller credit after : " + seller.getCredit());
+
     }
 
     @Override

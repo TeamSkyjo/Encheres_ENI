@@ -38,6 +38,18 @@ public class TestBidService {
         bidService.createBid(user, article, 560);
     }
 
+    @Test
+    public void test_bidClosure() {
+        // Vélo de course / seller: 3 (sporty) / fin enchères 2025-05-05
+        Article article = articleService.getArticleById(3);
+        Bid bestBid = bidService.getBestBid(article);
+        System.out.println(bestBid);
+
+        bidService.closeBid(article);
+        System.out.println(article);
+
+    }
+
 //    //Test to verify that the method linkUserAndArticletoBid works properly. The method was modified from private to public for the test.
 //    @Test
 //    public void test_linkUserAndArticleToBid() {
