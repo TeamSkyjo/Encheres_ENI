@@ -29,8 +29,6 @@ import java.util.List;
  * @Version 1.0
  * Class to control map the views for the article webpages
  */
-
-
 @Controller
 public class ArticleController {
 
@@ -58,7 +56,7 @@ public class ArticleController {
     }
 
     //mapping
-    @GetMapping("/")
+    @GetMapping("/encheres")
     public String home(Model model) {
         List<Article> articles = articleService.getArticles();
         model.addAttribute("articles", articles);

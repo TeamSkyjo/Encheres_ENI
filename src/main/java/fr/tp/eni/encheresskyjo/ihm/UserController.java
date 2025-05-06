@@ -30,7 +30,6 @@ public class UserController {
         return null;
     }
 
-
     /**
      * map to another user's profile WHEN USER IS LOGGED IN.
      * @param username

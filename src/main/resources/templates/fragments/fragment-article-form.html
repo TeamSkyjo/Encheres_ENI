@@ -4,59 +4,107 @@
     <!--    <h2 data-th-replace="~{fragments/fragment-errors.html :: errors}"></h2>-->
     <!--    <p class=cards data-th-each="keyError: ${#fields.errors('global')}" data-th-text="#{${keyError}}"></p>-->
     <ul class="flex-outer">
-        <!--        <li >-->
-        <!--            <label for="genre" data-th-text="#{frag-film-form.genre}"></label>-->
-        <!--            <input data-th-if="${#strings.isEmpty(action)}" type="text" name="genre" id="genre" disabled data-th-field="*{genre.titre}">-->
-        <!--            <select data-th-unless="${#strings.isEmpty(action)}" name="genre" id="genre">-->
-        <!--                <option data-th-each="genre: ${genres}" data-th-value="${genre.id}" data-th-text="${genre.titre}"></option>-->
-        <!--            </select>-->
-        <!--            <div data-th-replace="~{fragments/fragment-error :: error(genre)}"></div>-->
-        <!--        </li>-->
-        <!--        <li>-->
-        <!--            <label for="annee" data-th-text="#{frag-film-form.annee}"></label>-->
-        <!--            <input type="number" min="1900" name="annee" id="annee" data-th-disabled="${#strings.isEmpty(action)}" data-th-field="*{annee}">-->
-        <!--            <div data-th-replace="~{fragments/fragment-error :: error(annee)}"></div>-->
-        <!--        </li>-->
-        <!--        <li>-->
-        <!--            <label for="titre" data-th-text="#{frag-film-form.titre}">Titre:</label>-->
-        <!--            <input type="text" name="titre" id="titre" data-th-disabled="${#strings.isEmpty(action)}" data-th-field="*{titre}">-->
-        <!--            <div data-th-replace="~{fragments/fragment-error :: error(titre)}"></div>-->
-        <!--        </li>-->
-        <!--        <li>-->
-        <!--            <label for="realisateur" data-th-text="#{frag-film-form.realisateur}">Réalisateur:</label>-->
-        <!--            <input data-th-if="${#strings.isEmpty(action)}" type="text" name="realisateur" id="realisateur" disabled data-th-value="${film.realisateur.prenom} + ' ' + ${film.realisateur.nom}">-->
-        <!--            <select data-th-unless="${#strings.isEmpty(action)}" name="realisateur" id="realisateur">-->
-        <!--                <option data-th-each="participant: ${participants}" data-th-value="${participant.id}" data-th-text="${participant.prenom} + ' ' + ${participant.nom}"></option>-->
-        <!--            </select>-->
-        <!--            <div data-th-replace="~{fragments/fragment-error :: error(realisateur)}"></div>-->
-        <!--        </li>-->
-        <!--        <li>-->
-        <!--            <label for="duree" data-th-text="#{frag-film-form.duree}"></label>-->
-        <!--            <input type="number" name="duree" id="duree" data-th-disabled="${#strings.isEmpty(action)}" data-th-field="*{duree}">-->
-        <!--            <div data-th-replace="~{fragments/fragment-error :: error(duree)}"></div>-->
-        <!--        </li>-->
-        <!--        <li>-->
-        <!--            <label for="acteurs" data-th-text="#{frag-film-form.acteurs}">Acteur(s):</label>-->
-        <!--            <select data-th-if="${#strings.isEmpty(action)}" disabled multiple name="acteurs" id="acteurs">-->
-        <!--                <option data-th-each="acteur: ${film.acteurs}" data-th-text="'- ' + ${acteur.prenom} + ' ' + ${acteur.nom}"></option>-->
-        <!--            </select>-->
-        <!--            <select data-th-unless="${#strings.isEmpty(action)}" multiple name="acteurs" id="acteurs">-->
-        <!--                <option data-th-each="participant: ${participants}" data-th-value="${participant.id}" data-th-text="${participant.prenom} + ' ' + ${participant.nom}"></option>-->
-        <!--            </select>-->
-        <!--        </li>-->
-        <!--        <li>-->
-        <!--            <label for="synopsis" data-th-text="#{frag-film-form.synopsis}">Synopsis:</label>-->
-        <!--            <textarea id="synopsis" name="synopsis" data-th-disabled="${#strings.isEmpty(action)}" data-th-field="*{synopsis}"></textarea>-->
-        <!--            <div data-th-replace="~{fragments/fragment-error :: error(synopsis)}"></div>-->
-        <!--        </li>-->
-        <!--        <li>-->
-        <!--            <button data-th-unless="${#strings.isEmpty(action)}" type="submit" data-th-text="#{frag-film-form.enregistrer}"></button>-->
-        <!--        </li>-->
-        <!--        <li data-th-if="${#strings.isEmpty(action) && !#lists.isEmpty(film.avis)}">-->
-        <!--            <p data-th-text="#{frag-avis.label}"></p>-->
-        <!--            <ul>-->
-        <!--                <li data-th-each="avis: ${film.avis}" data-th-text="${avis.commentaire} + '[' + ${avis.note} + '] - (' + ${avis.membre.prenom} + ')'"></li>-->
-        <!--            </ul>-->
-        <!--        </li>-->
+        <img data-th-src="@{article.imageURL}" alt="Photo de l'objet à vendre">
+        <li>
+            <label for="articleName" data-th-text="#{frag-article-form.articleName}"></label>
+            <input data-th-field="*{articleName}"
+                   type="text" name="articleName" id="articleName" data-th-disabled="${#strings.isEmpty(action)}">
+            <!--<div data-th-replace="~{fragments/fragment-error :: error(articleName)}"></div>-->
+        </li>
+        <li>
+            <label for="description" data-th-text="#{frag-article-form.description}"></label>
+            <textarea name="description" id="description"
+                      data-th-disabled="${#strings.isEmpty(action)}"
+                      data-th-field="*{description}"></textarea>
+            <!-- <div data-th-replace="~{fragments/fragment-error :: error(description)}"></div>-->
+        </li>
+        <li>
+            <label for="category" data-th-text="#{frag-article-form.category}"></label>
+            <input data-th-if="${#strings.isEmpty(action)}" type="text" name="category" id="category" disabled
+                   data-th-field="*{category.label}">
+            <select data-th-unless="${#strings.isEmpty(action)}" name="category" id="category">
+                <option data-th-each="category: ${categories}" data-th-value="${category.categoryId}"
+                        data-th-text="${category.label}"></option>
+            </select>
+            <!-- <div data-th-replace="~{fragments/fragment-error :: error(category)}"></div>-->
+        </li>
+        <li data-th-if="${#strings.isEmpty(action)}">
+            <label for="bestBid" data-th-text="#{frag-article-form.bestBid}"></label>
+            <input type="number" name="bestBid" id="bestBid">
+        </li>
+        <li data-th-unless="${#strings.isEmpty(action)}">
+            <label for="imageURL" data-th-text="#{frag-article-form.imageUrl}"></label>
+            <input type="file" id="imageURL" name="imageURL" accept="image/png, image/jpeg, image/gif, image/jpg"
+                   data-th-unless="${#strings.isEmpty(action)}"/>
+            <!-- <div data-th-replace="~{fragments/fragment-error :: error(imageURL)}"></div>-->
+        </li>
+        <li>
+            <label for="startingPrice" data-th-text="#{frag-article-form.startingPrice}"></label>
+            <input type="number" name="startingPrice" id="startingPrice"
+                   data-th-disabled="${#strings.isEmpty(action)}"
+                   data-th-field="*{startingPrice}">
+<!--            <div data-th-replace="~{fragments/fragment-error :: error(startingPrice)}"></div>-->
+        </li>
+        <li data-th-unless="${#strings.isEmpty(action)}">
+            <label for="startDate" data-th-text="#{frag-article-form.startDate}"></label>
+            <input type="date" name="startDate" id="startDate"
+                   data-th-disabled="${#strings.isEmpty(action)}"
+                   data-th-field="*{startDate}">
+            <!--            <div data-th-replace="~{fragments/fragment-error :: error(startDate)}"></div>-->
+        </li>
+        <li>
+            <label for="endDate" data-th-text="#{frag-article-form.endDate}"></label>
+            <input type="date" name="endDate" id="endDate"
+                   data-th-disabled="${#strings.isEmpty(action)}"
+                   data-th-field="*{endDate}">
+            <!--            <div data-th-replace="~{fragments/fragment-error :: error(endDate)}"></div>-->
+        </li>
+        <li data-th-if="${#strings.isEmpty(action)}">
+            <label for="pickup" data-th-text="#{frag-article-form.pickup} + ' : '"></label>
+            <p id="pickup" data-th-text="${article.pickup.street}"></p>
+            <p data-th-text="${article.pickup.zip + ' ' + article.pickup.city}"></p>
+        </li>
+        <li data-th-unless="${#strings.isEmpty(action)}">
+            <fieldset>
+                <legend data-th-text="#{frag-article-form.pickup}"></legend>
+                <ul>
+                    <li>
+                        <label for="street" data-th-text="#{frag-article-form.pickup.street}"></label>
+                        <input data-th-field="*{pickup.street}"
+                               type="text" name="street" id="street" data-th-disabled="${#strings.isEmpty(action)}">
+                        <!--<div data-th-replace="~{fragments/fragment-error :: error(street)}"></div>-->
+                    </li>
+                    <li>
+                        <label for="zip" data-th-text="#{frag-article-form.pickup.zip}"></label>
+                        <input data-th-field="*{pickup.zip}"
+                               type="text" name="zip" id="zip" data-th-disabled="${#strings.isEmpty(action)}">
+                        <!--<div data-th-replace="~{fragments/fragment-error :: error(zip)}"></div>-->
+                    </li>
+                    <li>
+                        <label for="city" data-th-text="#{frag-article-form.pickup.city}"></label>
+                        <input data-th-field="*{pickup.city}"
+                               type="text" name="city" id="city" data-th-disabled="${#strings.isEmpty(action)}">
+                        <!--<div data-th-replace="~{fragments/fragment-error :: error(city)}"></div>-->
+                    </li>
+                </ul>
+            </fieldset>
+        </li>
+        <li data-th-if="${#strings.isEmpty(action)}">
+            <label for="seller" data-th-text="#{frag-article-form.seller}"></label>
+            <input data-th-value="${article.seller.username}"
+                   type="text" name="seller" id="seller" data-th-disabled="${#strings.isEmpty(action)}">
+            <!--<div data-th-replace="~{fragments/fragment-error :: error(seller)}"></div>-->
+        </li>
+        <li data-th-unless="${#strings.isEmpty(action)}">
+            <button type="submit" data-th-text="#{frag-article-form.button.save}"></button>
+            <button type="reset" data-th-text="#{frag-article-form.button.cancel}"></button>
+            <button type="button" data-th-text="#{frag-article-form.button.erase}"></button>
+        </li>
+        <li data-th-if="${#strings.isEmpty(action)}">
+            <label for="bidPrice" data-th-text="#{frag-article-form.bidPrice}"></label>
+            <input type="number" name="bidPrice" id="bidPrice"
+                   data-th-value="${article.startingPrice}">
+            <button type="submit" data-th-text="#{frag-article-form.button.bid}"></button>
+        </li>
     </ul>
 </form>
