@@ -26,7 +26,7 @@ header {
     height: 15vw;
 }
 
-header>img {
+header>a>img {
     width: 13vw;
     margin-right: 10px;
 }
@@ -138,7 +138,7 @@ footer {
     header {
         height: 12vw;
     }
-    header>img {
+    header>a>img {
         width: 10vw;
     }
 
@@ -149,7 +149,7 @@ footer {
     header {
         height: 12vw;
     }
-    header>img {
+    header>a>img {
         width: 10vw;
     }
     header li {
@@ -166,7 +166,7 @@ footer {
     header {
         height: 10vw;
     }
-    header>img {
+    header>a>img {
         width: 8vw;
     }
     #nav-title {
@@ -186,7 +186,7 @@ footer {
     header {
         height: 8vw;
     }
-    header>img {
+    header>a>img {
         width: 7vw;
     }
     #nav-title {

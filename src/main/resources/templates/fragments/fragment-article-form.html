@@ -120,21 +120,25 @@
         </li>
         <li data-th-if="${action != 'creer'}">
             <label for="seller" data-th-text="#{frag-article-form.seller}"></label>
-            <input data-th-value="${article.seller.username}"
-                   type="text" name="seller" id="seller" disabled>
+            <a data-th-href="@{/profil(username=${article.seller.username})}">
+                <p data-th-text="${article.seller.username}"></p>
+            </a>
             <!--<div data-th-replace="~{fragments/fragment-error :: error(seller)}"></div>-->
         </li>
+
         <li data-th-if="${action == 'creer'}">
             <button type="submit" data-th-text="#{frag-article-form.button.save}"></button>
             <button type="reset" data-th-text="#{frag-article-form.button.cancel}"></button>
         </li>
-        <li data-th-if="${(action == 'seller') and article.endDate.isAfter(T(java.time.LocalDate).now())}">
+        <li data-th-if="${(action == 'seller')
+        and (article.endDate.isAfter(T(java.time.LocalDate).now()) or article.endDate.isEqual(T(java.time.LocalDate).now()))}">
             <button type="submit" data-th-text="#{frag-article-form.button.erase}"></button>
         </li>
         <li data-th-if="${action == 'buyer' and sellingPrice == 0}">
             <button type="submit" data-th-text="#{frag-article-form.button.close}"></button>
         </li>
-        <li data-th-if="${#strings.isEmpty(action) and article.endDate.isAfter(T(java.time.LocalDate).now())}">
+        <li data-th-if="${#strings.isEmpty(action)
+        and (article.endDate.isAfter(T(java.time.LocalDate).now()) or article.endDate.isEqual(T(java.time.LocalDate).now()))}">
             <label for="bidPrice" data-th-text="#{frag-article-form.bidPrice}"></label>
             <input type="number" name="bidPrice" id="bidPrice" min="${article.bestPrice != 0 ? article.bestPrice : article.startingPrice}"
                    data-th-value="${article.bestPrice != 0 ? article.bestPrice : article.startingPrice}">
