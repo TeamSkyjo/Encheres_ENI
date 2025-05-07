@@ -65,7 +65,6 @@ public class ArticleController {
 
     @GetMapping("/")
     public String redirectHome() {
-        System.out.println(UPLOAD_DIRECTORY);
         return "redirect:/encheres";
     }
 

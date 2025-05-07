@@ -17,7 +17,7 @@
     <section class="center-section">
         <h1> Liste des enchères </h1>
         <form method="get" class="columnform" data-th-action="@{/rechercheArticle}">
-            <div class="formcolumn1">
+            <div id="formcolumn1">
                 <div class="searchcard">
                     <h3>Filtrer les enchères par : </h3>
                 </div>
@@ -34,75 +34,87 @@
                     </select>
                 </div>
             </div>
-
-            <div>
+            <div id="formcolumn2">
                 <button type="submit">Rechercher</button>
             </div>
         </form>
 
         <form data-th-if="${#authorization.expression('isAuthenticated')}"
               method="get" data-th-action="@{/rechercheUtilisateur}" class="columnform">
-            <div class="searchcard">
-                <h3>Mes ventes et achats </h3>
-            </div>
-
+            <h3>Mes ventes et achats </h3>
             <div class="searchcard">
                 <div>
-                    <input data-th-checked="${bidsorsales == 'bids'}"
-                           type="radio" name="bidsorsales" id="bids"
-                           value="bids"
-                           onchange="this.form.submit()">
-                    <label for="bids">Achats</label>
-                    <div>
-                        <input type="radio"
-                               data-th-checked="${bids=='all'}"
-                               name="bids" id="all" value="all"
-                               data-th-disabled="${bidsorsales != 'bids'}"
+                    <div class="radio-group">
+                        <input data-th-checked="${bidsorsales == 'bids'}"
+                               type="radio" name="bidsorsales" id="bids"
+                               value="bids"
                                onchange="this.form.submit()">
-                        <label for="all">Enchères ouvertes</label>
-                        <input type="radio"
-                               data-th-checked="${bids=='ongoing'}"
-                               name="bids" id="ongoing" value="ongoing"
-                               data-th-disabled="${bidsorsales != 'bids'}"
-                               onchange="this.form.submit()">
-                        <label for="ongoing">Mes enchères en cours</label>
-                        <input type="radio"
-                               data-th-checked="${bids=='win'}"
-                               name="bids" id="win" value="win"
-                               data-th-disabled="${bidsorsales != 'bids'}"
-                               onchange="this.form.submit()">
-                        <label for="win">Mes enchères remportées</label>
-
+                        <label for="bids">Achats</label>
+                    </div>
+                    <div class="radios">
+                        <div class="radio-group">
+                            <input type="radio"
+                                   data-th-checked="${bids=='all'}"
+                                   name="bids" id="all" value="all"
+                                   data-th-disabled="${bidsorsales != 'bids'}"
+                                   onchange="this.form.submit()">
+                            <label for="all">Enchères ouvertes</label>
+                        </div>
+                        <div class="radio-group">
+                            <input type="radio"
+                                   data-th-checked="${bids=='ongoing'}"
+                                   name="bids" id="ongoing" value="ongoing"
+                                   data-th-disabled="${bidsorsales != 'bids'}"
+                                   onchange="this.form.submit()">
+                            <label for="ongoing">Mes enchères en cours</label>
+                        </div>
+                        <div class="radio-group">
+                            <input type="radio"
+                                   data-th-checked="${bids=='win'}"
+                                   name="bids" id="win" value="win"
+                                   data-th-disabled="${bidsorsales != 'bids'}"
+                                   onchange="this.form.submit()">
+                            <label for="win">Mes enchères remportées</label>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div>
-                <input data-th-checked="${bidsorsales == 'sales'}"
-                       type="radio" name="bidsorsales" id="sales"
-                       value="sales"
-                       onchange="this.form.submit()">
-                <label for="sales">Mes ventes</label>
+            <div class="searchcard">
                 <div>
-                    <input type="radio"
-                           data-th-checked="${sales=='ongoing'}"
-                           name="sales" id="ongoing" value="ongoing"
-                           data-th-disabled="${bidsorsales != 'sales'}"
-                           onchange="this.form.submit()">
-                    <label for="ongoing">Mes ventes en cours</label>
-                    <input type="radio"
-                           data-th-checked="${sales=='not_started'}"
-                           name="sales" id="not_started" value="not_started"
-                           data-th-disabled="${bidsorsales != 'sales'}"
-                           onchange="this.form.submit()">
-                    <label for="not_started">Ventes non débutées</label>
-                    <input type="radio"
-                           data-th-checked="${sales=='ended'}"
-                           name="sales" id="ended" value="ended"
-                           data-th-disabled="${bidsorsales != 'sales'}"
-                           onchange="this.form.submit()">
-                    <label for="ended">Ventes terminées</label>
-
+                    <div class="radio-group">
+                        <input data-th-checked="${bidsorsales == 'sales'}"
+                               type="radio" name="bidsorsales" id="sales"
+                               value="sales"
+                               onchange="this.form.submit()">
+                        <label for="sales">Mes ventes</label>
+                    </div>
+                    <div class="radios">
+                        <div class="radio-group">
+                            <input type="radio"
+                                   data-th-checked="${sales=='ongoing'}"
+                                   name="sales" id="ongoing" value="ongoing"
+                                   data-th-disabled="${bidsorsales != 'sales'}"
+                                   onchange="this.form.submit()">
+                            <label for="ongoing">Mes ventes en cours</label>
+                        </div>
+                        <div class="radio-group">
+                            <input type="radio"
+                                   data-th-checked="${sales=='not_started'}"
+                                   name="sales" id="not_started" value="not_started"
+                                   data-th-disabled="${bidsorsales != 'sales'}"
+                                   onchange="this.form.submit()">
+                            <label for="not_started">Ventes non débutées</label>
+                        </div>
+                        <div class="radio-group">
+                            <input type="radio"
+                                   data-th-checked="${sales=='ended'}"
+                                   name="sales" id="ended" value="ended"
+                                   data-th-disabled="${bidsorsales != 'sales'}"
+                                   onchange="this.form.submit()">
+                            <label for="ended">Ventes terminées</label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -117,7 +129,8 @@
                 <img data-th-src="@{${article.imageUrl}}" alt="Image de l'article à vendre">
                 <h4 data-th-text="${article.articleName}">Titre</h4>
                 <p data-th-text="'Meilleure offre : ' + ${article.sellingPrice}">Prix</p>
-                <p data-th-text="'Date de fin : ' + ${article.endDate}">Date de fin</p>
+                <p data-th-text="'Date de fin : ' + ${#temporals.format(article.endDate, 'dd/MM/yyyy')}"></p>
+<!--                <p data-th-text="'Date de fin : ' + ${article.endDate}"></p>-->
                 <p>
                     Vendeur :
                     <a class="seller-link"

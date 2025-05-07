@@ -11,7 +11,6 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    /*height: 100vh;*/
     min-height: 100vh;
 }
 
@@ -22,14 +21,14 @@ header {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: 10px;
+    padding: 5px 10px;
     box-shadow: 0 1px 8px #ddd;
-    height: 15vh;
+    height: 15vw;
 }
 
 header>img {
-    width: 15%;
-    margin: 10px;
+    width: 13vw;
+    margin-right: 10px;
 }
 
 #nav-title {
@@ -40,7 +39,7 @@ header>img {
 header li {
     list-style: none;
     display: inline-block;
-    padding: 0 20px;
+    padding: 0 1vw;
     font-size: 1rem;
 }
 
@@ -59,7 +58,7 @@ header a:hover {
 }
 
 /* Pour petits écrans : afficher le burger et cacher le menu */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 992px) {
     .burger {
         display: block;
         font-size: 2rem;
@@ -73,7 +72,7 @@ header a:hover {
         position: absolute;
         top: 9vh; /* hauteur du header */
         right: 0;
-        width: 20%;
+        /*width: 20%;*/
         padding: 2%;
         box-shadow: 0 1px 8px #ddd;
     }
@@ -89,7 +88,7 @@ header a:hover {
     }
 }
 
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 993px) {
     .burger {
         display: none;
         font-size: 2rem;
@@ -115,8 +114,8 @@ header a:hover {
     text-align: center;
 }
 
-main h1 {
-    margin: 10px;
+main>h1 {
+    margin: 2vh;
     font-size: 2rem;
 }
 
@@ -136,21 +135,69 @@ footer {
 
 /* Medium devices (tablets, 768px and up) */
 @media screen and (min-width: 768px) {
+    header {
+        height: 12vw;
+    }
+    header>img {
+        width: 10vw;
+    }
 
 }
 
 /* Large devices (desktops, 992px and up) */
 @media screen and (min-width: 992px) {
-
+    header {
+        height: 12vw;
+    }
+    header>img {
+        width: 10vw;
+    }
+    header li {
+        padding: 0 1.5vw;
+        font-size: 1.2rem;
+    }
+    header em {
+        font-size: 1.2rem;
+    }
 }
 
 /* X-Large devices (large desktops, 1200px and up) */
 @media screen and (min-width: 1200px) {
-
+    header {
+        height: 10vw;
+    }
+    header>img {
+        width: 8vw;
+    }
+    #nav-title {
+        font-size: 2rem;
+    }
+    header li {
+        padding: 0 1.8vw;
+        font-size: 1.4rem;
+    }
+    header em {
+        font-size: 1.4rem;
+    }
 }
 
 /* XX-Large devices (larger desktops, 1400px and up) */
 @media screen and (min-width: 1400px) {
-
+    header {
+        height: 9vw;
+    }
+    header>img {
+        width: 7vw;
+    }
+    #nav-title {
+        font-size: 2.4rem;
+    }
+    header li {
+        padding: 0 1.8vw;
+        font-size: 1.6rem;
+    }
+    header em {
+        font-size: 1.6rem;
+    }
 }
 
