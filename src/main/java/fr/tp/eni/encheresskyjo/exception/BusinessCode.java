@@ -57,6 +57,7 @@ public class BusinessCode {
 
     //BID
     public static final String VALID_BID_USER_NULL = "validation.bid.user.null";
+    public static final String VALID_BID_USER_CREDIT_SCARCE="validation.bid.user.credit.scarce";
     public static final String VALID_BID_ARTICLE_NULL = "validation.bid.article.null";
     public static final String VALID_BID_PRICE_LOWER_BEST_BID = "validation.bid.price.lower.best.bid";
     public static final String VALID_BID_PRICE_LOWER_STARTING_PRICE = "validation.bid.price.lower.start.price";
