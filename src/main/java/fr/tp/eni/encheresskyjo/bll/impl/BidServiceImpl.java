@@ -180,7 +180,6 @@ public class BidServiceImpl implements BidService {
             throw businessException;
         }
 
-
         Bid bestBid = getBestBid(article);
         System.out.println("\nBest bid : " + bestBid);
 
