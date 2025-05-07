@@ -156,46 +156,36 @@ public class BidServiceImpl implements BidService {
     }
 
     /**
-     * end date, insert selling price, credit seller
-     * and check buyer uncredit ?
+     * if sellingPrice is NULL (=0 in java) and bid already closed (status = ENDED),
+     * insert the final selling price of the finished bid and update the seller credit.
      *
      * @param article
      */
     @Override
     public void closeBid(Article article) {
-        BusinessException businessException = new BusinessException();
 
-        // Checks if bid already closed
-        if (article.getSellingPrice() != 0) {
-            businessException.addKey(BusinessCode.BID_ARTICLE_ALREADY_CLOSED);
-            throw businessException;
-        }
-
-        // Checks if selling date is over
         ArticleStatus status = article.readStatus();
         System.out.println("Statut : " +status);
 
-        if (status != ArticleStatus.ENDED) {
-            businessException.addKey(BusinessCode.BID_NOT_ENDED);
-            throw businessException;
+
+        if (article.getSellingPrice() == 0 && status == ArticleStatus.ENDED) {
+            Bid bestBid = getBestBid(article);
+            System.out.println("\nBest bid : " + bestBid);
+
+            // update Article selling price
+            int bestPrice = bestBid.getBidPrice();
+            article.setSellingPrice(bestPrice);
+            articleDAO.update(article);
+            System.out.println("\nupdated article : " + article);
+
+            // update seller credit
+            User seller = article.getSeller();
+            System.out.println("\n Seller credit before : " + seller.getCredit());
+            seller.setCredit(seller.getCredit() + bestPrice);
+            userDAO.updateCredit(seller.getUserId(), seller.getCredit());
+            System.out.println("\n Seller credit after : " + seller.getCredit());
+
         }
-
-
-        Bid bestBid = getBestBid(article);
-        System.out.println("\nBest bid : " + bestBid);
-
-        // update Article selling price
-        int bestPrice = bestBid.getBidPrice();
-        article.setSellingPrice(bestPrice);
-        articleDAO.update(article);
-        System.out.println("\nupdated article : " + article);
-
-        // update seller credit
-        User seller = article.getSeller();
-        System.out.println("\n Seller credit before : " + seller.getCredit());
-        seller.setCredit(seller.getCredit() + bestPrice);
-        userDAO.updateCredit(seller.getUserId(), seller.getCredit());
-        System.out.println("\n Seller credit after : " + seller.getCredit());
 
     }
 
