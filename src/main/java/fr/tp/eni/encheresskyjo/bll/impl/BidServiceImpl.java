@@ -90,13 +90,15 @@ public class BidServiceImpl implements BidService {
     @Override
     public void creditLastBuyer(Article article) {
         Bid lastBid = getBestBid(article);
-        linkUserAndArticleToBid(lastBid);
-        User lastBuyer = lastBid.getBuyer();
-        int lastBidPrice = lastBid.getBidPrice();
-        int lastCredit = lastBuyer.getCredit();
-        int newCredit = lastCredit + lastBidPrice;
-        lastBuyer.setCredit(newCredit);
-        userDAO.updateCredit(lastBuyer.getUserId(), newCredit);
+        if (lastBid != null) {
+            linkUserAndArticleToBid(lastBid);
+            User lastBuyer = lastBid.getBuyer();
+            int lastBidPrice = lastBid.getBidPrice();
+            int lastCredit = lastBuyer.getCredit();
+            int newCredit = lastCredit + lastBidPrice;
+            lastBuyer.setCredit(newCredit);
+            userDAO.updateCredit(lastBuyer.getUserId(), newCredit);
+        }
     }
 
     /**
@@ -148,7 +150,7 @@ public class BidServiceImpl implements BidService {
     private boolean isBidPriceValid (int bidPrice, Article article, BusinessException businessException) {
         boolean isValid = true ;
         Bid bestBid = getBestBid(article);
-        if (bestBid.getBidPrice() > bidPrice) {
+        if (bestBid != null && bestBid.getBidPrice() > bidPrice) {
             isValid = false;
             businessException.addKey(BusinessCode.VALID_BID_PRICE_LOWER_BEST_BID);
         }
@@ -168,11 +170,8 @@ public class BidServiceImpl implements BidService {
     @Override
     public void closeBid(Article article) {
 
-        ArticleStatus status = article.readStatus();
-        System.out.println("Statut : " + status);
 
-
-        if (article.getSellingPrice() == 0 && status == ArticleStatus.ENDED) {
+        if (article.getSellingPrice() == 0 && article.readStatus() == ArticleStatus.ENDED) {
             Bid bestBid = getBestBid(article);
             System.out.println("\nBest bid : " + bestBid);
 

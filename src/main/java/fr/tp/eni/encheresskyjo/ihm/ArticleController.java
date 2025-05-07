@@ -5,10 +5,7 @@ import fr.tp.eni.encheresskyjo.bll.CategoryService;
 import fr.tp.eni.encheresskyjo.bll.BidService;
 import fr.tp.eni.encheresskyjo.bll.CategoryService;
 import fr.tp.eni.encheresskyjo.bll.UserService;
-import fr.tp.eni.encheresskyjo.bo.Article;
-import fr.tp.eni.encheresskyjo.bo.ArticleStatus;
-import fr.tp.eni.encheresskyjo.bo.Category;
-import fr.tp.eni.encheresskyjo.bo.User;
+import fr.tp.eni.encheresskyjo.bo.*;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -25,6 +22,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.security.Principal;
 import java.util.List;
@@ -96,18 +94,15 @@ public class ArticleController {
                 filteredArticles = articles.stream()
                         .filter(a->a.readStatus().equals(ArticleStatus.ONGOING))
                         .collect(Collectors.toList());
-                System.out.println("Get in Enchères ouvertes");
             }
             else if ("win".equals(bids)) {
                 filteredArticles = bidService.getBidsWonByUser(user.getUserId());
-                System.out.println("Get in Mes enchères remportées");
             }
             else {
                 articles = bidService.getBidsByUser(user.getUserId());
                 filteredArticles = articles.stream()
                         .filter(a->a.readStatus().equals(ArticleStatus.ONGOING))
                         .collect(Collectors.toList());
-                System.out.println("Get in Mes enchères en cours");
             }
         }
         else if (bidsorsales.equals("sales")) {
@@ -171,39 +166,73 @@ public class ArticleController {
     @GetMapping("/article/details")
     public String displayArticle(
             @RequestParam(name = "id", required = true) int id,
+            Principal principal,
             Model model
     ) {
+        User user = userService.getByUsername(principal.getName());
         Article article = this.articleService.getArticleById(id);
+        Bid bestBid = bidService.getBestBid(article);
         model.addAttribute("article", article);
+        if (article.getSeller().equals(user)) {
+            return "article/seller-bid-ended";
+        }
+        if (article.getEndDate().isBefore(LocalDate.now()) && user.getUserId() == bestBid.getBuyer().getUserId())
+        {
+            return "article/winning-bid";
+        }
         return "article/details";
     }
 
     @PostMapping("/article/details")
     public String placeBid(
-            @ModelAttribute("article") Article article,
-            @RequestParam("bidPrice") int bidPrice,
+            @ModelAttribute Article article,
+            @RequestParam(value = "bidPrice", required = false) Integer bidPrice,
+            @RequestParam(value = "articleId", required = false) Integer articleId,
+            @RequestParam String action,
             BindingResult bindingResult,
             Model model,
             Principal principal
     ){
-
+        article = articleService.getArticleById(articleId);
         User user = userService.getByUsername(principal.getName());
+        if ("seller".equals(action)) {
+            try {
+                articleService.deleteArticle(article, user);
+                return "redirect:/encheres";
+            } catch (BusinessException e) {
+                e.getKeys().forEach(key -> {
+                    ObjectError error = new ObjectError("globalError", key);
+                    bindingResult.addError(error);
+                });
+            }
+        }
+        else if ("buyer".equals(action)) {
+            try {
+                bidService.closeBid(article);
+                return "redirect:/encheres";
+            } catch (BusinessException e) {
+                e.getKeys().forEach(key -> {
+                    ObjectError error = new ObjectError("globalError", key);
+                    bindingResult.addError(error);
+                });
+            }
+        }
 
-        try {
-            bidService.createBid(user, article, bidPrice);
-            model.addAttribute("bidPrice", bidPrice);
-            return "redirect:/encheres";
+        else {
+            try {
+                bidService.createBid(user, article, bidPrice);
+                model.addAttribute("bidPrice", bidPrice);
+                return "redirect:/encheres";
 
-        } catch (BusinessException e) {
-            e.getKeys().forEach(key -> {
-                ObjectError error = new ObjectError("globalError", key);
-                bindingResult.addError(error);
-            });
+            } catch (BusinessException e) {
+                e.getKeys().forEach(key -> {
+                    ObjectError error = new ObjectError("globalError", key);
+                    bindingResult.addError(error);
+                });
+            }
         }
         model.addAttribute("article", article);
         return "article/details";
-
-
     }
 
 

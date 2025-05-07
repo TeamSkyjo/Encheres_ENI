@@ -128,6 +128,11 @@
                 <!-- Contenu de la carte -->
                 <img data-th-src="@{${article.imageUrl}}" alt="Image de l'article à vendre">
                 <h4 data-th-text="${article.articleName}">Titre</h4>
+                <p data-th-if="${article.bestPrice != 0}"
+                   data-th-text="'Meilleure offre : ' + ${article.bestPrice}">Prix</p>
+                <p data-th-unless="${article.bestPrice != 0}"
+                   data-th-text="'Prix de départ : ' + ${article.startingPrice}">Prix</p>
+                <p data-th-text="'Date de fin : ' + ${article.endDate}">Date de fin</p>
                 <p data-th-text="'Meilleure offre : ' + ${article.sellingPrice}">Prix</p>
                 <p data-th-text="'Date de fin : ' + ${#temporals.format(article.endDate, 'dd/MM/yyyy')}"></p>
 <!--                <p data-th-text="'Date de fin : ' + ${article.endDate}"></p>-->
