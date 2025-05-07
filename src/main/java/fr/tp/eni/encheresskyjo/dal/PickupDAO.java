@@ -6,4 +6,5 @@ public interface PickupDAO {
     void create(int articleId, Pickup pickup);
     Pickup read(int articleId);
     void update(int articleId, Pickup pickup);
+    void delete(int articleId);
 }

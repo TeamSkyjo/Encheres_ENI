@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BidServiceImpl implements BidService {
@@ -50,7 +51,7 @@ public class BidServiceImpl implements BidService {
         boolean isValid = true ;
         LocalDate now = LocalDate.now();
 
-        isValid = isUserValid(user, businessException);
+        isValid = isUserValid(user, bidPrice, businessException);
         isValid &= isArticleValid(article, businessException);
         isValid &= isBidPriceValid(bidPrice, article, businessException);
         isValid &= isDateValid(article, now, businessException);
@@ -83,10 +84,11 @@ public class BidServiceImpl implements BidService {
     }
 
     /**
-     * Private methode to give back credit to the last buyer in case a new bid is made.
+     * Method to give back credit to the last buyer in case a new bid is made.
      * @param article
      */
-    private void creditLastBuyer(Article article) {
+    @Override
+    public void creditLastBuyer(Article article) {
         Bid lastBid = getBestBid(article);
         linkUserAndArticleToBid(lastBid);
         User lastBuyer = lastBid.getBuyer();
@@ -101,7 +103,7 @@ public class BidServiceImpl implements BidService {
      * Private method to centralize the link between a bid, its user and the article
      * @param bid
      */
-    void linkUserAndArticleToBid(Bid bid) {
+    private void linkUserAndArticleToBid(Bid bid) {
         User buyer = userDAO.readById(bid.getBuyer().getUserId());
         bid.setBuyer(buyer);
         Article article = articleDAO.readByID((bid.getArticle().getArticleId()));
@@ -121,13 +123,15 @@ public class BidServiceImpl implements BidService {
         return isValid;
     }
 
-
-
-    private boolean isUserValid (User user, BusinessException businessException) {
+    private boolean isUserValid (User user, int bidPrice, BusinessException businessException) {
         boolean isValid = true ;
         if (userDAO.readById((user.getUserId())) == null) {
             isValid = false;
             businessException.addKey(BusinessCode.VALID_BID_USER_NULL);
+        }
+        if (user.getCredit() < bidPrice) {
+            isValid = false;
+            businessException.addKey(BusinessCode.VALID_BID_USER_CREDIT_SCARCE);
         }
         return isValid;
     }
@@ -203,6 +207,10 @@ public class BidServiceImpl implements BidService {
         List<Article> articles = new ArrayList<>();
         for (Bid bid : userBids) {
             Article article = articleDAO.readByID(bid.getArticle().getArticleId());
+            Bid bestBid = getBestBid(article);
+            if (bestBid != null) {
+                article.setBestPrice(bestBid.getBidPrice());
+            }
             articles.add(article);
         }
         return articles;
@@ -210,11 +218,24 @@ public class BidServiceImpl implements BidService {
 
     @Override
     public List<Article> getBidsWonByUser(int userId) {
-        //TODO: as soon as the closure of bid is done.
-        // Recover the list of the bids for the user
-        // Recover the status of each these bids.
-        // For those who are closed, check whether the sellingprice = bidingprice of current user.
-        // loop to recover each article for each bid ? Depend if we want to load the biding price.
-        return List.of();
+        List<Bid> userBids = bidDAO.readByUser(userId);
+        for (Bid bid : userBids) {
+            linkUserAndArticleToBid(bid);
+        }
+        LocalDate now = LocalDate.now();
+        List<Bid> selectedBids = userBids.stream()
+                .filter(b -> b.getArticle().getEndDate().isBefore(now))
+                .toList();
+
+        List<Article> wonArticles = new ArrayList<>();
+        for (Bid bid : selectedBids) {
+            Article article = articleDAO.readByID(bid.getArticle().getArticleId());
+            Bid bestBid = getBestBid(article);
+            article.setBestPrice(bestBid.getBidPrice());
+            if (bestBid.getBidPrice()== bid.getBidPrice()) {
+                wonArticles.add(article);
+            }
+        }
+        return wonArticles;
     }
 }

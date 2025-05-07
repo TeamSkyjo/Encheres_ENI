@@ -102,9 +102,12 @@
         </li>
         <li data-th-if="${#strings.isEmpty(action)}">
             <label for="bidPrice" data-th-text="#{frag-article-form.bidPrice}"></label>
-            <input type="number" name="bidPrice" id="bidPrice"
+            <input type="number" name="bidPrice" id="bidPrice" min="${article.startingPrice}"
                    data-th-value="${article.startingPrice}">
             <button type="submit" data-th-text="#{frag-article-form.button.bid}"></button>
+        </li>
+        <li >
+
         </li>
     </ul>
 </form>

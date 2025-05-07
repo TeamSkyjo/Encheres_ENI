@@ -13,6 +13,7 @@ public class Article {
     private LocalDate endDate;
     private int startingPrice;
     private int sellingPrice;
+    private int bestPrice;
     private String imageUrl;
 
     private User seller;
@@ -34,7 +35,7 @@ public class Article {
     public Article() {
     }
 
-    public Article(String articleName, String description, LocalDate startDate, LocalDate endDate, int startingPrice, int sellingPrice, String imageUrl) {
+    public Article(String articleName, String description, LocalDate startDate, LocalDate endDate, int startingPrice, int sellingPrice, int bestPrice, String imageUrl) {
         this.articleName = articleName;
         this.description = description;
         this.startDate = startDate;
@@ -44,7 +45,7 @@ public class Article {
         this.imageUrl = imageUrl;
     }
 
-    public Article(int articleId, String articleName, String description, LocalDate startDate, LocalDate endDate, int startingPrice, int sellingPrice, String imageUrl) {
+    public Article(int articleId, String articleName, String description, LocalDate startDate, LocalDate endDate, int startingPrice, int sellingPrice, int bestPrice, String imageUrl) {
         this.articleId = articleId;
         this.articleName = articleName;
         this.description = description;
@@ -143,6 +144,14 @@ public class Article {
         this.imageUrl = imageUrl;
     }
 
+    public int getBestPrice() {
+        return bestPrice;
+    }
+
+    public void setBestPrice(int bestPrice) {
+        this.bestPrice = bestPrice;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Article{");
@@ -152,6 +161,7 @@ public class Article {
         sb.append(", startDate=").append(startDate);
         sb.append(", endDate=").append(endDate);
         sb.append(", startingPrice=").append(startingPrice);
+        sb.append(", bestPrice=").append(bestPrice);
         sb.append(", sellingPrice=").append(sellingPrice);
         sb.append(", imageUrl='").append(imageUrl).append('\'');
         sb.append(", seller=").append(seller);
