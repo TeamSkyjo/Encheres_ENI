@@ -82,8 +82,16 @@
 
         <li data-th-if="${action != 'creer'}">
             <label for="pickup" data-th-text="#{frag-article-form.pickup} + ' : '"></label>
-            <p id="pickup" data-th-text="${article.pickup.street}"></p>
-            <p data-th-text="${article.pickup.zip + ' ' + article.pickup.city}"></p>
+            <ul>
+                <li id="pickup">
+                    <input type="text" name="pickup-street" id="pickup-street"
+                           data-th-value="${article.pickup.street}" disabled>
+                </li>
+                <li>
+                    <input type="text" name="pickup-zip-city" id="pickup-zip-city"
+                           data-th-value="${article.pickup.zip + ' ' + article.pickup.city}" disabled>
+                </li>
+            </ul>
         </li>
         <li data-th-if="${action == 'creer'}">
             <fieldset>
@@ -134,6 +142,5 @@
                    data-th-value="${article.bestPrice != 0 ? article.bestPrice : article.startingPrice}">
             <button type="submit" data-th-text="#{frag-article-form.button.bid}"></button>
         </li>
-
     </ul>
 </form>
