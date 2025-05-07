@@ -23,9 +23,9 @@ public class Article {
     // Dynamic attribute
     public ArticleStatus readStatus() {
         LocalDate now = LocalDate.now();
-        if (now.isBefore(startDate)) {
+        if (now.isBefore(this.startDate)) {
             return ArticleStatus.NOT_STARTED;
-        } else if (now.isAfter(endDate)) {
+        } else if (now.isAfter(this.endDate)) {
             return ArticleStatus.ENDED;
         } else {
             return ArticleStatus.ONGOING;
