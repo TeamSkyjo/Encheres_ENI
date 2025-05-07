@@ -31,7 +31,9 @@
         </li>
         <li data-th-if="${#strings.isEmpty(action)}">
             <label for="bestBid" data-th-text="#{frag-article-form.bestBid}"></label>
-            <input type="number" name="bestBid" id="bestBid">
+            <input type="number" name="bestBid" id="bestBid"
+                   data-th-disabled="${#strings.isEmpty(action)}"
+                   data-th-field="*{bestPrice}">
         </li>
         <li data-th-unless="${#strings.isEmpty(action)}">
             <label for="imageFile" data-th-text="#{frag-article-form.imageUrl}"></label>
