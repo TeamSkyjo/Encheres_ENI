@@ -1,5 +1,7 @@
 package fr.tp.eni.encheresskyjo.bo;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDate;
 import java.util.Objects;
 

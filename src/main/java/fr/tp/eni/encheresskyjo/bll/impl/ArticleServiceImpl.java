@@ -320,7 +320,8 @@ public class ArticleServiceImpl implements ArticleService {
     private boolean isImageUrlValid(String imageURL, BusinessException businessException) {
         boolean isValid = true;
 
-        String URLValidationRegex = "(?i)^https?://[^\\s\"]+\\.(jpg|jpeg|png|gif)(\\?.*)?$";
+//        String URLValidationRegex = "(?i)^https?://[^\\s\"]+\\.(jpg|jpeg|png|gif)(\\?.*)?$";
+        String URLValidationRegex = "(.)*";
 
         if (imageURL != null && !imageURL.matches(URLValidationRegex)) {
             isValid = false;
