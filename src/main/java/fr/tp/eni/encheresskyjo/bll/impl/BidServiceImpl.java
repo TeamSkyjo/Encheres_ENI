@@ -160,8 +160,8 @@ public class BidServiceImpl implements BidService {
     }
 
     /**
-     * if sellingPrice is NULL (=0 in java) and bid already closed (status = ENDED),
-     * insert the final selling price of the finished bid and update the seller credit.
+     * end date, insert selling price, credit seller
+     * and check buyer uncredit ?
      *
      * @param article
      */
@@ -169,12 +169,13 @@ public class BidServiceImpl implements BidService {
     public void closeBid(Article article) {
 
         ArticleStatus status = article.readStatus();
-        System.out.println("Statut : " +status);
+        System.out.println("Statut : " + status);
 
 
         if (article.getSellingPrice() == 0 && status == ArticleStatus.ENDED) {
             Bid bestBid = getBestBid(article);
             System.out.println("\nBest bid : " + bestBid);
+
 
             // update Article selling price
             int bestPrice = bestBid.getBidPrice();
@@ -188,9 +189,7 @@ public class BidServiceImpl implements BidService {
             seller.setCredit(seller.getCredit() + bestPrice);
             userDAO.updateCredit(seller.getUserId(), seller.getCredit());
             System.out.println("\n Seller credit after : " + seller.getCredit());
-
         }
-
     }
 
     @Override

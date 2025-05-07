@@ -179,6 +179,35 @@ public class ArticleController {
         return "article/details";
     }
 
+    @PostMapping("/article/details")
+    public String placeBid(
+            @ModelAttribute("article") Article article,
+            @RequestParam("bidPrice") int bidPrice,
+            BindingResult bindingResult,
+            Model model,
+            Principal principal
+    ){
+
+        User user = userService.getByUsername(principal.getName());
+
+        try {
+            bidService.createBid(user, article, bidPrice);
+            model.addAttribute("bidPrice", bidPrice);
+            return "redirect:/encheres";
+
+        } catch (BusinessException e) {
+            e.getKeys().forEach(key -> {
+                ObjectError error = new ObjectError("globalError", key);
+                bindingResult.addError(error);
+            });
+        }
+        model.addAttribute("article", article);
+        return "article/details";
+
+
+    }
+
+
     @GetMapping("/article/creer")
     public String displayArticleForm(
             Model model,
@@ -186,6 +215,9 @@ public class ArticleController {
     ) {
         if (principal != null) {
             Article article = new Article();
+            // ajout
+            article.setEndDate(article.getEndDate());
+
             List<Category> categories = categoryService.getAllCategories();
             model.addAttribute("categories", categories);
             model.addAttribute("article", article);
@@ -231,4 +263,6 @@ public class ArticleController {
         }
         return "redirect:/encheres";
     }
+
+
 }
