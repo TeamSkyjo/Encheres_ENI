@@ -112,10 +112,12 @@
         </li>
         <li data-th-if="${action != 'creer'}">
             <label for="seller" data-th-text="#{frag-article-form.seller}"></label>
-            <input data-th-value="${article.seller.username}"
-                   type="text" name="seller" id="seller" disabled>
+            <a data-th-href="@{/profil(username=${article.seller.username})}">
+                <p data-th-text="${article.seller.username}"></p>
+            </a>
             <!--<div data-th-replace="~{fragments/fragment-error :: error(seller)}"></div>-->
         </li>
+
         <li data-th-if="${action == 'creer'}">
             <button type="submit" data-th-text="#{frag-article-form.button.save}"></button>
             <button type="reset" data-th-text="#{frag-article-form.button.cancel}"></button>
