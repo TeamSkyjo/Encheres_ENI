@@ -30,11 +30,11 @@ form img {
 
 .flex-outer>li>label {
     max-width: 220px;
-    width: 32%;
+    width: 35%;
 }
 
 .flex-outer>li>label+* {
-    width: 65%;
+    width: 64%;
 }
 
 .flex-outer li button {
@@ -44,6 +44,10 @@ form img {
     background: darkcyan;
     color: #ffffff;
     border-radius: 5px;
+}
+
+.flex-outer li button:hover {
+    background-color: cadetblue;
 }
 
 *:disabled {

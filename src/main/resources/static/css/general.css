@@ -114,7 +114,7 @@ header a:hover {
     text-align: center;
 }
 
-main>h1 {
+main h1 {
     margin: 2vh;
     font-size: 2rem;
 }
@@ -184,7 +184,7 @@ footer {
 /* XX-Large devices (larger desktops, 1400px and up) */
 @media screen and (min-width: 1400px) {
     header {
-        height: 9vw;
+        height: 8vw;
     }
     header>img {
         width: 7vw;
