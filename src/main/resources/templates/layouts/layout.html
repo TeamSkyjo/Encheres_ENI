@@ -5,18 +5,44 @@
         data-th-fragment="layout(mainContent, cssContent, cssContent2, titleContent)"
 >
 <head>
-  <meta charset="UTF-8">
-  <link rel="icon" data-th-href="@{images/logoENI.png}">
-  <title data-th-replace="${titleContent} ?: ~{}"></title>
-  <link rel="stylesheet" data-th-href="@{/css/general.css}">
-  <link rel="stylesheet" data-th-href="@{/css/layout.css}">
-  <link rel="stylesheet" href="#" data-th-replace="${cssContent} ?: ~{}">
-  <link rel="stylesheet" href="#" data-th-replace="${cssContent2} ?: ~{}">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" data-th-href="@{images/logoENI.png}">
+    <title data-th-replace="${titleContent} ?: ~{}"></title>
+    <link rel="stylesheet" data-th-href="@{/css/general.css}">
+    <link rel="stylesheet" href="#" data-th-replace="${cssContent} ?: ~{}">
+    <link rel="stylesheet" href="#" data-th-replace="${cssContent2} ?: ~{}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <header data-th-replace="~{fragments/fragment-header :: header}"></header>
 <main data-th-replace="${mainContent} ?: ~{}"></main>
 <footer data-th-replace="~{fragments/fragment-footer :: footer}"></footer>
 </body>
+<script>
+    const burger = document.getElementById('burger');
+    const navLinks = document.getElementById('nav-links');
+    const navbar = document.querySelector('.navbar');
+    const navItems = navLinks.querySelectorAll('a');
+
+    burger.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+    });
+
+    // Cacher le menu quand la souris quitte la zone du menu
+    navLinks.addEventListener('mouseleave', () => {
+        navLinks.classList.remove('active');
+    });
+
+    navbar.addEventListener('mouseleave', () => {
+        navLinks.classList.remove('active');
+    });
+
+    // Cacher le menu quand un lien est cliqué
+    navItems.forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+        });
+    });
+</script>
 </html>

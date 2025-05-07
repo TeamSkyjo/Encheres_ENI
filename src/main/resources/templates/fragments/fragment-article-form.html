@@ -54,7 +54,7 @@
         </li>
         <li>
             <label for="endDate" data-th-text="#{frag-article-form.endDate}"></label>
-            <input type="date" name="endDate" id="endDate"
+            <input type="text" name="endDate" id="endDate"
                    data-th-disabled="${#strings.isEmpty(action)}"
                    data-th-field="*{endDate}">
             <!--            <div data-th-replace="~{fragments/fragment-error :: error(endDate)}"></div>-->

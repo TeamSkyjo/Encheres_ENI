@@ -29,7 +29,7 @@
 }
 
 .bidcards > img {
-    max-width: 300px;
+    max-height: 200px;
     margin-bottom: 15px;
 }
 
@@ -95,7 +95,6 @@
 .searchcard > div {
     margin-left: 15px;
 }
-
 
 button {
     border-radius: 15px;

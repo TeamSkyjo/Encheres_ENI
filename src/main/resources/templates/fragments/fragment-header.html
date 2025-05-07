@@ -1,6 +1,5 @@
 <header data-th-fragment="header">
-    <img data-th-src="@{/images/logo.png}" alt="Logo du site d'enchères de l'association Les objets sont nos amis"
-         height="60px">
+    <img data-th-src="@{/images/logo.png}" alt="Logo du site d'enchères de l'association Les objets sont nos amis">
     <div id="nav-title">
 <!--        <div>-->
 <!--            <a data-th-href="@{/?lang=fr}"><img data-th-src="@{/images/French.webp}" alt="French"></a>-->
@@ -17,8 +16,11 @@
             </em>
         </p>
     </div>
-    <nav>
-        <ul>
+    <nav class="navbar">
+        <a class="burger" id="burger" aria-label="Menu">
+            <i class="fa fa-bars"></i>
+        </a>
+        <ul class="nav-links" id="nav-links">
             <li>
                 <a data-th-href="@{/encheres}">Enchères
                 </a>
@@ -42,7 +44,6 @@
             <li data-th-unless="${#authorization.expression('isAuthenticated')}">
                 <a data-th-href="@{/login}">Se connecter</a>
             </li>
-
             <!--        <li data-th-unless="${#authorization.expression('isAuthenticated')}">-->
             <!--            <a data-th-href="@{/login}">Se connecter / S'inscrire</a>-->
             <!--        </li>-->
