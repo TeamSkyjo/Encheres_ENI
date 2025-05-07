@@ -5,7 +5,7 @@
     <!--    <h2 data-th-replace="~{fragments/fragment-errors.html :: errors}"></h2>-->
     <!--    <p class=cards data-th-each="keyError: ${#fields.errors('global')}" data-th-text="#{${keyError}}"></p>-->
     <ul class="flex-outer">
-        <img data-th-src="${article.imageUrl}" alt="Photo de l'objet à vendre">
+        <img data-th-src="@{${article.imageUrl}}" alt="Photo de l'objet à vendre">
         <li>
             <label for="articleName" data-th-text="#{frag-article-form.articleName}"></label>
             <input data-th-field="*{articleName}"

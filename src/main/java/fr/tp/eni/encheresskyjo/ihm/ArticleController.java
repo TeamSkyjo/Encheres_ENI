@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.security.Principal;
 import java.util.List;
@@ -36,7 +39,7 @@ import java.util.stream.Collectors;
 @Controller
 public class ArticleController {
 
-    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir");
+    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/uploads";
 
     //Dependencies injection
     private ArticleService articleService;
@@ -194,7 +197,7 @@ public class ArticleController {
 
     @PostMapping("/article/creer")
     public String createArticle (
-            @RequestParam("imageFile") MultipartFile imageFile,
+            @RequestParam("imageFile") MultipartFile file,
             @Valid @ModelAttribute("article") Article article,
             BindingResult bindingResult,
             Model model,
@@ -202,12 +205,12 @@ public class ArticleController {
     ) throws IOException {
         if (!bindingResult.hasErrors()) {
             try {
-//                if (!imageFile.isEmpty()) {
-//                    // Par exemple : sauvegarder sur disque
-//                    String filename = imageFile.getOriginalFilename();
-//                    byte[] bytes = imageFile.getBytes();
-//                    // ...
-//                }
+                StringBuilder fileNames = new StringBuilder();
+                Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
+                fileNames.append(file.getOriginalFilename());
+                Files.write(fileNameAndPath, file.getBytes());
+//                model.addAttribute("msg", "Uploaded images: " + fileNames.toString());
+                article.setImageUrl("/uploads/" + fileNames);
                 article.setSeller(userService.getByUsername(principal.getName()));
                 System.out.println(article);
                 articleService.createArticle(article);
