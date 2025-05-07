@@ -98,6 +98,11 @@ public class ArticleServiceImpl implements ArticleService {
         if (article != null) {
             // Association with Pickup
             linkPickupToArticle(article);
+            Bid bestBid = bidService.getBestBid(article);
+            if (bestBid != null) {
+                article.setBestPrice(bestBid.getBidPrice());
+            }
+
         }
         return article;
     }
@@ -110,7 +115,13 @@ public class ArticleServiceImpl implements ArticleService {
                     .filter(article -> article.readStatus() == articleStatus)
                             .collect(Collectors.toList());
             // Association with Pickup
-            articles.forEach(article -> linkPickupToArticle(article));
+            articles.forEach(article -> {
+                        linkPickupToArticle(article);
+                        Bid bestBid = bidService.getBestBid(article);
+                        if (bestBid != null) {
+                            article.setBestPrice(bestBid.getBidPrice());
+                        }
+                    });
         }
         return articles;
     }
@@ -129,7 +140,13 @@ public class ArticleServiceImpl implements ArticleService {
         List<Article> articles = articleDAO.readAll();
         if (articles != null) {
             // Association with Pickup
-            articles.forEach(article -> linkPickupToArticle(article));
+            articles.forEach(article -> {
+                linkPickupToArticle(article);
+                Bid bestBid = bidService.getBestBid(article);
+                if (bestBid != null) {
+                    article.setBestPrice(bestBid.getBidPrice());
+                }
+            });
         }
         return articles;
     }
@@ -159,9 +176,16 @@ public class ArticleServiceImpl implements ArticleService {
                 throw businessException;
             }
         }
-        if (filteredArticles != null && !filteredArticles.isEmpty()) {
-            // Association with Pickup
-            filteredArticles.forEach(article -> linkPickupToArticle(article));
+//        if (filteredArticles != null && !filteredArticles.isEmpty()) {
+//            // Association with Pickup
+//            filteredArticles.forEach(article -> linkPickupToArticle(article));
+//        }
+        for (Article article : filteredArticles) {
+                linkPickupToArticle(article);
+                Bid bestBid = bidService.getBestBid(article);
+                if (bestBid != null) {
+                    article.setBestPrice(bestBid.getBidPrice());
+                }
         }
         return filteredArticles;
     }

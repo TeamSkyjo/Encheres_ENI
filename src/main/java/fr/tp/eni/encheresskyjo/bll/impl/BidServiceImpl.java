@@ -208,6 +208,10 @@ public class BidServiceImpl implements BidService {
         List<Article> articles = new ArrayList<>();
         for (Bid bid : userBids) {
             Article article = articleDAO.readByID(bid.getArticle().getArticleId());
+            Bid bestBid = getBestBid(article);
+            if (bestBid != null) {
+                article.setBestPrice(bestBid.getBidPrice());
+            }
             articles.add(article);
         }
         return articles;
@@ -227,8 +231,9 @@ public class BidServiceImpl implements BidService {
         List<Article> wonArticles = new ArrayList<>();
         for (Bid bid : selectedBids) {
             Article article = articleDAO.readByID(bid.getArticle().getArticleId());
-            Bid bestbid = getBestBid(article);
-            if (bestbid.getBidPrice()== bid.getBidPrice()) {
+            Bid bestBid = getBestBid(article);
+            article.setBestPrice(bestBid.getBidPrice());
+            if (bestBid.getBidPrice()== bid.getBidPrice()) {
                 wonArticles.add(article);
             }
         }
