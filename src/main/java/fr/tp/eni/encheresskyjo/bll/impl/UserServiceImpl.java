@@ -12,7 +12,10 @@ import fr.tp.eni.encheresskyjo.dto.UserUpdateDTO;
 import fr.tp.eni.encheresskyjo.exception.BusinessCode;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,19 +30,17 @@ public class UserServiceImpl implements UserService {
     private final UserDAO userDAO;
     private final UserToUserGeneralDTOConverter userToUserGeneralDTOConverter;
     private final UserCreateDtoToUserConverter userCreateDtoToUserConverter;
-    private final UserUpdateDtoToUserConverter userUpdateDtoToUserConverter;
+    private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(
             UserDAO userDAO,
             UserToUserGeneralDTOConverter userToUserGeneralDTOConverter,
             UserCreateDtoToUserConverter userCreateDtoToUserConverter,
-            UserUpdateDtoToUserConverter userUpdateDtoToUserConverter
-    ) {
+            PasswordEncoder passwordEncoder) {
         this.userDAO = userDAO;
         this.userToUserGeneralDTOConverter = userToUserGeneralDTOConverter;
         this.userCreateDtoToUserConverter = userCreateDtoToUserConverter;
-        this.userUpdateDtoToUserConverter = userUpdateDtoToUserConverter;
-
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -68,61 +69,15 @@ public class UserServiceImpl implements UserService {
             businessException.addKey(BusinessCode.VALID_USER);
             throw businessException;
         } else {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            String encodedPassword = encoder.encode(dto.getPassword());
+            String encodedPassword = passwordEncoder.encode(dto.getPassword());
             User user = userCreateDtoToUserConverter.convert(dto);
-            user.setPassword("{bcrypt}" + encodedPassword);
+
+            if (user == null) {
+                throw new IllegalStateException("Conversion from DTO to User failed.");
+            }
+            user.setPassword(encodedPassword);
             userDAO.create(user);
         }
-    }
-
-    /**
-     * Updates an existing user's information.
-     *
-     * @param dto the UserUpdateDTO containing updated user data.
-     * @throws BusinessException if validation fails.
-     */
-    @Override
-    @Transactional
-    public void updateUser(UserUpdateDTO dto) {
-
-        BusinessException businessException = new BusinessException();
-
-        // TODO : with Spring Security, validate current Password against the authenticated user.
-        boolean isValid = validateUpdateUser(dto, businessException);
-
-        if (!isValid) {
-            businessException.addKey(BusinessCode.VALID_USER);
-            throw businessException;
-        }
-
-        User existingUser = userDAO.readById(dto.getId());
-        if (dto.getUsername() != null) existingUser.setUsername(dto.getUsername());
-        if (dto.getLastName() != null) existingUser.setLastName(dto.getLastName());
-        if (dto.getFirstName() != null) existingUser.setFirstName(dto.getFirstName());
-        if (dto.getEmail() != null) existingUser.setEmail(dto.getEmail());
-        if (dto.getTelephone() != null) existingUser.setTelephone(dto.getTelephone());
-        if (dto.getStreet() != null) existingUser.setStreet(dto.getStreet());
-        if (dto.getZip() != null) existingUser.setZip(dto.getZip());
-        if (dto.getCity() != null) existingUser.setCity(dto.getCity());
-
-
-        if (isPasswordChanged(dto)) {
-            // TODO: encode password
-            existingUser.setPassword(dto.getNewPassword());
-        }
-
-        userDAO.updateAll(existingUser);
-
-//        User existingUser = userDAO.readByUsername(dto.getUsername());
-//        User updatedUser = userUpdateDtoToUserConverter.convert(dto);
-//        if (isPasswordChanged(dto)) {
-//            updatedUser.setPassword(dto.getNewPassword());  // Encoder le mot de passe ici
-//        } else {
-//            updatedUser.setPassword(existingUser.getPassword());
-//        }
-//        userDAO.updateAll(updatedUser);
-
     }
 
     /**
@@ -162,6 +117,72 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * Updates an existing user's information.
+     *
+     * @param dto the UserUpdateDTO containing updated user data.
+     * @throws BusinessException if validation fails.
+     */
+    @Override
+    @Transactional
+    public void updateUser(UserUpdateDTO dto) {
+
+        BusinessException businessException = new BusinessException();
+        boolean isValid = validateUpdateUser(dto, businessException);
+
+        if (!isValid) {
+            businessException.addKey(BusinessCode.VALID_USER);
+            throw businessException;
+        }
+
+        User existingUser = userDAO.readById(dto.getUserId());
+        if (dto.getUsername() != null) existingUser.setUsername(dto.getUsername());
+        if (dto.getLastName() != null) existingUser.setLastName(dto.getLastName());
+        if (dto.getFirstName() != null) existingUser.setFirstName(dto.getFirstName());
+        if (dto.getEmail() != null) existingUser.setEmail(dto.getEmail());
+        if (dto.getTelephone() != null) existingUser.setTelephone(dto.getTelephone());
+        if (dto.getStreet() != null) existingUser.setStreet(dto.getStreet());
+        if (dto.getZip() != null) existingUser.setZip(dto.getZip());
+        if (dto.getCity() != null) existingUser.setCity(dto.getCity());
+
+
+        if (isPasswordChanged(dto)) {
+            validateCurrentPassword(dto, existingUser, businessException);
+            if (dto.getNewPassword() != null && !dto.getNewPassword().isBlank()) {
+                System.out.println(">>>>>");
+                System.out.println(dto.getCurrentPassword());
+                System.out.println(existingUser.getPassword());
+                System.out.println(">>>>>");
+                if (!passwordEncoder.matches(dto.getCurrentPassword(), existingUser.getPassword())) {
+                    businessException.addKey(BusinessCode.VALID_USER_CURRENT_PASSWORD);
+                    throw businessException;
+                }
+                // encode new password
+                existingUser.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+            }
+        }
+        System.out.println(existingUser);
+        userDAO.updateAll(existingUser);
+    }
+
+
+    /**
+     *  checks if current password matches with the one in DB.
+     * @param dto
+     * @param existingUser
+     * @param businessException
+     * @return
+     */
+    private void validateCurrentPassword(UserUpdateDTO dto, User existingUser, BusinessException businessException) {
+            if (!passwordEncoder.matches(dto.getCurrentPassword(), existingUser.getPassword())) {
+                System.out.println("dto pwd : " +dto.getCurrentPassword());
+                System.out.println("\n db pwd : " +existingUser.getPassword());
+
+                businessException.addKey(BusinessCode.VALID_USER_CURRENT_PASSWORD);
+                throw businessException;
+            }
+    }
+
+    /**
      * Validate the user update request, including password change attempt.
      *
      * @param dto               the DTO containing user update information.
@@ -197,16 +218,6 @@ public class UserServiceImpl implements UserService {
         }
 
         if (isPasswordChanged(dto)) {
-            // TODO: with Spring Security, validate if the current password matches the one in th DB.
-            // (PasswordEncoder)
-
-            // checks if currentPassword field is provided (TO BE REPLACED BY SPRING SECURITY validation)
-            if (dto.getCurrentPassword() == null || dto.getCurrentPassword().isBlank()) {
-                businessException.addKey(BusinessCode.VALID_USER_PASSWORD_CURRENT_BLANK);
-                isValid = false;
-            }
-
-            // Validate new password and its confirmation.
             isValid &= isPasswordValid(dto.getNewPassword(), dto.getNewPasswordConfirm(), businessException);
         }
 

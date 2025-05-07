@@ -8,6 +8,7 @@ package fr.tp.eni.encheresskyjo.dto;
  */
 public class UserGeneralDTO {
 
+    private int userId;
     private String username;
     private String lastName;
     private String firstName;
@@ -29,6 +30,14 @@ public class UserGeneralDTO {
         this.street = street;
         this.zip = zip;
         this.city = city;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {

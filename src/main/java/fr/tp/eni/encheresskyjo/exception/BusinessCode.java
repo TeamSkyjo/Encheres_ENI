@@ -30,7 +30,8 @@ public class BusinessCode {
     public static final String VALID_USER_PASSWORD_BLANK= "validation.user.password.blank";
     public static final String VALID_USER_PASSWORD_FORMAT = "validation.user.password.format";
     public static final String VALID_USER_PASSWORD_CONFIRM= "validation.user.password.confirm";
-    public static final String VALID_USER_PASSWORD_CURRENT_BLANK = "validation.user.password.current.blank"; // TO DELETE AFTER SPRING SECURITY
+    public static final String VALID_USER_PASSWORD_CURRENT_BLANK = "validation.user.password.current.blank";
+    public static final String VALID_USER_CURRENT_PASSWORD = "validation.user.current.password";
 
 
     // ARTICLE

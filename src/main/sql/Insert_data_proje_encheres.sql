@@ -25,13 +25,13 @@ SET IDENTITY_INSERT UTILISATEURS ON;
 
 INSERT INTO UTILISATEURS (no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES
 (1, 'techguy', 'Martin', 'Lucas', 'lucas.martin@email.com', '0601020304', '12 rue de l''Info', '75001', 'Paris', 
- '{bcrypt}$2a$12$mZmizxD.C0Y55LaOudITNuKrOmROLrUBLxSOo9j733ghXAKyzi.lW', 1500, 0),
+ '$2a$12$mZmizxD.C0Y55LaOudITNuKrOmROLrUBLxSOo9j733ghXAKyzi.lW', 1500, 0),
 (2, 'meublequeen', 'Durand', 'Claire', 'claire.durand@email.com', '0602030405', '8 avenue des Meubles', '69000', 'Lyon', 
- '{bcrypt}$2a$12$wrGC3yx6Lvo1wvZvonfdJOR14TsJFT5dHMxlXpdbtbtoBiQ.NjK8m', 1200, 0),
+ '$2a$12$wrGC3yx6Lvo1wvZvonfdJOR14TsJFT5dHMxlXpdbtbtoBiQ.NjK8m', 1200, 0),
 (3, 'sporty', 'Lemoine', 'Julien', 'julien.lemoine@email.com', NULL, '45 rue des Sports', '31000', 'Toulouse', 
- '{bcrypt}$2a$12$NHhiOwfP8ZMs9d9r./ED0eFk4BTADsCOleJsuqB3SK/skdKoKMuUm', 1000, 0),
+ '$2a$12$NHhiOwfP8ZMs9d9r./ED0eFk4BTADsCOleJsuqB3SK/skdKoKMuUm', 1000, 0),
 (4, 'admin', 'Admin', 'Super', 'admin@site.com', '0600000000', '1 rue de l''Admin', '99999', 'Webtown', 
- '{bcrypt}$2a$12$oKuuPMKR9mXQZWHQEGKYBO46LKkrQx0el0Ahlhetvs9tp2Q9rtp1q', 9999, 1);
+ '$2a$12$oKuuPMKR9mXQZWHQEGKYBO46LKkrQx0el0Ahlhetvs9tp2Q9rtp1q', 9999, 1);
 
 --Mots de passe : 
 --techguy		pass123		$2a$12$mZmizxD.C0Y55LaOudITNuKrOmROLrUBLxSOo9j733ghXAKyzi.lW

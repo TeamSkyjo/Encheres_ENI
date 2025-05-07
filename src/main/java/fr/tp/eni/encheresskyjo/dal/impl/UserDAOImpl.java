@@ -263,6 +263,7 @@ class UserRowMapper implements RowMapper<User> {
         user.setStreet(rs.getString("rue"));
         user.setZip(rs.getString("code_postal"));
         user.setCity(rs.getString("ville"));
+        user.setPassword(rs.getString("mot_de_passe"));
         user.setCredit(rs.getInt("credit"));
         user.setAdmin(rs.getBoolean("administrateur"));
         return user;

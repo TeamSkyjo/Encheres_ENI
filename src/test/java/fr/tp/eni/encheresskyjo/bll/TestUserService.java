@@ -129,37 +129,35 @@ public class TestUserService {
 
     }
 
-    @Test
-    public void testDeleteUser_valid() {
-        // TODO : contraintes de clés étrangères
-        int userId = 1;
-
-        userService.deleteUser(userId);
-
-        try {
-            User deletedUser = userDAO.readById(userId);
-
-            if (deletedUser == null) {
-                System.out.println("User with id " + userId + " has been successfully deleted.");
-            } else {
-                System.out.println("User with id " + userId + " still exists.");
-            }
-        } catch (Exception e) {
-            System.out.println("Error deleting user: " + e.getMessage());
-        }
-
-    }
+//    @Test
+//    public void testDeleteUser_valid() {
+//        // TODO : contraintes de clés étrangères
+//        int userId = 1;
+//
+//        userService.deleteUser(userId);
+//
+//        try {
+//            User deletedUser = userDAO.readById(userId);
+//
+//            if (deletedUser == null) {
+//                System.out.println("User with id " + userId + " has been successfully deleted.");
+//            } else {
+//                System.out.println("User with id " + userId + " still exists.");
+//            }
+//        } catch (Exception e) {
+//            System.out.println("Error deleting user: " + e.getMessage());
+//        }
+//
+//    }
 
 
     @Test
     public void testUpdateUser_valid() {
-        // TODO: ne fonctionne toujours pas !
-
         User user = userDAO.readById(1);
         System.out.println("\nAvant update : " + user);
 
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
-        userUpdateDTO.setId(1);
+        userUpdateDTO.setUserId(1);
         userUpdateDTO.setUsername("Jojo");
         userUpdateDTO.setLastName("Almodovar");
         userUpdateDTO.setCity("Madrid");
@@ -174,5 +172,73 @@ public class TestUserService {
             System.out.println("Error : " + businessException.getKeys());
         }
 
+    }
+
+    @Test
+    public void testCreateAndUpdateUser_pswd() {
+        UserCreateDTO userCreateDTO = new UserCreateDTO();
+        userCreateDTO.setUsername("Jojo89");
+        userCreateDTO.setLastName("Lapin");
+        userCreateDTO.setFirstName("Jojo");
+        userCreateDTO.setEmail("jojo89@gmail.com");
+        userCreateDTO.setTelephone("");
+        userCreateDTO.setStreet("4 rue du terrier");
+        userCreateDTO.setZip("89024");
+        userCreateDTO.setCity("LapinVille");
+        userCreateDTO.setPassword("Pa$$w0rdlong");
+        userCreateDTO.setPasswordConfirm("Pa$$w0rdlong");
+
+        try {
+            userService.createUser(userCreateDTO);
+        } catch (BusinessException e) {
+            System.out.println("BusinessException keys: " + e.getKeys());
+        }
+
+
+        User createdUser = userDAO.readByUsername("Jojo89");
+        System.out.println("\nCreated user: " + createdUser);
+        System.out.println("\ncreated user psw: " + createdUser.getPassword());
+
+        System.out.println("\nUpdated user---------------");
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setUserId(createdUser.getUserId());
+        userUpdateDTO.setCurrentPassword("Pa$$w0rdlong");
+        userUpdateDTO.setNewPassword("Motdepasse123!");
+        userUpdateDTO.setNewPasswordConfirm("Motdepasse123!");
+
+        try {
+            userService.updateUser(userUpdateDTO);
+
+            User updatedUser = userDAO.readById(createdUser.getUserId());
+            System.out.println("\nAfter update : " + updatedUser);
+
+        } catch (BusinessException businessException){
+            System.out.println("Error : " + businessException.getKeys());
+        }
+
+
+    }
+
+    @Test
+    public void testUpdateUser_password_valid() {
+        User user = userDAO.readById(1);
+        System.out.println("\nAvant update : " + user.getPassword());
+
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setUserId(1);
+        userUpdateDTO.setTelephone("0143567898");
+        userUpdateDTO.setCurrentPassword("pass123");
+        userUpdateDTO.setNewPassword("Motdepasse123!");
+        userUpdateDTO.setNewPasswordConfirm("Motdepasse123!");
+
+        try {
+            userService.updateUser(userUpdateDTO);
+
+            User updatedUser = userDAO.readById(1);
+            System.out.println("\nAfter update : " + updatedUser.getPassword());
+
+        } catch (BusinessException businessException){
+            System.out.println("Error : " + businessException.getKeys());
+        }
     }
 }

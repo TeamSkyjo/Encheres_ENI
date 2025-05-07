@@ -13,7 +13,6 @@ package fr.tp.eni.encheresskyjo.dto;
  */
 public class UserUpdateDTO extends UserGeneralDTO {
 
-    private int id;
     private String currentPassword;
     private String newPassword;
     private String newPasswordConfirm;
@@ -33,13 +32,6 @@ public class UserUpdateDTO extends UserGeneralDTO {
         this.newPasswordConfirm = newPasswordConfirm;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getCurrentPassword() {
         return currentPassword;
