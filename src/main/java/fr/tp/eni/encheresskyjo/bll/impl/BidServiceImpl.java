@@ -83,10 +83,11 @@ public class BidServiceImpl implements BidService {
     }
 
     /**
-     * Private methode to give back credit to the last buyer in case a new bid is made.
+     * Method to give back credit to the last buyer in case a new bid is made.
      * @param article
      */
-    private void creditLastBuyer(Article article) {
+    @Override
+    public void creditLastBuyer(Article article) {
         Bid lastBid = getBestBid(article);
         linkUserAndArticleToBid(lastBid);
         User lastBuyer = lastBid.getBuyer();
@@ -120,8 +121,6 @@ public class BidServiceImpl implements BidService {
         }
         return isValid;
     }
-
-
 
     private boolean isUserValid (User user, BusinessException businessException) {
         boolean isValid = true ;

@@ -1,10 +1,8 @@
 package fr.tp.eni.encheresskyjo.bll.impl;
 
 import fr.tp.eni.encheresskyjo.bll.ArticleService;
-import fr.tp.eni.encheresskyjo.bo.Article;
-import fr.tp.eni.encheresskyjo.bo.ArticleStatus;
-import fr.tp.eni.encheresskyjo.bo.Category;
-import fr.tp.eni.encheresskyjo.bo.Pickup;
+import fr.tp.eni.encheresskyjo.bll.BidService;
+import fr.tp.eni.encheresskyjo.bo.*;
 import fr.tp.eni.encheresskyjo.dal.*;
 import fr.tp.eni.encheresskyjo.exception.BusinessCode;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
@@ -31,13 +29,15 @@ public class ArticleServiceImpl implements ArticleService {
     private UserDAO userDAO;
     private CategoryDAO categoryDAO;
     private PickupDAO pickupDAO;
+    private BidService bidService;
 
-    public ArticleServiceImpl(ArticleDAO articleDAO, BidDAO bidDAO, UserDAO userDAO, CategoryDAO categoryDAO, PickupDAO pickupDAO) {
+    public ArticleServiceImpl(ArticleDAO articleDAO, BidDAO bidDAO, UserDAO userDAO, CategoryDAO categoryDAO, PickupDAO pickupDAO, BidService bidService) {
         this.articleDAO = articleDAO;
         this.bidDAO = bidDAO;
         this.userDAO = userDAO;
         this.categoryDAO = categoryDAO;
         this.pickupDAO = pickupDAO;
+        this.bidService = bidService;
     }
 
     @Override
@@ -164,6 +164,63 @@ public class ArticleServiceImpl implements ArticleService {
             filteredArticles.forEach(article -> linkPickupToArticle(article));
         }
         return filteredArticles;
+    }
+
+    /**
+     * Method to cancel a sale. The sale will stay in the database, but won't be bitable anymore.
+     * We put to 0 the selling price and close the sale by
+     * @param article
+     * @param user
+     */
+    @Transactional
+    @Override
+    public void deleteArticle(Article article, User user) {
+        BusinessException businessException = new BusinessException();
+        boolean isValid = true ;
+
+        isValid = isUserValid(article, user, businessException);
+        isValid &= isArticleValid(article, businessException);
+        if (isValid) {
+            if (article.readStatus() == ArticleStatus.NOT_STARTED) {
+                pickupDAO.delete(article.getArticleId());
+                articleDAO.delete(article.getArticleId());
+            }
+            else if (article.readStatus() == ArticleStatus.ONGOING) {
+                bidService.creditLastBuyer(article);
+
+                List<Bid> bids = bidDAO.readByArticle(article.getArticleId());
+                for (Bid bid : bids) {
+                    bidDAO.delete(bid);
+                }
+                pickupDAO.delete(article.getArticleId());
+                articleDAO.delete(article.getArticleId());
+            }
+            else {
+                businessException.addKey(BusinessCode.CANCEL_SALE_ALREADY_ENDED);
+                throw businessException;
+            }
+        }
+        else {
+            throw businessException;
+        }
+    }
+
+    private boolean isUserValid(Article article, User user, BusinessException businessException) {
+        boolean isValid = true;
+        if (user.getUserId() != article.getSeller().getUserId()) {
+            isValid = false;
+            businessException.addKey(BusinessCode.CANCEL_SALE_UNVALID_USER);
+        }
+        return isValid;
+    }
+
+    private boolean isArticleValid(Article article, BusinessException businessException) {
+        boolean isValid = true;
+        if (article.getSellingPrice()!=0) {
+            isValid = false;
+            businessException.addKey(BusinessCode.CANCEL_SALE_ALREADY_ENDED);
+        }
+        return isValid;
     }
 
     private boolean isCategoryValid(Category category, BusinessException businessException) {

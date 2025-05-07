@@ -12,4 +12,5 @@ public interface BidService {
     Bid getBestBid(Article article);
     List<Article> getBidsByUser(int userId);
     List<Article> getBidsWonByUser(int userId);
+    void creditLastBuyer(Article article);
 }

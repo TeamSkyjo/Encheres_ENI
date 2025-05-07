@@ -32,6 +32,7 @@ public class PickupDAOImpl implements PickupDAO {
     private static final String CREATE = "INSERT INTO RETRAITS VALUES (:no_article, :rue, :code_postal, :ville);";
     private static final String UPDATE = "UPDATE RETRAITS SET rue=:rue, code_postal=:code_postal, ville=:ville WHERE no_article = :no_article;";
     private static final String READ = "SELECT * FROM RETRAITS WHERE no_article = :no_article;";
+    private static final String DELETE = "DELETE FROM RETRAITS WHERE no_article = :no_article;";
 
     @Override
     public void create(int articleId, Pickup pickup) {
@@ -55,6 +56,13 @@ public class PickupDAOImpl implements PickupDAO {
     public void update(int articleId, Pickup pickup) {
         MapSqlParameterSource mapSqlParameterSource = getSource(articleId, pickup);
         namedParameterJdbcTemplate.update(UPDATE, mapSqlParameterSource);
+    }
+
+    @Override
+    public void delete(int articleId) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("no_article", articleId);
+        namedParameterJdbcTemplate.update(DELETE, mapSqlParameterSource);
     }
 
     private static MapSqlParameterSource getSource(int articleId, Pickup pickup) {
