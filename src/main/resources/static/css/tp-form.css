@@ -8,6 +8,10 @@ form h1 {
 	margin: 15px;
 }
 
+form img {
+	max-width: 200px;
+}
+
 .flex-outer li {
 	display: flex;
 	flex-wrap: wrap;
