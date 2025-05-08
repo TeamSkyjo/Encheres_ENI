@@ -16,4 +16,18 @@ public class BusinessException extends RuntimeException {
     public List<String> getKeys() {
         return keys;
     }
+
+    private final List<BusinessError> errors = new ArrayList<>();
+
+    public void addGlobalError(String messageCode) {
+        errors.add(new BusinessError(null, messageCode));
+    }
+
+    public void addFieldError(String field, String messageCode) {
+        errors.add(new BusinessError(field, messageCode));
+    }
+
+    public List<BusinessError> getErrors() {
+        return errors;
+    }
 }

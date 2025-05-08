@@ -1,0 +1,202 @@
+/* General style */
+form {
+    background-color: rgb(207, 226, 227);
+    border-radius: 10px;
+    padding: 5px 15px;
+    margin: 5vh auto;
+    width: 90%;
+    text-align: center;
+}
+
+form h1 {
+    margin-bottom: 15px;
+}
+
+form img {
+    width: 80%;
+    margin-bottom: 15px;
+}
+
+/* Elements structure */
+li {
+    list-style: none;
+}
+
+.flex-outer > li,
+fieldset li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    text-align: left;
+    margin: 10px 0;
+}
+
+.flex-outer > li {
+    justify-content: space-between;
+}
+
+fieldset li {
+    justify-content: flex-start;
+    margin: 10px;
+}
+
+.flex-outer > .button-row {
+    justify-content: flex-end;
+}
+
+.flex-outer > .button-row button + button {
+    margin-left: 10px;
+}
+
+/* Labels and inputs */
+.flex-outer > li > label,
+fieldset li > label {
+    max-width: 220px;
+}
+
+.flex-outer > li > label {
+    width: 35%;
+}
+
+fieldset li > label {
+    width: 45%;
+}
+
+.flex-outer > li > label + *,
+fieldset li > label + * {
+    margin-right: auto;
+}
+
+.flex-outer > li > label + * {
+    width: 64%;
+}
+
+fieldset li > label + * {
+    width: 54%;
+}
+
+#bidPrice {
+    width: 10vw;
+    padding: 1%;
+    margin-left: 1%;
+}
+
+#seller-link {
+    color: darkcyan;
+    text-decoration: none;
+    width: fit-content;
+    margin-right: auto;
+    padding: 1%;
+}
+
+#seller-link:hover {
+    color: cadetblue;
+}
+
+legend {
+    margin: 1%;
+    padding: 1%;
+}
+
+fieldset {
+    border: 2px solid darkcyan;
+    width: 60%;
+}
+
+/* Form inputs */
+input:not([type="file"]),
+textarea,
+#category,
+#imageFile {
+    border: 1px solid cadetblue;
+    border-radius: 2px;
+    outline: none;
+    box-sizing: border-box;
+    background-color: white;
+    color: darkcyan;
+    padding: 2%;
+}
+
+input:not([type="file"]),
+textarea {
+    padding: 1%;
+}
+
+input:not([type="file"]):focus,
+textarea:focus {
+    border: 2px solid darkcyan;
+}
+
+/* Disabled inputs */
+input[type="number"]:disabled::-webkit-inner-spin-button,
+input[type="number"]:disabled::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"]:disabled {
+    -moz-appearance: textfield;
+}
+
+*:disabled {
+    border: none !important;
+    background: none;
+    color: black;
+    font-style: italic;
+    font-size: 1rem;
+    resize: none;
+}
+
+/* Buttons */
+.flex-outer li button {
+    font-size: 1.2rem;
+    margin-left: auto;
+    padding: 8px 16px;
+    border: none;
+    background: darkcyan;
+    color: #ffffff;
+    border-radius: 5px;
+}
+
+.flex-outer li button:hover {
+    background-color: cadetblue;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media screen and (min-width: 576px) {}
+
+/* Medium devices (tablets, 768px and up) */
+@media screen and (min-width: 768px) {
+    form {
+        width: 75%;
+    }
+
+    form img {
+        width: 75%;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media screen and (min-width: 992px) {
+    form {
+        width: 60%;
+    }
+
+    form img {
+        width: 60%;
+    }
+}
+
+/* X-Large devices (large desktops, 1200px and up) */
+@media screen and (min-width: 1200px) {
+    form {
+        width: 50%;
+    }
+
+    form img {
+        width: 50%;
+    }
+}
+
+/* XX-Large devices (larger desktops, 1400px and up) */
+@media screen and (min-width: 1400px) {}

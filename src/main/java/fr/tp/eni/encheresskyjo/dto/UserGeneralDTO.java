@@ -1,5 +1,7 @@
 package fr.tp.eni.encheresskyjo.dto;
 
+import jakarta.validation.constraints.Size;
+
 /**
  * Data Transfer Object used to handle general user information common to user creation, update or profile display operations.
  *

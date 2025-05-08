@@ -107,11 +107,13 @@ header a:hover {
     height: 100vh;
     margin: 1% auto;
     flex: 1;
+    justify-content: flex-start;
 }
 
 .center-section {
-    margin: auto;
+    margin: 0 auto;
     text-align: center;
+    width: 100%;
 }
 
 main h1 {

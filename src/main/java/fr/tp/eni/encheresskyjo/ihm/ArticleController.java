@@ -243,8 +243,15 @@ public class ArticleController {
     ) {
         if (principal != null) {
             Article article = new Article();
-            // ajout
             article.setEndDate(article.getEndDate());
+
+            User loggedUser = userService.getByUsername(principal.getName());
+
+            Pickup pickup = new Pickup();
+            pickup.setStreet(loggedUser.getStreet());
+            pickup.setCity(loggedUser.getCity());
+            pickup.setZip(loggedUser.getZip());
+            article.setPickup(pickup);
 
             List<Category> categories = categoryService.getAllCategories();
             model.addAttribute("categories", categories);

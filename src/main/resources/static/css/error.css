@@ -1,0 +1,15 @@
+@charset "UTF-8";
+.global-error {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    color: #960000;
+    margin: 5px;
+}
+
+.field-error {
+    color: #960000;
+    margin: 5px;
+    font-size: 0.75rem;
+    margin-left: auto;
+}

@@ -9,67 +9,97 @@
                                                 titleContent=~{:: title}
                                             )}"
 >
-<title>Eni Enchères</title>
-<link rel="stylesheet" data-th-href="@{/css/article-form.css}">
-<link rel="stylesheet" data-th-href="@{/css/tp-error.css}">
 
-<main>
-    <h1 data-th-text="'Créer mon profil'"></h1>
-    <p class=cards data-th-each="keyError: ${#fields.errors('global')}" data-th-text="#{${keyError}}"></p>
-    <form data-th-action="@{/inscription}" method="post" data-th-object="${userCreateDTO}">
+<link rel="stylesheet" data-th-href="@{/css/forms.css}">
+<link rel="stylesheet" data-th-href="@{/css/error.css}">
 
-        <ul class="flex-outer">
-            <li>
-                <label for="username">Pseudo :</label>
-                <input type="text" id="username" name="username" required autofocus data-th-field="*{username}">
-            </li>
-            <li>
-                <label for="lastName">Nom :</label>
-                <input type="text" id="lastName" name="lastName" required data-th-field="*{lastName}">
-            </li>
-            <li>
-                <label for="firstName">Prénom :</label>
-                <input type="text" id="firstName" name="firstName" required data-th-field="*{firstName}">
-            </li>
-            <li>
-                <label for="email">Email :</label>
-                <input type="email" id="email" name="email" required data-th-field="*{email}">
-            </li>
-            <li>
-                <label for="phone">Téléphone :</label>
-                <input type="tel" id="phone" name="phone" data-th-field="*{telephone}">
-            </li>
-            <li>
-                <label for="street">Rue :</label>
-                <input type="text" id="street" name="street" required data-th-field="*{street}">
-            </li>
-            <li>
-                <label for="zip">Code postal :</label>
-                <input type="text" id="zip" name="zip" required data-th-field="*{zip}">
-            </li>
-            <li>
-                <label for="city">Ville :</label>
-                <input type="text" id="city" name="city" required data-th-field="*{city}">
-            </li>
-            <li>
-                <label for="password">Mot de passe :</label>
-                <input type="password" id="password" name="password" minlength="12" required data-th-field="*{password}">
-            </li>
-            <li>
-                <label for="pwd-confirm">Confirmation :</label>
-                <input type="password" id="pwd-confirm" name="pwd-confirm" required data-th-field="*{passwordConfirm}">
-            </li>
-            <li>
-                <button type="submit">Créer</button>
-            </li>
-            <li>
-                <button type="reset">Annuler</button>
-            </li>
+<title data-th-text="#{register.title}"></title>
 
-        </ul>
-
-    </form>
-
-
+<main class="center-main">
+    <section class="center-section">
+        <h1 data-th-text="#{register.h1}"></h1>
+        <form data-th-action="@{/inscription}" method="post" data-th-object="${userCreateDTO}">
+            <p class="global-error" data-th-each="keyError: ${#fields.errors('global')}"
+               data-th-text="#{${keyError}}"></p>
+            <ul class="flex-outer">
+                <li>
+                    <label for="username">Pseudo :</label>
+                    <input type="text" id="username" name="username" required autofocus data-th-field="*{username}">
+                    <p class="field-error"
+                       data-th-each="error : ${#fields.errors('username')}"
+                       data-th-text="#{${error}}"></p>
+                </li>
+                <li>
+                    <label for="lastName">Nom :</label>
+                    <input type="text" id="lastName" name="lastName" required data-th-field="*{lastName}">
+                    <p class="field-error"
+                       data-th-each="error : ${#fields.errors('lastName')}"
+                       data-th-text="#{${error}}"></p>
+                </li>
+                <li>
+                    <label for="firstName">Prénom :</label>
+                    <input type="text" id="firstName" name="firstName" required data-th-field="*{firstName}">
+                    <p class="field-error"
+                       data-th-each="error : ${#fields.errors('firstName')}"
+                       data-th-text="#{${error}}"></p>
+                </li>
+                <li>
+                    <label for="email">Email :</label>
+                    <input type="email" id="email" name="email" required data-th-field="*{email}">
+                    <p class="field-error"
+                       data-th-each="error : ${#fields.errors('email')}"
+                       data-th-text="#{${error}}"></p>
+                </li>
+                <li>
+                    <label for="telephone">Téléphone :</label>
+                    <input type="tel" id="telephone" name="telephone" data-th-field="*{telephone}">
+                    <p class="field-error"
+                       data-th-each="error : ${#fields.errors('telephone')}"
+                       data-th-text="#{${error}}"></p>
+                </li>
+                <li>
+                    <label for="street">Rue :</label>
+                    <input type="text" id="street" name="street" required data-th-field="*{street}">
+                    <p class="field-error"
+                       data-th-each="error : ${#fields.errors('street')}"
+                       data-th-text="#{${error}}"></p>
+                </li>
+                <li>
+                    <label for="zip">Code postal :</label>
+                    <input type="text" id="zip" name="zip" required data-th-field="*{zip}">
+                    <p class="field-error"
+                       data-th-each="error : ${#fields.errors('zip')}"
+                       data-th-text="#{${error}}"></p>
+                </li>
+                <li>
+                    <label for="city">Ville :</label>
+                    <input type="text" id="city" name="city" required data-th-field="*{city}">
+                    <p class="field-error"
+                       data-th-each="error : ${#fields.errors('city')}"
+                       data-th-text="#{${error}}"></p>
+                </li>
+                <li>
+                    <label for="password">Mot de passe :</label>
+                    <input type="password" id="password" name="password" minlength="12" required
+                           data-th-field="*{password}">
+                    <p class="field-error"
+                       data-th-each="error : ${#fields.errors('password')}"
+                       data-th-text="#{${error}}"></p>
+                </li>
+                <li>
+                    <label for="pwd-confirm">Confirmation :</label>
+                    <input type="password" id="pwd-confirm" name="pwd-confirm" required
+                           data-th-field="*{passwordConfirm}">
+                    <p class="field-error"
+                       data-th-each="error : ${#fields.errors('passwordConfirm')}"
+                       data-th-text="#{${error}}"></p>
+                </li>
+                <li class="button-row">
+                    <button type="submit">Créer</button>
+                    <button type="reset">Annuler</button>
+                </li>
+            </ul>
+        </form>
+    </section>
 </main>
 </html>

@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
         isValid &= isUserUnique(dto, businessException);
 
         if (!isValid) {
-            businessException.addKey(BusinessCode.VALID_USER);
+            businessException.addGlobalError(BusinessCode.VALID_USER);
             throw businessException;
         } else {
             String encodedPassword = passwordEncoder.encode(dto.getPassword());
@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
         boolean isValid = validateUpdateUser(dto, businessException);
 
         if (!isValid) {
-            businessException.addKey(BusinessCode.VALID_USER);
+            businessException.addGlobalError(BusinessCode.VALID_USER);
             throw businessException;
         }
 
@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService {
                 System.out.println(existingUser.getPassword());
                 System.out.println(">>>>>");
                 if (!passwordEncoder.matches(dto.getCurrentPassword(), existingUser.getPassword())) {
-                    businessException.addKey(BusinessCode.VALID_USER_CURRENT_PASSWORD);
+                    businessException.addFieldError("password", BusinessCode.VALID_USER_CURRENT_PASSWORD);
                     throw businessException;
                 }
                 // encode new password
@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService {
                 System.out.println("dto pwd : " +dto.getCurrentPassword());
                 System.out.println("\n db pwd : " +existingUser.getPassword());
 
-                businessException.addKey(BusinessCode.VALID_USER_CURRENT_PASSWORD);
+                businessException.addFieldError("password", BusinessCode.VALID_USER_CURRENT_PASSWORD);
                 throw businessException;
             }
     }
@@ -266,7 +266,7 @@ public class UserServiceImpl implements UserService {
             User user = userDAO.readByUsername(username);
             return userToUserGeneralDTOConverter.convert(user);
         } catch (EmptyResultDataAccessException e) {
-            businessException.addKey(BusinessCode.USER_NOT_FOUND);
+            businessException.addGlobalError(BusinessCode.USER_NOT_FOUND);
             throw businessException;
         }
 
@@ -297,7 +297,7 @@ public class UserServiceImpl implements UserService {
         User user = userDAO.readById(userId);
         if (user == null) {
             BusinessException businessException = new BusinessException();
-            businessException.addKey(BusinessCode.USER_NOT_FOUND);
+            businessException.addGlobalError(BusinessCode.USER_NOT_FOUND);
             throw businessException;
         }
         userDAO.delete(userId);
@@ -313,13 +313,13 @@ public class UserServiceImpl implements UserService {
         boolean isValid = true;
 
         if (username == null || username.isBlank()) {
-            businessException.addKey(BusinessCode.VALID_USER_USERNAME_BLANK);
+            businessException.addFieldError("username", BusinessCode.VALID_USER_USERNAME_BLANK);
             return false;
         }
 
         if (username.length() > 30) {
             isValid = false;
-            businessException.addKey(BusinessCode.VALID_USER_USERNAME_LENGTH_MAX);
+            businessException.addFieldError("username", BusinessCode.VALID_USER_USERNAME_LENGTH_MAX);
         }
 
         return isValid;
@@ -330,10 +330,10 @@ public class UserServiceImpl implements UserService {
 
         if (firstname == null || firstname.isBlank()) {
             isValid = false;
-            businessException.addKey(BusinessCode.VALID_USER_FIRSTNAME_BLANK);
+            businessException.addFieldError("firstname", BusinessCode.VALID_USER_FIRSTNAME_BLANK);
         } else if (firstname.length() > 30) {
             isValid = false;
-            businessException.addKey(BusinessCode.VALID_USER_FIRSTNAME_LENGTH_MAX);
+            businessException.addFieldError("firstname", BusinessCode.VALID_USER_FIRSTNAME_LENGTH_MAX);
         }
 
         return isValid;
@@ -344,10 +344,10 @@ public class UserServiceImpl implements UserService {
 
         if (lastname == null || lastname.isBlank()) {
             isValid = false;
-            businessException.addKey(BusinessCode.VALID_USER_LASTNAME_BLANK);
+            businessException.addFieldError("lastname", BusinessCode.VALID_USER_LASTNAME_BLANK);
         } else if (lastname.length() > 30) {
             isValid = false;
-            businessException.addKey(BusinessCode.VALID_USER_LASTNAME_LENGTH_MAX);
+            businessException.addFieldError("lastname", BusinessCode.VALID_USER_LASTNAME_LENGTH_MAX);
         }
         return isValid;
     }
@@ -357,16 +357,16 @@ public class UserServiceImpl implements UserService {
         String emailRegexValidation = "^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$";
 
         if (email == null || email.isBlank()) {
-            businessException.addKey(BusinessCode.VALID_USER_EMAIL_BLANK);
+            businessException.addFieldError("email", BusinessCode.VALID_USER_EMAIL_BLANK);
             return false;
         }
 
         if (!email.matches(emailRegexValidation)) {
             isValid = false;
-            businessException.addKey(BusinessCode.VALID_USER_EMAIL_FORMAT);
+            businessException.addFieldError("email", BusinessCode.VALID_USER_EMAIL_FORMAT);
         } else if (email.length() > 30) {
             isValid = false;
-            businessException.addKey(BusinessCode.VALID_USER_EMAIL_LENGTH_MAX);
+            businessException.addFieldError("email", BusinessCode.VALID_USER_EMAIL_LENGTH_MAX);
         }
 
         return isValid;
@@ -382,10 +382,10 @@ public class UserServiceImpl implements UserService {
         if (phone != null && !phone.isBlank()) {
             if (!phone.matches(phoneValidationRegex)) {
                 isValid = false;
-                businessException.addKey(BusinessCode.VALID_USER_PHONE_FORMAT);
+                businessException.addFieldError("telephone", BusinessCode.VALID_USER_PHONE_FORMAT);
             } else if (phone.length() > 15) {
                 isValid = false;
-                businessException.addKey(BusinessCode.VALID_USER_PHONE_LENGTH_MAX);
+                businessException.addFieldError("telephone", BusinessCode.VALID_USER_PHONE_LENGTH_MAX);
             }
         }
 
@@ -400,14 +400,14 @@ public class UserServiceImpl implements UserService {
 
         if (street == null || street.isBlank()) {
             isValid = false;
-            businessException.addKey(BusinessCode.VALID_ADDRESS_STREET_NAME_BLANK);
+            businessException.addFieldError("street", BusinessCode.VALID_ADDRESS_STREET_NAME_BLANK);
         } else {
             if (street.length() > 30) {
                 isValid = false;
-                businessException.addKey(BusinessCode.VALID_ADDRESS_STREET_NAME_LENGTH_MAX);
+                businessException.addFieldError("street", BusinessCode.VALID_ADDRESS_STREET_NAME_LENGTH_MAX);
             } else if (!street.matches(streetValidationRegex)) {
                 isValid = false;
-                businessException.addKey(BusinessCode.VALID_ADDRESS_STREET_NAME_FORMAT);
+                businessException.addFieldError("street", BusinessCode.VALID_ADDRESS_STREET_NAME_FORMAT);
             }
         }
 
@@ -421,16 +421,16 @@ public class UserServiceImpl implements UserService {
         String postalCodeRegex = "^(0[1-9]|[1-8][0-9]|9[0-8])[0-9]{3}$";
 
         if (zip == null || zip.isBlank()) {
-            businessException.addKey(BusinessCode.VALID_ADDRESS_ZIP_BLANK);
+            businessException.addFieldError("zip", BusinessCode.VALID_ADDRESS_ZIP_BLANK);
             return false;
         }
 
         if (zip.length() > 10) {
             isValid = false;
-            businessException.addKey(BusinessCode.VALID_ADDRESS_ZIP_LENGTH_MAX);
+            businessException.addFieldError("zip", BusinessCode.VALID_ADDRESS_ZIP_LENGTH_MAX);
         } else if (!zip.matches(postalCodeRegex)) {
             isValid = false;
-            businessException.addKey(BusinessCode.VALID_ADDRESS_ZIP_FORMAT);
+            businessException.addFieldError("zip", BusinessCode.VALID_ADDRESS_ZIP_FORMAT);
         }
 
         return isValid;
@@ -442,13 +442,13 @@ public class UserServiceImpl implements UserService {
 
 
         if (city == null || city.isBlank()) {
-            businessException.addKey(BusinessCode.VALID_ADDRESS_CITY_BLANK);
+            businessException.addFieldError("city", BusinessCode.VALID_ADDRESS_CITY_BLANK);
             return false;
         }
 
         if (city.length() > 30) {
             isValid = false;
-            businessException.addKey(BusinessCode.VALID_ADDRESS_CITY_LENGTH_MAX);
+            businessException.addFieldError("city", BusinessCode.VALID_ADDRESS_CITY_LENGTH_MAX);
         }
 
         return isValid;
@@ -466,18 +466,18 @@ public class UserServiceImpl implements UserService {
         String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+]).{12,250}$";
 
         if (password == null || password.isBlank()) {
-            businessException.addKey(BusinessCode.VALID_USER_PASSWORD_BLANK);
+            businessException.addFieldError("password", BusinessCode.VALID_USER_PASSWORD_BLANK);
             return false;
         }
 
         if (!password.matches(passwordRegex)) {
             isValid = false;
-            businessException.addKey(BusinessCode.VALID_USER_PASSWORD_FORMAT);
+            businessException.addFieldError("password", BusinessCode.VALID_USER_PASSWORD_FORMAT);
         }
 
         if (!password.equals(passwordConfirm)) {
             isValid = false;
-            businessException.addKey(BusinessCode.VALID_USER_PASSWORD_CONFIRM);
+            businessException.addFieldError("passwordConfirm", BusinessCode.VALID_USER_PASSWORD_CONFIRM);
         }
 
         return isValid;
@@ -490,11 +490,11 @@ public class UserServiceImpl implements UserService {
         boolean isEmailUnique = userDAO.isEmailUnique(dto.getEmail());
 
         if (!isUsernameUnique) {
-            businessException.addKey(BusinessCode.VALID_USER_USERNAME_UNIQUENESS);
+            businessException.addFieldError("username", BusinessCode.VALID_USER_USERNAME_UNIQUENESS);
         }
 
         if (!isEmailUnique) {
-            businessException.addKey(BusinessCode.VALID_USER_EMAIL_UNIQUENESS);
+            businessException.addFieldError("email", BusinessCode.VALID_USER_EMAIL_UNIQUENESS);
         }
 
         return isUsernameUnique && isEmailUnique;

@@ -10,7 +10,9 @@
     <!--    <h2 data-th-replace="~{fragments/fragment-errors.html :: errors}"></h2>-->
     <!--    <p class=cards data-th-each="keyError: ${#fields.errors('global')}" data-th-text="#{${keyError}}"></p>-->
     <ul class="flex-outer">
-        <img data-th-src="@{${article.imageUrl}}" alt="Photo de l'objet à vendre">
+        <img data-th-if="${action != 'creer'}"
+             data-th-src="@{${article.imageUrl}}"
+             alt="Photo de l'objet à vendre">
         <li>
             <label for="articleName" data-th-text="#{frag-article-form.articleName}"></label>
             <input data-th-field="*{articleName}"
@@ -27,7 +29,7 @@
         </li>
         <li>
             <label for="category" data-th-text="#{frag-article-form.category}"></label>
-            <input data-th-disabled="${action != 'creer'}" type="text" name="category" id="category" disabled
+            <input data-th-if="${action != 'creer'}" type="text" name="category" id="category" disabled
                    data-th-field="*{category.label}">
             <select data-th-unless="${action != 'creer'}" name="category" id="category">
                 <option data-th-each="category: ${categories}" data-th-value="${category.categoryId}"
@@ -100,33 +102,36 @@
                     <li>
                         <label for="street" data-th-text="#{frag-article-form.pickup.street}"></label>
                         <input data-th-field="*{pickup.street}"
-                               type="text" name="street" id="street" data-th-disabled="${#strings.isEmpty(action)}">
+                               type="text" name="street" id="street"
+                               data-th-disabled="${#strings.isEmpty(action)}">
                         <!--<div data-th-replace="~{fragments/fragment-error :: error(street)}"></div>-->
                     </li>
                     <li>
                         <label for="zip" data-th-text="#{frag-article-form.pickup.zip}"></label>
                         <input data-th-field="*{pickup.zip}"
-                               type="text" name="zip" id="zip" data-th-disabled="${#strings.isEmpty(action)}">
+                               type="text" name="zip" id="zip"
+                               data-th-disabled="${#strings.isEmpty(action)}">
                         <!--<div data-th-replace="~{fragments/fragment-error :: error(zip)}"></div>-->
                     </li>
                     <li>
                         <label for="city" data-th-text="#{frag-article-form.pickup.city}"></label>
                         <input data-th-field="*{pickup.city}"
-                               type="text" name="city" id="city" data-th-disabled="${#strings.isEmpty(action)}">
+                               type="text" name="city" id="city"
+                               data-th-disabled="${#strings.isEmpty(action)}">
                         <!--<div data-th-replace="~{fragments/fragment-error :: error(city)}"></div>-->
                     </li>
                 </ul>
             </fieldset>
         </li>
         <li data-th-if="${action != 'creer'}">
-            <label for="seller" data-th-text="#{frag-article-form.seller}"></label>
-            <a data-th-href="@{/profil(username=${article.seller.username})}">
+            <label data-th-text="#{frag-article-form.seller}"></label>
+            <a id="seller-link" data-th-href="@{/profil(username=${article.seller.username})}">
                 <p data-th-text="${article.seller.username}"></p>
             </a>
             <!--<div data-th-replace="~{fragments/fragment-error :: error(seller)}"></div>-->
         </li>
 
-        <li data-th-if="${action == 'creer'}">
+        <li class="button-row" data-th-if="${action == 'creer'}">
             <button type="submit" data-th-text="#{frag-article-form.button.save}"></button>
             <button type="reset" data-th-text="#{frag-article-form.button.cancel}"></button>
         </li>
