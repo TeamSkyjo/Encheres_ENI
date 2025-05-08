@@ -186,10 +186,10 @@ public class ArticleController {
     @PostMapping("/article/details")
     public String placeBid(
             @ModelAttribute Article article,
+            BindingResult bindingResult,
             @RequestParam(value = "bidPrice", required = false) Integer bidPrice,
             @RequestParam(value = "articleId", required = false) Integer articleId,
             @RequestParam String action,
-            BindingResult bindingResult,
             Model model,
             Principal principal
     ){
