@@ -1,0 +1,148 @@
+<form data-th-fragment="article-form(action)" data-th-action="@{/article/details}" method="post"
+      data-th-object="${article}" enctype="multipart/form-data">
+    <input type="hidden" name="action" data-th-value="${action}" />
+    <input type="hidden" data-th-field="*{articleId}" />
+    <h1 data-th-if="${#strings.isEmpty(action)}" data-th-text="#{view-article-detail.h1}"></h1>
+    <h1 data-th-if="${action == 'creer'}" data-th-text="#{view-article-form.h1}"></h1>
+    <h1 data-th-if="${action == 'buyer'}" data-th-text="#{view-article-detail.buyer.h1}"></h1>
+    <h1 data-th-if="${action == 'seller'}" data-th-text="#{view-article-detail.seller.h1}"></h1>
+
+    <!--    <h2 data-th-replace="~{fragments/fragment-errors.html :: errors}"></h2>-->
+    <!--    <p class=cards data-th-each="keyError: ${#fields.errors('global')}" data-th-text="#{${keyError}}"></p>-->
+    <ul class="flex-outer">
+        <img data-th-src="@{${article.imageUrl}}" alt="Photo de l'objet à vendre">
+        <li>
+            <label for="articleName" data-th-text="#{frag-article-form.articleName}"></label>
+            <input data-th-field="*{articleName}"
+                   type="text" name="articleName" id="articleName"
+                   data-th-disabled="${action != 'creer'}">
+            <!--<div data-th-replace="~{fragments/fragment-error :: error(articleName)}"></div>-->
+        </li>
+        <li>
+            <label for="description" data-th-text="#{frag-article-form.description}"></label>
+            <textarea name="description" id="description"
+                      data-th-disabled="${action != 'creer'}"
+                      data-th-field="*{description}"></textarea>
+            <!-- <div data-th-replace="~{fragments/fragment-error :: error(description)}"></div>-->
+        </li>
+        <li>
+            <label for="category" data-th-text="#{frag-article-form.category}"></label>
+            <input data-th-disabled="${action != 'creer'}" type="text" name="category" id="category" disabled
+                   data-th-field="*{category.label}">
+            <select data-th-unless="${action != 'creer'}" name="category" id="category">
+                <option data-th-each="category: ${categories}" data-th-value="${category.categoryId}"
+                        data-th-text="${category.label}"></option>
+            </select>
+            <!-- <div data-th-replace="~{fragments/fragment-error :: error(category)}"></div>-->
+        </li>
+        <li data-th-if="${action != 'creer'}">
+            <label for="bestBid" data-th-text="#{frag-article-form.bestBid}"></label>
+            <input type="number" name="bestBid" id="bestBid"
+                   disabled
+                   data-th-field="*{bestPrice}">
+        </li>
+        <li data-th-if="${action == 'creer'}">
+            <label for="imageFile" data-th-text="#{frag-article-form.imageUrl}"></label>
+            <input type="file" id="imageFile" name="imageFile" accept="image/*"/>
+            <!-- <div data-th-replace="~{fragments/fragment-error :: error(imageURL)}"></div>-->
+        </li>
+        <li>
+            <label for="startingPrice" data-th-text="#{frag-article-form.startingPrice}"></label>
+            <input type="number" name="startingPrice" id="startingPrice"
+                   data-th-disabled="${action != 'creer'}"
+                   data-th-field="*{startingPrice}">
+<!--            <div data-th-replace="~{fragments/fragment-error :: error(startingPrice)}"></div>-->
+        </li>
+        <li data-th-if="${action == 'creer'}">
+            <label for="startDate" data-th-text="#{frag-article-form.startDate}"></label>
+            <input type="date" name="startDate" id="startDate"
+                   data-th-field="*{startDate}">
+            <!--            <div data-th-replace="~{fragments/fragment-error :: error(startDate)}"></div>-->
+        </li>
+        <li data-th-if="${action != 'creer'}">
+            <label for="startDate" data-th-text="#{frag-article-form.startDate}"></label>
+            <input type="text" name="startDate" id="startDate"
+                   disabled
+                   data-th-field="*{startDate}">
+            <!--            <div data-th-replace="~{fragments/fragment-error :: error(startDate)}"></div>-->
+        </li>
+        <li data-th-if="${action == 'creer'}">
+            <label for="endDate" data-th-text="#{frag-article-form.endDate}"></label>
+            <input type="date" name="endDate" id="endDate"
+                   data-th-field="*{endDate}">
+            <!--            <div data-th-replace="~{fragments/fragment-error :: error(endDate)}"></div>-->
+        </li>
+        <li data-th-if="${action != 'creer'}">
+            <label for="endDate" data-th-text="#{frag-article-form.endDate}"></label>
+            <input type="text" name="endDate" id="endDate"
+                   disabled
+                   data-th-field="*{endDate}">
+            <!--            <div data-th-replace="~{fragments/fragment-error :: error(endDate)}"></div>-->
+        </li>
+
+        <li data-th-if="${action != 'creer'}">
+            <label for="pickup" data-th-text="#{frag-article-form.pickup} + ' : '"></label>
+            <ul>
+                <li id="pickup">
+                    <input type="text" name="pickup-street" id="pickup-street"
+                           data-th-value="${article.pickup.street}" disabled>
+                </li>
+                <li>
+                    <input type="text" name="pickup-zip-city" id="pickup-zip-city"
+                           data-th-value="${article.pickup.zip + ' ' + article.pickup.city}" disabled>
+                </li>
+            </ul>
+        </li>
+        <li data-th-if="${action == 'creer'}">
+            <fieldset>
+                <legend data-th-text="#{frag-article-form.pickup}"></legend>
+                <ul>
+                    <li>
+                        <label for="street" data-th-text="#{frag-article-form.pickup.street}"></label>
+                        <input data-th-field="*{pickup.street}"
+                               type="text" name="street" id="street" data-th-disabled="${#strings.isEmpty(action)}">
+                        <!--<div data-th-replace="~{fragments/fragment-error :: error(street)}"></div>-->
+                    </li>
+                    <li>
+                        <label for="zip" data-th-text="#{frag-article-form.pickup.zip}"></label>
+                        <input data-th-field="*{pickup.zip}"
+                               type="text" name="zip" id="zip" data-th-disabled="${#strings.isEmpty(action)}">
+                        <!--<div data-th-replace="~{fragments/fragment-error :: error(zip)}"></div>-->
+                    </li>
+                    <li>
+                        <label for="city" data-th-text="#{frag-article-form.pickup.city}"></label>
+                        <input data-th-field="*{pickup.city}"
+                               type="text" name="city" id="city" data-th-disabled="${#strings.isEmpty(action)}">
+                        <!--<div data-th-replace="~{fragments/fragment-error :: error(city)}"></div>-->
+                    </li>
+                </ul>
+            </fieldset>
+        </li>
+        <li data-th-if="${action != 'creer'}">
+            <label for="seller" data-th-text="#{frag-article-form.seller}"></label>
+            <a data-th-href="@{/profil(username=${article.seller.username})}">
+                <p data-th-text="${article.seller.username}"></p>
+            </a>
+            <!--<div data-th-replace="~{fragments/fragment-error :: error(seller)}"></div>-->
+        </li>
+
+        <li data-th-if="${action == 'creer'}">
+            <button type="submit" data-th-text="#{frag-article-form.button.save}"></button>
+            <button type="reset" data-th-text="#{frag-article-form.button.cancel}"></button>
+        </li>
+        <li data-th-if="${(action == 'seller')
+        and (article.endDate.isAfter(T(java.time.LocalDate).now()) or article.endDate.isEqual(T(java.time.LocalDate).now()))}">
+            <button type="submit" data-th-text="#{frag-article-form.button.erase}"></button>
+        </li>
+        <li data-th-if="${action == 'buyer' and sellingPrice == 0}">
+            <button type="submit" data-th-text="#{frag-article-form.button.close}"></button>
+        </li>
+        <li data-th-if="${#strings.isEmpty(action)
+        and (article.endDate.isAfter(T(java.time.LocalDate).now()) or article.endDate.isEqual(T(java.time.LocalDate).now()))}">
+            <label for="bidPrice" data-th-text="#{frag-article-form.bidPrice}"></label>
+            <input type="number" name="bidPrice" id="bidPrice" min="${article.bestPrice != 0 ? article.bestPrice : article.startingPrice}"
+                   data-th-value="${article.bestPrice != 0 ? article.bestPrice : article.startingPrice}">
+            <button type="submit" data-th-text="#{frag-article-form.button.bid}"></button>
+        </li>
+    </ul>
+</form>

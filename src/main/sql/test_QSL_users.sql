@@ -26,12 +26,36 @@ UPDATE UTILISATEURS SET mot_de_passe='testestest' WHERE email='laety@vrd.fr';
 
 DELETE FROM UTILISATEURS WHERE no_utilisateur=11;
 
+
+-- repartir avec le jeu de données de base
+DELETE FROM UTILISATEURS WHERE no_utilisateur>4;
+DBCC CHECKIDENT ('UTILISATEURS', RESEED, 4);
+SELECT * FROM UTILISATEURS;
+
+
+
 SELECT * FROM RETRAITS ; 
 SELECT * FROM ARTICLES ;
 
 INSERT INTO ARTICLES VALUES ('Veste en jean', 'Veste jean, taille XS', DATEADD(DAY,-5,GETDATE()), DATEADD(DAY,+5,GETDATE()), 250, NULL, 'https://example.com/veste.jpg', 2, 4);
 DELETE FROM RETRAITS WHERE no_article = 5 ;
 INSERT INTO RETRAITS VALUES (5, 'rue des mouettes', '29000', 'Quimper');
-UPDATE RETRAITS SET rue='5 allée des mouettes', code_postal='29200', ville='Brest' WHERE no_article = 5;
+UPDATE RETRAITS SET rue='5 allï¿½e des mouettes', code_postal='29200', ville='Brest' WHERE no_article = 5;
 
 SELECT * FROM RETRAITS WHERE no_article = 5;
+
+--------------------------------------------------
+
+SELECT * FROM UTILISATEURS;
+
+-- private static final String INSERT
+INSERT INTO UTILISATEURS
+VALUES ('movieFan', 'Almodovar', 'Pedro', 'p.almodovar@email.com', null, '5 somewhere', '67345', 'MadridInFrance', 'MotDePasse123!', 500, 0);
+
+DELETE FROM UTILISATEURS WHERE no_utilisateur>4;
+
+-- après le DELETE, pour repartir à auto-incrémentation de l'id à partir du jeu de données initial
+-- la prochaine donnée insérée aura l'id 5
+DBCC CHECKIDENT ('UTILISATEURS', RESEED, 4);
+
+SELECT * FROM UTILISATEURS;

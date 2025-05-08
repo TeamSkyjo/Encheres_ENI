@@ -3,7 +3,6 @@ GO
 
 -- supprimer les données ajoutées lors des tests
 
-
 -- private static final String SELECT_ALL = "SELECT no_utilisateur, no_article, date_enchere, montant_enchere FROM ENCHERES;";
 SELECT no_utilisateur, no_article, date_enchere, montant_enchere FROM ENCHERES;
 

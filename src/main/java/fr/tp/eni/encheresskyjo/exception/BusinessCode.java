@@ -3,7 +3,8 @@ package fr.tp.eni.encheresskyjo.exception;
 public class BusinessCode {
 
     // USER
-    public static final String VALID_USER = "validation_user";
+    public static final String USER_NOT_FOUND = "validation.user.not.found";
+    public static final String VALID_USER = "validation.user";
     public static final String VALID_USER_UNIQUENESS = "validation.user.uniqueness";
     public static final String VALID_USER_USERNAME_BLANK = "validation.user.username.blank";
     public static final String VALID_USER_USERNAME_LENGTH_MAX = "validation.user.username.length.max";
@@ -29,6 +30,8 @@ public class BusinessCode {
     public static final String VALID_USER_PASSWORD_BLANK= "validation.user.password.blank";
     public static final String VALID_USER_PASSWORD_FORMAT = "validation.user.password.format";
     public static final String VALID_USER_PASSWORD_CONFIRM= "validation.user.password.confirm";
+    public static final String VALID_USER_PASSWORD_CURRENT_BLANK = "validation.user.password.current.blank";
+    public static final String VALID_USER_CURRENT_PASSWORD = "validation.user.current.password";
 
 
     // ARTICLE
@@ -36,9 +39,9 @@ public class BusinessCode {
     public static final String VALID_ARTICLE_NAME_BLANK = "validation.article.name.blank";
     public static final String VALID_ARTICLE_NAME_LENGTH_MAX = "validation.article.name.length.max";
     public static final String VALID_ARTICLE_NAME_LENGTH_MIN = "validation.article.name.length.min";
-    public static final String VALID_ARTICLE_DESCRIPTION_NAME_BLANK = "validation.article.description.name.blank";
-    public static final String VALID_ARTICLE_DESCRIPTION_NAME_LENGTH_MAX = "validation.article.description.name.length.max";
-    public static final String VALID_ARTICLE_DESCRIPTION_NAME_LENGTH_MIN = "validation.article.description.name.length.min";
+    public static final String VALID_ARTICLE_DESCRIPTION_BLANK = "validation.article.description.blank";
+    public static final String VALID_ARTICLE_DESCRIPTION_LENGTH_MAX = "validation.article.description.length.max";
+    public static final String VALID_ARTICLE_DESCRIPTION_LENGTH_MIN = "validation.article.description.length.min";
     public static final String VALID_ARTICLE_STARTDATE_NULL = "validation.article.startdate.null";
     public static final String VALID_ARTICLE_STARTDATE_BEFORE = "validation.article.startdate.before";
     public static final String VALID_ARTICLE_ENDDATE_NULL = "validation.article.enddate.null";
@@ -50,5 +53,18 @@ public class BusinessCode {
     public static final String VALID_ARTICLE_PICKUP_NULL = "validation.article.pickup.null";
     public static final String VALID_ARTICLE_PICKUP_UNKNOWN_ARTICLE_ID = "validation.article.pickup.unknown.article.id";
     public static final String VALID_ARTICLE_UNIQUE = "validation.article.unique";
+    public static final String CANCEL_SALE_UNVALID_USER = "cancel.sale.unvalid.user";
+    public static final String CANCEL_SALE_ALREADY_ENDED = "cancel.sale.already.ended";
+
+    //BID
+    public static final String VALID_BID_USER_NULL = "validation.bid.user.null";
+    public static final String VALID_BID_USER_CREDIT_SCARCE="validation.bid.user.credit.scarce";
+    public static final String VALID_BID_ARTICLE_NULL = "validation.bid.article.null";
+    public static final String VALID_BID_PRICE_LOWER_BEST_BID = "validation.bid.price.lower.best.bid";
+    public static final String VALID_BID_PRICE_LOWER_STARTING_PRICE = "validation.bid.price.lower.start.price";
+    public static final String VALID_BID_DATE_BEFORE_START = "validation.bid.date.before.start";
+    public static final String VALID_BID_DATE_AFTER_END = "validation.bid.date.after.end";
+    public static final String BID_ARTICLE_ALREADY_CLOSED = "bid_article_already_closed";
+    public static final String BID_NOT_ENDED = "bid_not_ended";
 
 }

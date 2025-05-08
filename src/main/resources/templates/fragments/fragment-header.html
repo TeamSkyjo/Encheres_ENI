@@ -1,45 +1,54 @@
 <header data-th-fragment="header">
-  <img data-th-src="@{/images/logoFilmotheque.png}" alt="Logo de la filmothèque" height="50px">
-  <div id="nav-title">
-    <div>
-      <a data-th-href="@{/?lang=fr}"><img data-th-src="@{/images/French.webp}" alt="French"></a>
-      <a data-th-href="@{/?lang=en}"><img data-th-src="@{/images/English.webp}" alt="English"></a>
+    <a data-th-href="@{/encheres}">
+        <img data-th-src="@{/images/logo-cropped.png}" alt="Logo du site d'enchères de l'association Les objets sont nos amis">
+    </a>
+    <div id="nav-title">
+<!--        <div>-->
+<!--            <a data-th-href="@{/?lang=fr}"><img data-th-src="@{/images/French.webp}" alt="French"></a>-->
+<!--            <a data-th-href="@{/?lang=en}"><img data-th-src="@{/images/English.webp}" alt="English"></a>-->
+<!--        </div>-->
+        <p>
+            <a data-th-href="@{/encheres}">
+                Enchères entre particuliers
+            </a>
+        </p>
+        <p>
+            <em data-th-if="${loggedUser != null}"
+                data-th-text="'Salut ' + ${loggedUser.firstName} + ' ! (' + ${loggedUser.credit} + ' crédits)'">
+            </em>
+        </p>
     </div>
-    <p >
-      <a data-th-href="@{/}">
-        Eni-Enchères
-      </a>
-<!--      <strong data-th-if="${membreSession != null && membreSession.id != 0}"-->
-<!--                  data-th-text="'[' + ${membreSession.prenom} + ']'">-->
-<!--      </strong>-->
-    </p>
-  </div>
-  <nav>
-    <ul>
-      <li>
-        <a data-th-href="@{/}">Enchères
+    <nav class="navbar">
+        <a class="burger" id="burger" aria-label="Menu">
+            <i class="fa fa-bars"></i>
         </a>
-      </li>
-      <li>
-        <a data-th-href="@{/}">
-          Vendre un article
-        </a>
-      </li>
-      <li>
-<!--        data-th-if="${#authorization.expression('isAuthenticated')}"-->
-        <a data-th-href="@{/}">
-          Mon profil
-        </a>
-      </li>
-      <li>
-        <a data-th-href="@{/inscription}">S'inscrire</a>
-      </li>
-      <li>
-        <a data-th-href="@{/login}">Se connecter</a>
-      </li>
-      <li>
-        <a data-th-href="@{/logout}">Déconnexion</a>
-      </li>
-    </ul>
-  </nav>
+        <ul class="nav-links" id="nav-links">
+            <li>
+                <a data-th-href="@{/encheres}">Enchères
+                </a>
+            </li>
+            <li data-th-if="${#authorization.expression('isAuthenticated')}">
+                <a data-th-href="@{/article/creer}">
+                    Vendre un article
+                </a>
+            </li>
+            <li data-th-if="${#authorization.expression('isAuthenticated')}">
+                <a data-th-href="@{/profil}">
+                    Mon profil
+                </a>
+            </li>
+            <li data-th-if="${#authorization.expression('isAuthenticated')}">
+                <a data-th-href="@{/logout}">Déconnexion</a>
+            </li>
+            <li data-th-unless="${#authorization.expression('isAuthenticated')}">
+                <a data-th-href="@{/inscription}">S'inscrire</a>
+            </li>
+            <li data-th-unless="${#authorization.expression('isAuthenticated')}">
+                <a data-th-href="@{/login}">Se connecter</a>
+            </li>
+            <!--        <li data-th-unless="${#authorization.expression('isAuthenticated')}">-->
+            <!--            <a data-th-href="@{/login}">Se connecter / S'inscrire</a>-->
+            <!--        </li>-->
+        </ul>
+    </nav>
 </header>

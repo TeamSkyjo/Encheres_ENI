@@ -1,9 +1,6 @@
 package fr.tp.eni.encheresskyjo.bll;
 
-import fr.tp.eni.encheresskyjo.bo.Article;
-import fr.tp.eni.encheresskyjo.bo.ArticleStatus;
-import fr.tp.eni.encheresskyjo.bo.Category;
-import fr.tp.eni.encheresskyjo.bo.Pickup;
+import fr.tp.eni.encheresskyjo.bo.*;
 import fr.tp.eni.encheresskyjo.dal.UserDAO;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
 import org.junit.jupiter.api.Test;
@@ -105,6 +102,14 @@ public class TestArticleService {
         articles = articleService.getFilteredArticles(pattern, null);
         System.out.println("Articles filtrés par pattern : " + articles.size());
         articles.forEach(System.out::println);
+    }
+
+    @Test
+    public void test_deleteArticle(){
+        Article article = articleService.getArticleById(14);
+        User user = userDAO.readById(1);
+        articleService.deleteArticle(article, user);
+
     }
 }
 

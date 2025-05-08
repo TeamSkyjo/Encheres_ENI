@@ -46,4 +46,10 @@ public class TestPickupDAO {
         Pickup pickup = pickupDAO.read(5);
         System.out.println(pickup);
     }
+
+    @Test
+    public void test_delete() {
+
+        pickupDAO.delete(13);
+    }
 }

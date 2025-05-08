@@ -14,7 +14,6 @@ public class User {
     private String zip;
     private String city;
     private String password;
-    private String passwordConfirm;
     private int credit;
     private boolean admin;
 
@@ -128,14 +127,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getPasswordConfirm() {
-        return passwordConfirm;
-    }
-
-    public void setPasswordConfirm(String passwordConfirm) {
-        this.passwordConfirm = passwordConfirm;
     }
 
     public int getCredit() {

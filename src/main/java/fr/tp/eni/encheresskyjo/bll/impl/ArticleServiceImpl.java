@@ -1,10 +1,8 @@
 package fr.tp.eni.encheresskyjo.bll.impl;
 
 import fr.tp.eni.encheresskyjo.bll.ArticleService;
-import fr.tp.eni.encheresskyjo.bo.Article;
-import fr.tp.eni.encheresskyjo.bo.ArticleStatus;
-import fr.tp.eni.encheresskyjo.bo.Category;
-import fr.tp.eni.encheresskyjo.bo.Pickup;
+import fr.tp.eni.encheresskyjo.bll.BidService;
+import fr.tp.eni.encheresskyjo.bo.*;
 import fr.tp.eni.encheresskyjo.dal.*;
 import fr.tp.eni.encheresskyjo.exception.BusinessCode;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
@@ -31,13 +29,15 @@ public class ArticleServiceImpl implements ArticleService {
     private UserDAO userDAO;
     private CategoryDAO categoryDAO;
     private PickupDAO pickupDAO;
+    private BidService bidService;
 
-    public ArticleServiceImpl(ArticleDAO articleDAO, BidDAO bidDAO, UserDAO userDAO, CategoryDAO categoryDAO, PickupDAO pickupDAO) {
+    public ArticleServiceImpl(ArticleDAO articleDAO, BidDAO bidDAO, UserDAO userDAO, CategoryDAO categoryDAO, PickupDAO pickupDAO, BidService bidService) {
         this.articleDAO = articleDAO;
         this.bidDAO = bidDAO;
         this.userDAO = userDAO;
         this.categoryDAO = categoryDAO;
         this.pickupDAO = pickupDAO;
+        this.bidService = bidService;
     }
 
     @Override
@@ -98,6 +98,11 @@ public class ArticleServiceImpl implements ArticleService {
         if (article != null) {
             // Association with Pickup
             linkPickupToArticle(article);
+            Bid bestBid = bidService.getBestBid(article);
+            if (bestBid != null) {
+                article.setBestPrice(bestBid.getBidPrice());
+            }
+
         }
         return article;
     }
@@ -110,7 +115,13 @@ public class ArticleServiceImpl implements ArticleService {
                     .filter(article -> article.readStatus() == articleStatus)
                             .collect(Collectors.toList());
             // Association with Pickup
-            articles.forEach(article -> linkPickupToArticle(article));
+            articles.forEach(article -> {
+                        linkPickupToArticle(article);
+                        Bid bestBid = bidService.getBestBid(article);
+                        if (bestBid != null) {
+                            article.setBestPrice(bestBid.getBidPrice());
+                        }
+                    });
         }
         return articles;
     }
@@ -129,7 +140,13 @@ public class ArticleServiceImpl implements ArticleService {
         List<Article> articles = articleDAO.readAll();
         if (articles != null) {
             // Association with Pickup
-            articles.forEach(article -> linkPickupToArticle(article));
+            articles.forEach(article -> {
+                linkPickupToArticle(article);
+                Bid bestBid = bidService.getBestBid(article);
+                if (bestBid != null) {
+                    article.setBestPrice(bestBid.getBidPrice());
+                }
+            });
         }
         return articles;
     }
@@ -159,11 +176,75 @@ public class ArticleServiceImpl implements ArticleService {
                 throw businessException;
             }
         }
-        if (filteredArticles != null && !filteredArticles.isEmpty()) {
-            // Association with Pickup
-            filteredArticles.forEach(article -> linkPickupToArticle(article));
+//        if (filteredArticles != null && !filteredArticles.isEmpty()) {
+//            // Association with Pickup
+//            filteredArticles.forEach(article -> linkPickupToArticle(article));
+//        }
+        for (Article article : filteredArticles) {
+                linkPickupToArticle(article);
+                Bid bestBid = bidService.getBestBid(article);
+                if (bestBid != null) {
+                    article.setBestPrice(bestBid.getBidPrice());
+                }
         }
         return filteredArticles;
+    }
+
+    /**
+     * Method to cancel a sale. The sale will stay in the database, but won't be bitable anymore.
+     * We put to 0 the selling price and close the sale by
+     * @param article
+     * @param user
+     */
+    @Transactional
+    @Override
+    public void deleteArticle(Article article, User user) {
+        BusinessException businessException = new BusinessException();
+        boolean isValid = true ;
+
+        isValid = isUserValid(article, user, businessException);
+        isValid &= isArticleValid(article, businessException);
+        if (isValid) {
+            if (article.readStatus() == ArticleStatus.NOT_STARTED) {
+                pickupDAO.delete(article.getArticleId());
+                articleDAO.delete(article.getArticleId());
+            }
+            else if (article.readStatus() == ArticleStatus.ONGOING) {
+                bidService.creditLastBuyer(article);
+
+                List<Bid> bids = bidDAO.readByArticle(article.getArticleId());
+                for (Bid bid : bids) {
+                    bidDAO.delete(bid);
+                }
+                pickupDAO.delete(article.getArticleId());
+                articleDAO.delete(article.getArticleId());
+            }
+            else {
+                businessException.addKey(BusinessCode.CANCEL_SALE_ALREADY_ENDED);
+                throw businessException;
+            }
+        }
+        else {
+            throw businessException;
+        }
+    }
+
+    private boolean isUserValid(Article article, User user, BusinessException businessException) {
+        boolean isValid = true;
+        if (user.getUserId() != article.getSeller().getUserId()) {
+            isValid = false;
+            businessException.addKey(BusinessCode.CANCEL_SALE_UNVALID_USER);
+        }
+        return isValid;
+    }
+
+    private boolean isArticleValid(Article article, BusinessException businessException) {
+        boolean isValid = true;
+        if (article.getSellingPrice()!=0) {
+            isValid = false;
+            businessException.addKey(BusinessCode.CANCEL_SALE_ALREADY_ENDED);
+        }
+        return isValid;
     }
 
     private boolean isCategoryValid(Category category, BusinessException businessException) {
@@ -209,15 +290,15 @@ public class ArticleServiceImpl implements ArticleService {
 
         if (description == null || description.isBlank()) {
             isValid = false;
-            businessException.addKey(BusinessCode.VALID_ARTICLE_DESCRIPTION_NAME_BLANK);
+            businessException.addKey(BusinessCode.VALID_ARTICLE_DESCRIPTION_BLANK);
         } else {
             if (description.length() > 300) {
                 isValid = false;
-                businessException.addKey(BusinessCode.VALID_ARTICLE_DESCRIPTION_NAME_LENGTH_MAX);
+                businessException.addKey(BusinessCode.VALID_ARTICLE_DESCRIPTION_LENGTH_MAX);
             }
             if (description.length() < 10) {
                 isValid = false;
-                businessException.addKey(BusinessCode.VALID_ARTICLE_DESCRIPTION_NAME_LENGTH_MIN);
+                businessException.addKey(BusinessCode.VALID_ARTICLE_DESCRIPTION_LENGTH_MIN);
             }
         }
 
@@ -263,7 +344,8 @@ public class ArticleServiceImpl implements ArticleService {
     private boolean isImageUrlValid(String imageURL, BusinessException businessException) {
         boolean isValid = true;
 
-        String URLValidationRegex = "(?i)^https?://[^\\s\"]+\\.(jpg|jpeg|png|gif)(\\?.*)?$";
+//        String URLValidationRegex = "(?i)^https?://[^\\s\"]+\\.(jpg|jpeg|png|gif)(\\?.*)?$";
+        String URLValidationRegex = "(.)*";
 
         if (imageURL != null && !imageURL.matches(URLValidationRegex)) {
             isValid = false;

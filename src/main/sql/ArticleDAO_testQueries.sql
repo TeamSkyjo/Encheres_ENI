@@ -6,6 +6,7 @@ GO
 
 SELECT * FROM ARTICLES;
 SELECT * FROM CATEGORIES;
+SELECT * FROM ENCHERES;
 
 --private static final String INSERT
 INSERT INTO ARTICLES (nom_article, 

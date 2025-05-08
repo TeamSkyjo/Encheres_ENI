@@ -2,12 +2,22 @@ package fr.tp.eni.encheresskyjo.bll.impl;
 
 import fr.tp.eni.encheresskyjo.bll.BidService;
 import fr.tp.eni.encheresskyjo.bo.Article;
+import fr.tp.eni.encheresskyjo.bo.ArticleStatus;
 import fr.tp.eni.encheresskyjo.bo.Bid;
 import fr.tp.eni.encheresskyjo.bo.User;
 import fr.tp.eni.encheresskyjo.dal.*;
+import fr.tp.eni.encheresskyjo.exception.BusinessCode;
+import fr.tp.eni.encheresskyjo.exception.BusinessException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Service
 public class BidServiceImpl implements BidService {
 
     //Dependencies Injection
@@ -26,6 +36,72 @@ public class BidServiceImpl implements BidService {
     }
 
     /**
+     * This methods allow the creation of a new bid for an article.
+     * First : it checks whether the bid, user, article is valid. if so :
+     * Second : it recovers the last bid to get the credit back to the former best-bider.
+     * Third : it creates the new bid and update the credit of the ongoing bider.
+     * @param user
+     * @param article
+     * @param bidPrice
+     */
+    @Transactional
+    @Override
+    public void createBid(User user, Article article, int bidPrice) {
+        BusinessException businessException = new BusinessException();
+        boolean isValid = true ;
+        LocalDate now = LocalDate.now();
+
+        isValid = isUserValid(user, bidPrice, businessException);
+        isValid &= isArticleValid(article, businessException);
+        isValid &= isBidPriceValid(bidPrice, article, businessException);
+        isValid &= isDateValid(article, now, businessException);
+
+        if (isValid) {
+            //Give back its credits to the last best bider.
+            creditLastBuyer(article);
+            //collect credits of the actual user
+            int userCreditUpdated = user.getCredit()-bidPrice;
+            user.setCredit(userCreditUpdated);
+            userDAO.updateCredit(user.getUserId(), userCreditUpdated);
+            //Create new bid - depending if the buyer has already tried to buy this article.
+            Bid newBid = new Bid(now, bidPrice, user, article);
+            List<Bid> userBids= bidDAO.readByUser(user.getUserId());
+            Bid lastBid = userBids.stream()
+                            .filter(b -> b.getArticle().equals(article))
+                            .filter(b ->b.getBuyer().equals(user))
+                            .findFirst()
+                            .orElse(null);
+            if (lastBid != null) {
+                bidDAO.update(newBid);
+            }
+            else {
+                bidDAO.create(newBid);
+            }
+        }
+        else {
+            throw businessException;
+        }
+    }
+
+    /**
+     * Method to give back credit to the last buyer in case a new bid is made.
+     * @param article
+     */
+    @Override
+    public void creditLastBuyer(Article article) {
+        Bid lastBid = getBestBid(article);
+        if (lastBid != null) {
+            linkUserAndArticleToBid(lastBid);
+            User lastBuyer = lastBid.getBuyer();
+            int lastBidPrice = lastBid.getBidPrice();
+            int lastCredit = lastBuyer.getCredit();
+            int newCredit = lastCredit + lastBidPrice;
+            lastBuyer.setCredit(newCredit);
+            userDAO.updateCredit(lastBuyer.getUserId(), newCredit);
+        }
+    }
+
+    /**
      * Private method to centralize the link between a bid, its user and the article
      * @param bid
      */
@@ -36,23 +112,129 @@ public class BidServiceImpl implements BidService {
         bid.setArticle(article);
     }
 
-    @Override
-    public void createBid(Bid bid) {
+    private boolean isDateValid(Article article, LocalDate now, BusinessException businessException) {
+        boolean isValid = true ;
+        if (article.getStartDate().isAfter(now)) {
+            isValid = false ;
+            businessException.addKey(BusinessCode.VALID_BID_DATE_BEFORE_START);
+        }
+        if (article.getEndDate().isBefore(now)) {
+            isValid = false ;
+            businessException.addKey(BusinessCode.VALID_BID_DATE_AFTER_END);
+        }
+        return isValid;
+    }
 
+    private boolean isUserValid (User user, int bidPrice, BusinessException businessException) {
+        boolean isValid = true ;
+        if (userDAO.readById((user.getUserId())) == null) {
+            isValid = false;
+            businessException.addKey(BusinessCode.VALID_BID_USER_NULL);
+        }
+        if (user.getCredit() < bidPrice) {
+            isValid = false;
+            businessException.addKey(BusinessCode.VALID_BID_USER_CREDIT_SCARCE);
+        }
+        return isValid;
+    }
+
+    private boolean isArticleValid (Article article, BusinessException businessException) {
+        boolean isValid = true ;
+        if (articleDAO.readByID((article.getArticleId())) == null) {
+            isValid = false;
+            businessException.addKey(BusinessCode.VALID_BID_ARTICLE_NULL);
+        }
+        return isValid;
+    }
+
+    private boolean isBidPriceValid (int bidPrice, Article article, BusinessException businessException) {
+        boolean isValid = true ;
+        Bid bestBid = getBestBid(article);
+        if (bestBid != null && bestBid.getBidPrice() > bidPrice) {
+            isValid = false;
+            businessException.addKey(BusinessCode.VALID_BID_PRICE_LOWER_BEST_BID);
+        }
+        if (article.getStartingPrice() > bidPrice) {
+            isValid = false;
+            businessException.addKey(BusinessCode.VALID_BID_PRICE_LOWER_STARTING_PRICE);
+        }
+        return isValid;
+    }
+
+    /**
+     * end date, insert selling price, credit seller
+     * and check buyer uncredit ?
+     *
+     * @param article
+     */
+    @Override
+    public void closeBid(Article article) {
+
+
+        if (article.getSellingPrice() == 0 && article.readStatus() == ArticleStatus.ENDED) {
+            Bid bestBid = getBestBid(article);
+            System.out.println("\nBest bid : " + bestBid);
+
+
+            // update Article selling price
+            int bestPrice = bestBid.getBidPrice();
+            article.setSellingPrice(bestPrice);
+            articleDAO.update(article);
+            System.out.println("\nupdated article : " + article);
+
+            // update seller credit
+            User seller = article.getSeller();
+            System.out.println("\n Seller credit before : " + seller.getCredit());
+            seller.setCredit(seller.getCredit() + bestPrice);
+            userDAO.updateCredit(seller.getUserId(), seller.getCredit());
+            System.out.println("\n Seller credit after : " + seller.getCredit());
+        }
     }
 
     @Override
     public Bid getBestBid(Article article) {
-        return null;
+        List<Bid> bids = bidDAO.readByArticle(article.getArticleId());
+        Bid maxBid = bids.stream()
+                .max(Comparator.comparingInt(Bid::getBidPrice))
+                .orElse(null);
+        return maxBid;
     }
 
     @Override
-    public List<Bid> getBidsByUser(int userId) {
-        return List.of();
+    public List<Article> getBidsByUser(int userId) {
+        List<Bid> userBids = bidDAO.readByUser(userId);
+        List<Article> articles = new ArrayList<>();
+        for (Bid bid : userBids) {
+            Article article = articleDAO.readByID(bid.getArticle().getArticleId());
+            Bid bestBid = getBestBid(article);
+            if (bestBid != null) {
+                article.setBestPrice(bestBid.getBidPrice());
+            }
+            articles.add(article);
+        }
+        return articles;
     }
 
     @Override
-    public List<Bid> getBidsWonByUser(int userId) {
-        return List.of();
+    public List<Article> getBidsWonByUser(int userId) {
+        List<Bid> userBids = bidDAO.readByUser(userId);
+        for (Bid bid : userBids) {
+            linkUserAndArticleToBid(bid);
+        }
+        LocalDate now = LocalDate.now();
+        List<Bid> selectedBids = userBids.stream()
+                .filter(b -> b.getArticle().getEndDate().isBefore(now))
+                .toList();
+
+        List<Article> wonArticles = new ArrayList<>();
+        for (Bid bid : selectedBids) {
+            Article article = articleDAO.readByID(bid.getArticle().getArticleId());
+            Bid bestBid = getBestBid(article);
+            article.setBestPrice(bestBid.getBidPrice());
+            if (bestBid.getBidPrice()== bid.getBidPrice()) {
+                wonArticles.add(article);
+            }
+        }
+        return wonArticles;
     }
 }

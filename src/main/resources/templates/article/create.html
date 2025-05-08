@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        data-th-replace="~{layouts/layout :: layout(
+                                                mainContent=~{:: main},
+                                                cssContent=~{},
+                                                cssContent2=~{:: link},
+                                                titleContent=~{:: title}
+                                            )}"
+>
+
+<title data-th-text="#{article.create.title}"></title>
+<link rel="stylesheet" data-th-href="@{/css/bidlist.css}">
+<link rel="stylesheet" data-th-href="@{/css/article-form.css}">
+
+<main>
+  <form data-th-replace="~{fragments/fragment-article-form :: article-form('creer')}"></form>
+</main>
+</html>

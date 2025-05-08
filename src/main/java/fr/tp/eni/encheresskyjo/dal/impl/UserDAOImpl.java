@@ -42,6 +42,7 @@ public class UserDAOImpl implements UserDAO {
             "WHERE no_utilisateur = :no_utilisateur;";
     private static final String UPDATE_PASSWORD = "UPDATE UTILISATEURS SET mot_de_passe=:mot_de_passe WHERE email=:email;";
     private static final String DELETE = "DELETE FROM UTILISATEURS WHERE no_utilisateur=:no_utilisateur;";
+    private static final String UPDATE_CREDIT = "UPDATE UTILISATEURS SET credit=:credit WHERE no_utilisateur=:no_utilisateur;";
 
     //IMPLEMENTATION
 
@@ -230,6 +231,17 @@ public class UserDAOImpl implements UserDAO {
         return users.isEmpty();
     }
 
+    @Override
+    public void updateCredit(int userId, int credit) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("no_utilisateur", userId);
+        mapSqlParameterSource.addValue("credit", credit);
+        namedParameterJdbcTemplate.update(
+                UPDATE_CREDIT,
+                mapSqlParameterSource
+        );
+    }
+
 }
 
 /**
@@ -251,6 +263,7 @@ class UserRowMapper implements RowMapper<User> {
         user.setStreet(rs.getString("rue"));
         user.setZip(rs.getString("code_postal"));
         user.setCity(rs.getString("ville"));
+        user.setPassword(rs.getString("mot_de_passe"));
         user.setCredit(rs.getInt("credit"));
         user.setAdmin(rs.getBoolean("administrateur"));
         return user;

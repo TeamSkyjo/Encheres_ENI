@@ -9,4 +9,5 @@ public interface BidDAO {
     List<Bid> readByArticle(int articleId);
     List<Bid> readByUser(int userId);
     void delete(Bid bid);
+    void update(Bid bid);
 }
