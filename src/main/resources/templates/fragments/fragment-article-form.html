@@ -8,9 +8,9 @@
     <h1 data-th-if="${action == 'seller'}" data-th-text="#{view-article-detail.seller.h1}"></h1>
 
     <!--    <h2 data-th-replace="~{fragments/fragment-errors.html :: errors}"></h2>-->
-    <!--    <p class=cards data-th-each="keyError: ${#fields.errors('global')}" data-th-text="#{${keyError}}"></p>-->
+        <p data-th-each="key: ${#fields.errors('global')}" data-th-text="#{${key.code}}"></p>
     <ul class="flex-outer">
-        <img data-th-src="@{${article.imageUrl}}" alt="Photo de l'objet à vendre">
+        <img data-th-if="${action != 'creer'}" data-th-src="@{${article.imageUrl}}" alt="Photo de l'objet à vendre">
         <li>
             <label for="articleName" data-th-text="#{frag-article-form.articleName}"></label>
             <input data-th-field="*{articleName}"
@@ -27,9 +27,9 @@
         </li>
         <li>
             <label for="category" data-th-text="#{frag-article-form.category}"></label>
-            <input data-th-disabled="${action != 'creer'}" type="text" name="category" id="category" disabled
+            <input data-th-if="${action != 'creer'}" type="text" name="category" id="category" disabled
                    data-th-field="*{category.label}">
-            <select data-th-unless="${action != 'creer'}" name="category" id="category">
+            <select data-th-unless="${action != 'creer'}" name="category" id="category" data-th-field="*{category.label}">
                 <option data-th-each="category: ${categories}" data-th-value="${category.categoryId}"
                         data-th-text="${category.label}"></option>
             </select>
@@ -140,8 +140,8 @@
         <li data-th-if="${#strings.isEmpty(action)
         and (article.endDate.isAfter(T(java.time.LocalDate).now()) or article.endDate.isEqual(T(java.time.LocalDate).now()))}">
             <label for="bidPrice" data-th-text="#{frag-article-form.bidPrice}"></label>
-            <input type="number" name="bidPrice" id="bidPrice" min="${article.bestPrice != 0 ? article.bestPrice : article.startingPrice}"
-                   data-th-value="${article.bestPrice != 0 ? article.bestPrice : article.startingPrice}">
+            <input type="number" name="bidPrice" id="bidPrice" min="${article.bestPrice != 0 ? article.bestPrice+1 : article.startingPrice+1}"
+                   data-th-value="${article.bestPrice != 0 ? article.bestPrice +1 : article.startingPrice +1}">
             <button type="submit" data-th-text="#{frag-article-form.button.bid}"></button>
         </li>
     </ul>

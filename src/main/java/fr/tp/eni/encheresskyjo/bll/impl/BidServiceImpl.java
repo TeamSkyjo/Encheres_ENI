@@ -150,11 +150,11 @@ public class BidServiceImpl implements BidService {
     private boolean isBidPriceValid (int bidPrice, Article article, BusinessException businessException) {
         boolean isValid = true ;
         Bid bestBid = getBestBid(article);
-        if (bestBid != null && bestBid.getBidPrice() > bidPrice) {
+        if (bestBid != null && bestBid.getBidPrice() >= bidPrice) {
             isValid = false;
             businessException.addKey(BusinessCode.VALID_BID_PRICE_LOWER_BEST_BID);
         }
-        if (article.getStartingPrice() > bidPrice) {
+        if (article.getStartingPrice() >= bidPrice) {
             isValid = false;
             businessException.addKey(BusinessCode.VALID_BID_PRICE_LOWER_STARTING_PRICE);
         }
@@ -169,8 +169,6 @@ public class BidServiceImpl implements BidService {
      */
     @Override
     public void closeBid(Article article) {
-
-
         if (article.getSellingPrice() == 0 && article.readStatus() == ArticleStatus.ENDED) {
             Bid bestBid = getBestBid(article);
             System.out.println("\nBest bid : " + bestBid);
