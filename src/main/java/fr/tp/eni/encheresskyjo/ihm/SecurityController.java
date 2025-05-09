@@ -62,7 +62,7 @@ public class SecurityController {
 
     @PostMapping("/inscription")
     public String register(
-            @Valid @ModelAttribute("userCreateDTO") UserCreateDTO userCreateDTO,
+            @ModelAttribute("userCreateDTO") UserCreateDTO userCreateDTO,
             BindingResult bindingResult,
             Model model
     ) {
@@ -77,7 +77,6 @@ public class SecurityController {
                         bindingResult.addError(new FieldError("userCreateDTO", error.getField(), error.getMessageCode()));
                     }
                 }
-                System.out.println(exception.getErrors());
                 model.addAttribute("userCreateDTO", userCreateDTO);
                 return "/register";
             }

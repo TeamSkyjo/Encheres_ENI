@@ -192,7 +192,10 @@ li > ul {
     background-color: cadetblue;
 }
 
-
+#password-format {
+    font-size: 0.8rem;
+    color: #888888;
+}
 
 /* Small devices (landscape phones, 576px and up) */
 @media screen and (min-width: 576px) {}

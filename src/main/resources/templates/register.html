@@ -19,8 +19,8 @@
     <section class="center-section">
         <h1 data-th-text="#{register.h1}"></h1>
         <form data-th-action="@{/inscription}" method="post" data-th-object="${userCreateDTO}">
-            <p class="global-error" data-th-each="keyError: ${#fields.errors('global')}"
-               data-th-text="#{${keyError}}"></p>
+            <p class="global-error" data-th-each="key: ${#fields.errors('global')}"
+               data-th-text="#{${key}}"></p>
             <ul class="flex-outer">
                 <li>
                     <label for="username">Pseudo :</label>
@@ -82,6 +82,7 @@
                     <label for="password">Mot de passe :</label>
                     <input type="password" id="password" name="password" minlength="12" required
                            data-th-field="*{password}">
+                    <p id="password-format">Le mot de passe doit contenir minimum 12 caractères dont une majuscule, une minuscule, un chiffre et un caractère spécial parmi (!@#$%^&*()_+)</p>
                     <p class="field-error"
                        data-th-each="error : ${#fields.errors('password')}"
                        data-th-text="#{${error}}"></p>

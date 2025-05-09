@@ -82,6 +82,7 @@
             <li data-th-if="${action == 'update'}">
                 <label for="new-pwd">Nouveau mot de passe :</label>
                 <input type="password" id="new-pwd" name="newPassword" data-th-field="*{newPassword}">
+                <p id="password-format">Le mot de passe doit contenir minimum 12 caractères dont une majuscule, une minuscule, un chiffre et un caractère spécial parmi (!@#$%^&*()_+)</p>
                 <p class="field-error"
                    data-th-each="error : ${#fields.errors('newPassword')}"
                    data-th-text="#{${error}}"></p>
