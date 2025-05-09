@@ -64,7 +64,7 @@ fieldset li > label {
 
 .flex-outer > li > label + *,
 fieldset li > label + * {
-    margin-right: auto;
+    margin-left: auto;
 }
 
 .flex-outer > li > label + * {
@@ -86,6 +86,7 @@ fieldset li > label + * {
     text-decoration: none;
     width: fit-content;
     margin-right: auto;
+    margin-left: 0;
     padding: 1%;
 }
 
@@ -146,11 +147,19 @@ input[type="number"]:disabled {
 
 *:disabled {
     border: none !important;
-    background: none;
-    color: black;
+    background-color: transparent !important;
+    color: black !important;
     font-style: italic;
     font-size: 1rem;
     resize: none;
+    margin-right: auto !important;
+    margin-left: 0 !important;
+    padding: 1% !important;
+}
+
+li > ul {
+    margin-left: 0 !important;
+    margin-right: auto !important;
 }
 
 /* Buttons */
@@ -222,4 +231,12 @@ input[type="number"]:disabled {
 }
 
 /* XX-Large devices (larger desktops, 1400px and up) */
-@media screen and (min-width: 1400px) {}
+@media screen and (min-width: 1400px) {
+    form {
+        width: 40%;
+    }
+
+    form img {
+        width: 40%;
+    }
+}

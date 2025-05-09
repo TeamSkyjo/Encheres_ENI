@@ -6,55 +6,92 @@
         <input type="hidden" data-th-field="*{userId}">
         <input type="hidden" name="action" data-th-value="${action}">
 
-<!--        <h1 data-th-if="${action == 'profile'}">Profil Utilisateur</h1>-->
+        <h1 data-th-if="${action == 'profile'}">Profil Utilisateur</h1>
         <h1 data-th-if="${action == 'my-profile'}">Mon profil</h1>
+        <h1 data-th-if="${action == 'update'}">Modifier mon profil</h1>
+
+        <p class="global-error" data-th-each="keyError: ${#fields.errors('global')}"
+           data-th-text="#{${keyError}}"></p>
 
         <ul class="flex-outer">
             <li>
                 <label for="username">Pseudo :</label>
                 <input type="text" id="username" name="username" data-th-field="*{username}" data-th-disabled="${action != 'update'}">
+                <p class="field-error"
+                   data-th-each="error : ${#fields.errors('username')}"
+                   data-th-text="#{${error}}"></p>
             </li>
             <li>
                 <label for="lastName">Nom :</label>
                 <input type="text" id="lastName" name="lastName" data-th-field="*{lastName}" data-th-disabled="${action != 'update'}">
+                <p class="field-error"
+                   data-th-each="error : ${#fields.errors('lastName')}"
+                   data-th-text="#{${error}}"></p>
             </li>
             <li>
                 <label for="firstName">Prénom :</label>
                 <input type="text" id="firstName" name="firstName" data-th-field="*{firstName}" data-th-disabled="${action != 'update'}">
+                <p class="field-error"
+                   data-th-each="error : ${#fields.errors('firstName')}"
+                   data-th-text="#{${error}}"></p>
             </li>
             <li>
                 <label for="email">Email :</label>
                 <input type="email" id="email" name="email" data-th-field="*{email}" data-th-disabled="${action != 'update'}">
+                <p class="field-error"
+                   data-th-each="error : ${#fields.errors('email')}"
+                   data-th-text="#{${error}}"></p>
             </li>
             <li>
                 <label for="phone">Téléphone :</label>
                 <input type="tel" id="phone" name="phone" data-th-field="*{telephone}" data-th-disabled="${action != 'update'}">
+                <p class="field-error"
+                   data-th-each="error : ${#fields.errors('telephone')}"
+                   data-th-text="#{${error}}"></p>
             </li>
             <li>
                 <label for="street">Rue :</label>
                 <input type="text" id="street" name="street" data-th-field="*{street}" data-th-disabled="${action != 'update'}">
+                <p class="field-error"
+                   data-th-each="error : ${#fields.errors('street')}"
+                   data-th-text="#{${error}}"></p>
             </li>
             <li>
                 <label for="zip">Code postal :</label>
                 <input type="text" id="zip" name="zip" data-th-field="*{zip}" data-th-disabled="${action != 'update'}">
+                <p class="field-error"
+                   data-th-each="error : ${#fields.errors('zip')}"
+                   data-th-text="#{${error}}"></p>
             </li>
             <li>
                 <label for="city">Ville :</label>
                 <input type="text" id="city" name="city" data-th-field="*{city}" data-th-disabled="${action != 'update'}">
+                <p class="field-error"
+                   data-th-each="error : ${#fields.errors('city')}"
+                   data-th-text="#{${error}}"></p>
             </li>
 
             <!-- Password fields are only displayed on update mode -->
             <li data-th-if="${action == 'update'}">
                 <label for="current-pwd">Mot de passe actuel :</label>
-                <input type="password" id="current-pwd" name="current-pwd" data-th-field="*{currentPassword}">
+                <input type="password" id="current-pwd" name="currentPassword" data-th-field="*{currentPassword}">
+                <p class="field-error"
+                   data-th-each="error : ${#fields.errors('currentPassword')}"
+                   data-th-text="#{${error}}"></p>
             </li>
             <li data-th-if="${action == 'update'}">
                 <label for="new-pwd">Nouveau mot de passe :</label>
-                <input type="password" id="new-pwd" name="new-pwd" data-th-field="*{newPassword}">
+                <input type="password" id="new-pwd" name="newPassword" data-th-field="*{newPassword}">
+                <p class="field-error"
+                   data-th-each="error : ${#fields.errors('newPassword')}"
+                   data-th-text="#{${error}}"></p>
             </li>
             <li data-th-if="${action == 'update'}">
                 <label for="pwd-confirm">Confirmation :</label>
-                <input type="password" id="pwd-confirm" name="pwd-confirm" data-th-field="*{newPasswordConfirm}">
+                <input type="password" id="pwd-confirm" name="newPasswordConfirm" data-th-field="*{newPasswordConfirm}">
+                <p class="field-error"
+                   data-th-each="error : ${#fields.errors('newPasswordConfirm')}"
+                   data-th-text="#{${error}}"></p>
             </li>
 
             <li data-th-if="${action=='my-profile'}">
