@@ -4,7 +4,6 @@ import fr.tp.eni.encheresskyjo.bll.UserService;
 import fr.tp.eni.encheresskyjo.bo.User;
 import fr.tp.eni.encheresskyjo.converter.UserCreateDtoToUserConverter;
 import fr.tp.eni.encheresskyjo.converter.UserToUserGeneralDTOConverter;
-import fr.tp.eni.encheresskyjo.converter.UserUpdateDtoToUserConverter;
 import fr.tp.eni.encheresskyjo.dal.UserDAO;
 import fr.tp.eni.encheresskyjo.dto.UserCreateDTO;
 import fr.tp.eni.encheresskyjo.dto.UserGeneralDTO;
@@ -12,9 +11,6 @@ import fr.tp.eni.encheresskyjo.dto.UserUpdateDTO;
 import fr.tp.eni.encheresskyjo.exception.BusinessCode;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -149,6 +145,7 @@ public class UserServiceImpl implements UserService {
             validateCurrentPassword(dto, existingUser, businessException);
             if (dto.getNewPassword() != null && !dto.getNewPassword().isBlank()) {
                 System.out.println(">>>>>");
+                System.out.println("username in dto : " + dto.getUsername());
                 System.out.println(dto.getCurrentPassword());
                 System.out.println(existingUser.getPassword());
                 System.out.println(">>>>>");

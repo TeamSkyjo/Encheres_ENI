@@ -43,7 +43,8 @@ public class WebSecurityConfiguration {
                             .requestMatchers(HttpMethod.GET, "/profil").hasRole("MEMBRE")
                             .requestMatchers(HttpMethod.GET, "/rechercheUtilisateur").hasRole("MEMBRE")
                             .requestMatchers(HttpMethod.GET, "/article/details").hasRole("MEMBRE")
-                            .requestMatchers(HttpMethod.GET, "/article/creer").hasRole("MEMBRE");
+                            .requestMatchers(HttpMethod.GET, "/article/creer").hasRole("MEMBRE")
+                            .requestMatchers(HttpMethod.POST, "/profil").hasRole("MEMBRE");
 
                     auth.requestMatchers(HttpMethod.POST, "/inscription").permitAll();
                     auth.anyRequest().permitAll();

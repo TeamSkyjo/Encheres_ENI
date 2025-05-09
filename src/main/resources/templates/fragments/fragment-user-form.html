@@ -1,48 +1,67 @@
 
     <form data-th-fragment="user-profile(action)"
-          data-th-action="@{/profil}"
+          data-th-action="@{/profil/modifier}"
           method="post"
           data-th-object="${user}">
         <input type="hidden" data-th-field="*{userId}">
-        <h1 data-th-if="${action=='profile'}" >Profil Utilisateur</h1>
-        <h1 data-th-unless="${action=='profile'}">Mon profil</h1>
+        <input type="hidden" name="action" data-th-value="${action}">
+
+        <h1 data-th-if="${action == 'profile' ? 'Profil Utilisateur' : 'Mon profil'}"></h1>
 
         <ul class="flex-outer">
             <li>
                 <label for="username">Pseudo :</label>
-                <input type="text" id="username" name="username" data-th-field="*{username}" data-th-disabled="${action=='profile'}">
+                <input type="text" id="username" name="username" data-th-field="*{username}" data-th-disabled="${action != 'update'}">
             </li>
             <li>
                 <label for="lastName">Nom :</label>
-                <input type="text" id="lastName" name="lastName" data-th-field="*{lastName}" data-th-disabled="${action=='profile'}">
+                <input type="text" id="lastName" name="lastName" data-th-field="*{lastName}" data-th-disabled="${action != 'update'}">
             </li>
             <li>
                 <label for="firstName">Prénom :</label>
-                <input type="text" id="firstName" name="firstName" data-th-field="*{firstName}" data-th-disabled="${action=='profile'}">
+                <input type="text" id="firstName" name="firstName" data-th-field="*{firstName}" data-th-disabled="${action != 'update'}">
             </li>
             <li>
                 <label for="email">Email :</label>
-                <input type="email" id="email" name="email" data-th-field="*{email}" data-th-disabled="${action=='profile'}">
+                <input type="email" id="email" name="email" data-th-field="*{email}" data-th-disabled="${action != 'update'}">
             </li>
             <li>
                 <label for="phone">Téléphone :</label>
-                <input type="tel" id="phone" name="phone" data-th-field="*{telephone}" data-th-disabled="${action=='profile'}">
+                <input type="tel" id="phone" name="phone" data-th-field="*{telephone}" data-th-disabled="${action != 'update'}">
             </li>
             <li>
                 <label for="street">Rue :</label>
-                <input type="text" id="street" name="street" data-th-field="*{street}" data-th-disabled="${action=='profile'}">
+                <input type="text" id="street" name="street" data-th-field="*{street}" data-th-disabled="${action != 'update'}">
             </li>
             <li>
                 <label for="zip">Code postal :</label>
-                <input type="text" id="zip" name="zip" data-th-field="*{zip}" data-th-disabled="${action=='profile'}">
+                <input type="text" id="zip" name="zip" data-th-field="*{zip}" data-th-disabled="${action != 'update'}">
             </li>
             <li>
                 <label for="city">Ville :</label>
-                <input type="text" id="city" name="city" data-th-field="*{city}" data-th-disabled="${action=='profile'}">
+                <input type="text" id="city" name="city" data-th-field="*{city}" data-th-disabled="${action != 'update'}">
+            </li>
+
+            <!-- Password fields are only displayed on update mode -->
+            <li data-th-if="${action == 'update'}">
+                <label for="current-pwd">Mot de passe actuel :</label>
+                <input type="password" id="current-pwd" name="current-pwd" data-th-field="*{currentPassword}">
+            </li>
+            <li data-th-if="${action == 'update'}">
+                <label for="new-pwd">Nouveau mot de passe :</label>
+                <input type="password" id="new-pwd" name="new-pwd" data-th-field="*{newPassword}">
+            </li>
+            <li data-th-if="${action == 'update'}">
+                <label for="pwd-confirm">Confirmation :</label>
+                <input type="password" id="pwd-confirm" name="pwd-confirm" data-th-field="*{newPasswordConfirm}">
             </li>
 
             <li data-th-if="${action=='my-profile'}">
-                <button type="submit">Modifier</button>
+                <a data-th-href="@{/profil/modifier}" class="btn">Modifier</a>
+            </li>
+
+            <li data-th-if="${action == 'update'}">
+                <button type="submit">Enregistrer</button>
             </li>
         </ul>
 

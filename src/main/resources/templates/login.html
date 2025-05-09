@@ -18,6 +18,14 @@
 <main class="center-main">
     <section class="center-section">
         <h1 data-th-text="#{login.h1}"></h1>
+
+        <div data-th-if="${param.usernameChanged}">
+            <p class="usernameChanged">Votre pseudo a été changé avec succès. Veuillez vous reconnecter avec votre nouveau pseudo.</p>
+        </div>
+        <div data-th-if="${param.passwordChanged}">
+            <p class="passwordChanged">Votre mot de passe a été changé avec succès. Veuillez vous reconnecter.</p>
+        </div>
+
         <form data-th-action="@{/login}" method="post">
             <ul class="flex-outer">
                 <li>

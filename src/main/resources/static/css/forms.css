@@ -103,6 +103,12 @@ fieldset {
     width: 60%;
 }
 
+p.usernameChanged,
+p.passwordChanged {
+    color: #004040;
+    margin: 10px;
+}
+
 /* Form inputs */
 input:not([type="file"]),
 textarea,
@@ -158,9 +164,26 @@ input[type="number"]:disabled {
     border-radius: 5px;
 }
 
-.flex-outer li button:hover {
+.btn {
+    display: inline-block;
+    margin-left: auto;
+    padding: 8px 16px;
+    border: none;
+    background: darkcyan;
+    color: #ffffff;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.flex-outer li button:hover,
+.btn:hover {
     background-color: cadetblue;
 }
+
+
 
 /* Small devices (landscape phones, 576px and up) */
 @media screen and (min-width: 576px) {}

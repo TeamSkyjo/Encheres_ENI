@@ -155,6 +155,7 @@ public class TestUserService {
     public void testUpdateUser_valid() {
         User user = userDAO.readById(1);
         System.out.println("\nAvant update : " + user);
+        System.out.println("-----------------------");
 
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setUserId(1);
@@ -167,6 +168,7 @@ public class TestUserService {
 
             User updatedUser = userDAO.readById(1);
             System.out.println("\nAfter update : " + updatedUser);
+            System.out.println("-----------------------");
 
         } catch (BusinessException businessException){
             System.out.println("Error : " + businessException.getKeys());
