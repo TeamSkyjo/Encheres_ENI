@@ -122,12 +122,13 @@ public class UserController {
                 if (error.getField() == null) {
                     bindingResult.addError(new ObjectError("globalError", error.getMessageCode()));
                 } else {
-                    bindingResult.addError(new FieldError("userCreateDTO", error.getField(), error.getMessageCode()));
+                    bindingResult.addError(new FieldError("user", error.getField(), error.getMessageCode()));
                 }
             }
 
             System.out.println("Error while updating : " + exception.getKeys());
             model.addAttribute("action", "update");
+            model.addAttribute("user", userUpdateDTO);
             return "/user/update";
         }
     }

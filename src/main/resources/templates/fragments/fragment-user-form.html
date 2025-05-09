@@ -74,21 +74,21 @@
             <!-- Password fields are only displayed on update mode -->
             <li data-th-if="${action == 'update'}">
                 <label for="current-pwd">Mot de passe actuel :</label>
-                <input type="password" id="current-pwd" name="current-pwd" data-th-field="*{currentPassword}">
+                <input type="password" id="current-pwd" name="currentPassword" data-th-field="*{currentPassword}">
                 <p class="field-error"
                    data-th-each="error : ${#fields.errors('currentPassword')}"
                    data-th-text="#{${error}}"></p>
             </li>
             <li data-th-if="${action == 'update'}">
                 <label for="new-pwd">Nouveau mot de passe :</label>
-                <input type="password" id="new-pwd" name="new-pwd" data-th-field="*{newPassword}">
+                <input type="password" id="new-pwd" name="newPassword" data-th-field="*{newPassword}">
                 <p class="field-error"
                    data-th-each="error : ${#fields.errors('newPassword')}"
                    data-th-text="#{${error}}"></p>
             </li>
             <li data-th-if="${action == 'update'}">
                 <label for="pwd-confirm">Confirmation :</label>
-                <input type="password" id="pwd-confirm" name="pwd-confirm" data-th-field="*{newPasswordConfirm}">
+                <input type="password" id="pwd-confirm" name="newPasswordConfirm" data-th-field="*{newPasswordConfirm}">
                 <p class="field-error"
                    data-th-each="error : ${#fields.errors('newPasswordConfirm')}"
                    data-th-text="#{${error}}"></p>
