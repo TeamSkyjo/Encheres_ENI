@@ -185,13 +185,14 @@ public class ArticleController {
 
     @PostMapping("/article/details")
     public String placeBid(
-            @ModelAttribute Article article,
+            @Valid
+            @ModelAttribute("article") Article article,
             BindingResult bindingResult,
             @RequestParam(value = "bidPrice", required = false) Integer bidPrice,
             @RequestParam(value = "articleId", required = false) Integer articleId,
             @RequestParam String action,
-            Model model,
-            Principal principal
+            Principal principal,
+            Model model
     ){
         article = articleService.getArticleById(articleId);
         User user = userService.getByUsername(principal.getName());
@@ -203,6 +204,8 @@ public class ArticleController {
                 e.getKeys().forEach(key -> {
                     ObjectError error = new ObjectError("globalError", key);
                     bindingResult.addError(error);
+//                    bindingResult.reject(key);
+                    System.out.println(bindingResult.getAllErrors());
                 });
             }
         }
@@ -214,6 +217,7 @@ public class ArticleController {
                 e.getKeys().forEach(key -> {
                     ObjectError error = new ObjectError("globalError", key);
                     bindingResult.addError(error);
+                    System.out.println(bindingResult.getAllErrors());
                 });
             }
         }
@@ -226,11 +230,14 @@ public class ArticleController {
 
             } catch (BusinessException e) {
                 e.getKeys().forEach(key -> {
-                    ObjectError error = new ObjectError("globalError", key);
-                    bindingResult.addError(error);
+//                    ObjectError error = new ObjectError("globalError", key);
+//                    bindingResult.addError(error);
+                    bindingResult.reject(key);
+                    System.out.println(bindingResult.getAllErrors());
                 });
             }
         }
+
         model.addAttribute("article", article);
         return "article/details";
     }
