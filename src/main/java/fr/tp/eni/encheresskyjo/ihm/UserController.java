@@ -5,11 +5,13 @@ import fr.tp.eni.encheresskyjo.bo.User;
 import fr.tp.eni.encheresskyjo.converter.UserToUserUpdateDtoConverter;
 import fr.tp.eni.encheresskyjo.dto.UserGeneralDTO;
 import fr.tp.eni.encheresskyjo.dto.UserUpdateDTO;
+import fr.tp.eni.encheresskyjo.exception.BusinessError;
 import fr.tp.eni.encheresskyjo.exception.BusinessException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
@@ -115,10 +117,15 @@ public class UserController {
 
             return "redirect:/profil";
         } catch (BusinessException exception) {
-            exception.getKeys().forEach(key -> {
-                ObjectError error = new ObjectError("globalError", key);
-                bindingResult.addError(error);
-            });
+
+            for (BusinessError error : exception.getErrors()) {
+                if (error.getField() == null) {
+                    bindingResult.addError(new ObjectError("globalError", error.getMessageCode()));
+                } else {
+                    bindingResult.addError(new FieldError("userCreateDTO", error.getField(), error.getMessageCode()));
+                }
+            }
+
             System.out.println("Error while updating : " + exception.getKeys());
             model.addAttribute("action", "update");
             return "/user/update";
