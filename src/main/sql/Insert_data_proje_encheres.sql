@@ -67,8 +67,8 @@ INSERT INTO ARTICLES (no_article, nom_article, description, date_debut_encheres,
 
 --ajouts pour démo
 INSERT INTO ARTICLES (no_article, nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, url_image, no_utilisateur, no_categorie) VALUES
-(13, 'Souris sans fil', 'Souris Logitech M185, neuve', DATEADD(DAY,-7,GETDATE()), DATEADD(DAY,-4,GETDATE()), 15, 20, '/uploads/souris-logitech.jpg', 1, 1),
-(14, 'Lampe de bureau LED', 'Lampe blanche avec variateur d’intensité', DATEADD(DAY,-10,GETDATE()), DATEADD(DAY,-6,GETDATE()), 25, 30, '/uploads/lampe-bureau.jpg', 1, 2);
+(13, 'Souris sans fil', 'Souris Logitech M185, neuve', DATEADD(DAY,-7,GETDATE()), DATEADD(DAY,-4,GETDATE()), 15, 20, '/uploads/Souris-sans-fil.jpg', 1, 1),
+(14, 'Lampe de bureau LED', 'Lampe blanche avec variateur d’intensité', DATEADD(DAY,-10,GETDATE()), DATEADD(DAY,-6,GETDATE()), 25, 30, '/uploads/lampe-bureau-led.jpg', 1, 2);
 
 SET IDENTITY_INSERT ARTICLES OFF;
 
