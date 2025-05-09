@@ -10,8 +10,9 @@
     <h1 data-th-if="${action == 'seller'}" data-th-text="#{view-article-detail.seller.h1}"></h1>
 
     <!--    <h2 data-th-replace="~{fragments/fragment-errors.html :: errors}"></h2>-->
-<!--    <p class="global-error" data-th-each="key: ${#fields.errors('global')}"-->
-<!--       data-th-text="#{${key}}"></p>-->
+<!--    <p data-th-each="key: ${#fields.errors('global')}" data-th-text="#{${key}}"></p>-->
+    <p data-th-each="err: ${#fields.globalErrors()}" data-th-text="#{${err}}"></p>
+
     <ul class="flex-outer">
         <img data-th-if="${action != 'creer'}"
              data-th-src="@{${article.imageUrl}}"

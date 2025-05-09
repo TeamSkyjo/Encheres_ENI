@@ -185,15 +185,16 @@ public class ArticleController {
 
     @PostMapping("/article/details")
     public String placeBid(
+            @Valid
             @ModelAttribute("article") Article article,
             BindingResult bindingResult,
             @RequestParam(value = "bidPrice", required = false) Integer bidPrice,
             @RequestParam(value = "articleId", required = false) Integer articleId,
             @RequestParam String action,
-            Model model,
-            Principal principal
+            Principal principal,
+            Model model
     ){
-//        article = articleService.getArticleById(articleId);
+        article = articleService.getArticleById(articleId);
         User user = userService.getByUsername(principal.getName());
         if ("seller".equals(action)) {
             try {
@@ -220,7 +221,6 @@ public class ArticleController {
 
         else {
             try {
-                System.out.println(article);
                 bidService.createBid(user, article, bidPrice);
                 model.addAttribute("bidPrice", bidPrice);
                 return "redirect:/encheres";
@@ -230,10 +230,6 @@ public class ArticleController {
                     ObjectError error = new ObjectError("globalError", key);
                     bindingResult.addError(error);
                 });
-                System.out.println(e.getKeys());
-                System.out.println(article);
-                model.addAttribute("article", article);
-                return "article/details";
             }
         }
         model.addAttribute("article", article);
