@@ -65,6 +65,11 @@ INSERT INTO ARTICLES (no_article, nom_article, description, date_debut_encheres,
 (11, 'Jean slim homme', 'Taille 42, couleur bleu foncé', DATEADD(DAY,-2,GETDATE()), DATEADD(DAY,+1,GETDATE()), 30, NULL, '/uploads/jeans-slim-bleu-fonce.jpg', 1, 4),
 (12, 'Robe été fleurie', 'Robe légère, taille M, comme neuve', DATEADD(DAY,-5,GETDATE()), DATEADD(DAY,-1,GETDATE()), 45, NULL, '/uploads/robe.jpg', 3, 4);
 
+--ajouts pour démo
+INSERT INTO ARTICLES (no_article, nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, url_image, no_utilisateur, no_categorie) VALUES
+(13, 'Souris sans fil', 'Souris Logitech M185, neuve', DATEADD(DAY,-7,GETDATE()), DATEADD(DAY,-4,GETDATE()), 15, 20, '/uploads/souris-logitech.jpg', 1, 1),
+(14, 'Lampe de bureau LED', 'Lampe blanche avec variateur d’intensité', DATEADD(DAY,-10,GETDATE()), DATEADD(DAY,-6,GETDATE()), 25, 30, '/uploads/lampe-bureau.jpg', 1, 2);
+
 SET IDENTITY_INSERT ARTICLES OFF;
 
 -- Insertion des retraits
@@ -81,6 +86,10 @@ INSERT INTO RETRAITS (no_article, rue, code_postal, ville) VALUES
 (10, '8 avenue des Meubles', '69000', 'Lyon'),     -- Utilisateur 2
 (11, '12 rue de l''Info', '75001', 'Paris'),       -- Utilisateur 1
 (12, '45 rue des Sports', '31000', 'Toulouse');    -- Utilisateur 3
+--ajouts pour démo
+INSERT INTO RETRAITS (no_article, rue, code_postal, ville) VALUES
+(13, '12 rue de l''Info', '75001', 'Paris'),
+(14, '12 rue de l''Info', '75001', 'Paris');
 
 
 -- Insertion des enchères
@@ -89,6 +98,13 @@ INSERT INTO ENCHERES (no_utilisateur, no_article, date_enchere, montant_enchere)
 (1, 2, DATEADD(DAY,-1,GETDATE()), 320),
 (2, 3, DATEADD(DAY,-2,GETDATE()), 260),
 (1, 4, DATEADD(DAY,-3,GETDATE()), 150);
+-- ajouts pour démo enchères terminées puis enchères en cours pour Techguy
+INSERT INTO ENCHERES (no_utilisateur, no_article, date_enchere, montant_enchere) VALUES
+(1, 10, DATEADD(DAY,-3,GETDATE()), 80),  -- Raquette de tennis
+(1, 7, DATEADD(DAY,-2,GETDATE()), 85);  -- Chaise de bureau
+INSERT INTO ENCHERES (no_utilisateur, no_article, date_enchere, montant_enchere) VALUES
+(1, 5, DATEADD(HOUR,-2,GETDATE()), 130),  -- Écran 27 pouces
+(1, 8, DATEADD(HOUR,-3,GETDATE()), 95);   -- Table basse
 
 
 -- Insertion des rôles
